@@ -27,6 +27,9 @@ rule token = parse
 
   | integer_literal as k    { INT (int_of_string k) }
 
+  | "true"                  { BOOL true }
+  | "false"                 { BOOL false }
+
   | ":"                     { COLON }
   | "="                     { EQUAL }
   | ";"                     { SEMI_COLON }
