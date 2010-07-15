@@ -3,8 +3,9 @@
 
 
 type ast =
-    | Prototype of list_type_proto * list_expr_proto
+    | Prototype of list_type_proto * expr_proto list
     | Decl of list_type_decl * list_type_decl * expression
+    | Expression of expression
 
 and list_type_proto = (type_proto * bool) list
 
@@ -15,8 +16,10 @@ and type_proto =
 
 and type_decl =
     | Arrow_decl of type_decl * type_decl
+    | Expr_decl of expression
+    | Type_name_decl of string
 
-and list_expr_proto = 
+and expr_proto =
     | Expr_proto_underscore
     | Expr_proto_ident of string
 

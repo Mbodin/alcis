@@ -62,7 +62,7 @@
 #
 ########################## End of Documentation ####################
 
-VPATH = .:src/parsing
+VPATH = .:src/parsing:src/interface
 
 ########################## User's variables #####################
 
@@ -70,7 +70,8 @@ VPATH = .:src/parsing
 # The Caml sources (including camlyacc and camllex source files)
 
 SOURCES = \
-	parsed_syntax.mli parsed_syntax.ml \
+	errors.ml \
+	parsed_syntax.ml \
 	lexer.mll parser.mly \
 
 
@@ -119,11 +120,11 @@ REMOVE   = find . -name $(var) -exec rm -vf {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
 
 $(EXEC): $(OBJS) .depend
-	@echo "\033[33m$< → $@\033[0m"
+	@echo "\033[33m${OBJS} → $@\033[0m"
 	@$(CAMLC) $(INCLUDE) -o $(EXEC) $(LIBS) $(OBJS)
 
 $(EXEC).opt: $(OPTOBJS) .depend
-	@echo "\033[33m$< → $@\033[0m"
+	@echo "\033[33m${OPTOBJS} → $@\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -o $(EXEC).opt $(LIBS:.cma=.cmxa) $(OPTOBJS)
 
 .SUFFIXES:
@@ -239,15 +240,15 @@ pres : $(SLIDES)
 
 sweep:
 	# produced c files
-	@find ./examples -name "*.c" -exec rm -vf {} \;
+	#@find ./examples -name "*.c" -exec rm -vf {} \;
 	# binary files
-	@$(foreach var,"*.bin",$(REMOVE);)
+	#@$(foreach var,"*.bin",$(REMOVE);)
 
 clobber:
 	# temporary doc files
-	@rm -vf $(addprefix $(DOCPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.snm)
+	#@rm -vf $(addprefix $(DOCPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.snm)
 	# temporary slides files
-	@rm -vf $(addprefix $(SLIDESPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.vrb *.snm)
+	#@rm -vf $(addprefix $(SLIDESPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.vrb *.snm)
 
 clean: sweep clobber
 	# dependencies
@@ -255,13 +256,13 @@ clean: sweep clobber
 	# libraries
 	@$(foreach var,"*.cm[iox]" "*~" ".*~",$(REMOVE);)
 	# object files
-	@$(foreach var,"*.o",$(REMOVE);)
+	#@$(foreach var,"*.o",$(REMOVE);)
 	# lexer
 	@$(foreach var,$(PRODLEX),$(REMOVE);)
 	# parser
 	@$(foreach var,$(PRODYACC),$(REMOVE);)
 	# machine
-	@$(foreach var,$(MBASE).ml,$(REMOVE);)
+	#@$(foreach var,$(MBASE).ml,$(REMOVE);)
 
 mrproper: clean clobber
 	# executable

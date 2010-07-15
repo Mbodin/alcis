@@ -20,7 +20,7 @@
 %left SEMICOLON
 
 %start implementation lex_flot
-%type <Parsed_syntax.ast> implementation
+%type <Parsed_syntax.ast list> implementation
 %type <string list> lex_flot
 
 %%
@@ -32,12 +32,7 @@ implementation:
 structure: /* Split the header and the body. */
     | prototype structure                                       { $1 :: $2 }
     | declaration structure                                     { $1 :: $2 }
-    | instruction structure                                     { $1 :: $2 }
-    | expression                                                { $1 :: [] }
-;
-
-instruction:
-    | expression SEMICOLON                                      { $1 }
+    | expression                                                { Expression $1 :: [] }
 ;
 
 expression_item:
@@ -83,7 +78,8 @@ list_expr_decl:
 ;
 
 type_prototype:
-    | list_expr_prototype RIGHT_ARROW list_expr_prototype       { Arrow_proto ($1, $3) }
+    | LPAREN type_prototype RPAREN                              { $2 }
+    | list_type_prototype RIGHT_ARROW list_type_prototype       { Arrow_proto ($1, $3) }
     | LPAREN expression RPAREN                                  { Expr_proto $2 }
     | IDENT                                                     { Type_name_proto $1 }
 ;

@@ -64,7 +64,7 @@ rule token = parse
                             }
 
 and comment = shortest (* ignore comments *)
-  | ")"                     { if Errors.warning_comments then Errors.warn
+  | ")"                     { if Errors.warning_comments () then Errors.warn
                             (
                                 Printf.sprintf "this will be considered as a open comment : ‘%s’ near %d-%d"
                                 (Lexing.lexeme lexbuf)
@@ -73,5 +73,5 @@ and comment = shortest (* ignore comments *)
                             ); comment lexbuf }
   | (_)*"(*"                { comment lexbuf; comment lexbuf }
   | (_)*"*)"                { }
-  | (_)* as s eof           { if Errors.warning_comments then Errors.warn ("unfinished comment : “" ^ s ^ "”") }
+  | (_)* as s eof           { if Errors.warning_comments () then Errors.warn ("unfinished comment : “" ^ s ^ "”") }
 
