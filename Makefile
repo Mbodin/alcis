@@ -117,61 +117,61 @@ REMOVE   = find . -name $(var) -exec rm -vf {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
 
 $(EXEC): $(OBJS) .depend
-	@echo "$(CAMLC) -o $(EXEC) $(LIBS)"
+	@echo "\033[33m$@ → $<\033[0m"
 	@$(CAMLC) $(INCLUDE) -o $(EXEC) $(LIBS) $(OBJS)
 
 $(EXEC).opt: $(OPTOBJS) .depend
-	@echo "$(CAMLOPT) -o $(EXEC).opt $(LIBS:.cma=.cmxa)"
+	@echo "\033[33m$@ → $<\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -o $(EXEC).opt $(LIBS:.cma=.cmxa) $(OPTOBJS)
 
 .SUFFIXES:
 .SUFFIXES: .ml .mli .cmo .cmi .cmx .mll .mly
 
 .ml.cmo:
-	@echo "$(CAMLC) -c $<"
+	@echo "\033[32m$@ → $<\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $<
 
 .mli.cmi:
-	@echo "$(CAMLC) -c $<"
+	@echo "\033[36m$@ → $<\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $<
 
 .ml.cmx:
-	@echo "$(CAMLOPT) -c $<"
+	@echo "\033[32m$@ → $<\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -c $<
 
 .mll.cmo:
-	$(CAMLLEX) $<
-	@echo "$(CAMLC) -c $*.ml"
+	@$(CAMLLEX) $<
+	@echo "\033[35m$@ → $<\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $*.ml
 
 .mll.cmx:
-	$(CAMLLEX) $<
-	@echo "$(CAMLOPT) -c $*.ml"
+	@$(CAMLLEX) $<
+	@echo "\033[35m$@ → $<\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -c $*.ml
 
 .mly.cmo:
-	$(CAMLYACC) $<
-	@echo "$(CAMLC) -c $*.mli"
+	@echo "\033[35m$@ → $<\033[0m"
+	@$(CAMLYACC) $<
 	@$(CAMLC) $(INCLUDE) -c $*.mli
-	@echo "$(CAMLC) -c $*.ml"
 	@$(CAMLC) $(INCLUDE) -c $*.ml
 
 .mly.cmx:
-	$(CAMLYACC) $<
-	@echo "$(CAMLOPT) -c $*.mli"
+	@echo "\033[35m$@ → $<\033[0m"
+	@$(CAMLYACC) $<
 	@$(CAMLOPT) $(INCLUDE) -c $*.mli
-	@echo "$(CAMLOPT) -c $*.ml"
 	@$(CAMLOPT) $(INCLUDE) -c $*.ml
 
 .mly.cmi:
-	$(CAMLYACC) $<
-	@echo "$(CAMLC) -c $*.mli"
+	@echo "\033[35m$@ → $<\033[0m"
+	@$(CAMLYACC) $<
 	@$(CAMLC) $(INCLUDE) -c $*.mli
 
 .mll.ml:
+	@echo "\033[35m$@ → $<\033[0m"
 	$(CAMLLEX) $<
 
 .mly.ml:
+	@echo "\033[35m$@ → $<\033[0m"
 	$(CAMLYACC) $<
 
 ##############################################################
