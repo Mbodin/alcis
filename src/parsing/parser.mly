@@ -9,7 +9,7 @@
 %token LPAREN RPAREN
 %token COLON
 %token EQUAL
-%token COMMA
+%token COMMA LPRIOR RPRIOR
 %token SEMI_COLON
 %token FUN
 %token FOR IN WHILE IF ELSE
@@ -28,7 +28,7 @@ implementation:
     | structure EOF                                     { $1 }
 ;
 
-structure:
+structure: /* Split the header and the body. */
     | prototype structure                               { $1 :: $2 }
     | declaration structure                             { $1 :: $2 }
     | instruction structure                             { $1 :: $2 }
@@ -45,6 +45,23 @@ expression:
     | IDENT                                             { Ident $1 }
     | LPAREN expression RPAREN                          { $2 }
 ;
+
+prototype:
+    | list_type_prototype COMMA list_expr_prototype     { ($1, $3) }
+;
+
+list_type_prototype:
+    /* FIXME */
+;
+
+list_expr_prototype:
+    /* FIXME */
+;
+
+declaration:
+    /* FIXME */
+;
+
 
 /* ================================ */
 /* Rules used to draw a lexem flow. */

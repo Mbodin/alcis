@@ -35,6 +35,9 @@ rule token = parse
   | ";"                     { SEMI_COLON }
   | ','                     { COMMA }
 
+  | "<<<"                   { LPRIOR }
+  | ">>>"                   { RPRIOR }
+
   | "fun"                   { FUN }
 
   | "for"                   { FOR }
