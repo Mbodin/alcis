@@ -1,5 +1,5 @@
 %{
-  open Syntax
+  open Parsed_syntax
   exception Eof
 %}
 
@@ -14,6 +14,7 @@
 %token FUN
 %token FOR IN WHILE IF ELSE
 %token UNDERSCORE
+%token RIGHT_ARROW
 %token EOF
 
 %left SEMICOLON
@@ -25,41 +26,66 @@
 %%
 
 implementation:
-    | structure EOF                                     { $1 }
+    | structure EOF                                             { $1 }
 ;
 
 structure: /* Split the header and the body. */
-    | prototype structure                               { $1 :: $2 }
-    | declaration structure                             { $1 :: $2 }
-    | instruction structure                             { $1 :: $2 }
-    | expression                                        { $1 :: [] }
+    | prototype structure                                       { $1 :: $2 }
+    | declaration structure                                     { $1 :: $2 }
+    | instruction structure                                     { $1 :: $2 }
+    | expression                                                { $1 :: [] }
 ;
 
 instruction:
-    | expression SEMICOLON                              { $1 }
+    | expression SEMICOLON                                      { $1 }
 ;
 
 expression:
-    | BOOL                                              { Bool $1 }
-    | INT                                               { Int $1 }
-    | IDENT                                             { Ident $1 }
-    | LPAREN expression RPAREN                          { $2 }
+    | BOOL                                                      { Parsed_bool $1 }
+    | INT                                                       { Parsed_int $1 }
+    | IDENT                                                     { Parsed_ident $1 }
+    | LPAREN expression RPAREN                                  { $2 }
 ;
 
 prototype:
-    | list_type_prototype COMMA list_expr_prototype     { ($1, $3) }
+    | list_type_prototype COMMA list_expr_prototype             { Parse_prototype ($1, $3) }
 ;
 
 list_type_prototype:
-    /* FIXME */
+    | LPRIOR type_prototype RPRIOR list_type_prototype          { ($2, true) :: $4 }
+    | type_prototype list_type_prototype                        { ($1, false) :: $2 }
+    | /* empty */                                               { [] }
+;
+
+list_type_decl:
+    | type_decl list_type_decl                                  { $1 :: $2 }
+    | /* empty */                                               { [] }
 ;
 
 list_expr_prototype:
-    /* FIXME */
+    | expr_prototype list_expr_prototype                        { $1 :: $2 }
+    | /* empty */                                               { [] }
+;
+
+type_prototype:
+    | list_expr_prototype RIGHT_ARROW list_expr_prototype       { Parsed_arrow_proto ($1, $3) }
+    | LPAREN expression RPAREN                                  { Parsed_expr_proto $2 }
+    | IDENT                                                     { Parsed_type_name_proto $1 }
+;
+
+type_decl:
+    | list_expr_decl RIGHT_ARROW list_expr_decl                 { Parsed_arrow_decl ($1, $3) }
+    | LPAREN expression RPAREN                                  { Parsed_expr_decl $2 }
+    | IDENT                                                     { Parsed_type_name_decl $1 }
+;
+
+expr_prototype:
+    | UNDERSCORE                                                { Parsed_expr_proto_underscore }
+    | IDENT                                                     { Parsed_expr_proto_ident $1 }
 ;
 
 declaration:
-    /* FIXME */
+    | list_type_decl COMMA list_type_decl EQUAL expression      { Parse_decl ($1, $3, $5) }
 ;
 
 

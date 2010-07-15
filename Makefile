@@ -70,7 +70,8 @@ VPATH = .:src/parsing
 # The Caml sources (including camlyacc and camllex source files)
 
 SOURCES = \
-	lexer.mll parser.mly
+	lexer.mll parser.mly \
+	syntax.mli syntax.ml
 
 INCLUDE = $(patsubst %,-I %,$(subst :, ,$(VPATH)))
 

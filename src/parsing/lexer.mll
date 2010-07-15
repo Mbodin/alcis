@@ -30,9 +30,9 @@ rule token = parse
   | "true"                  { BOOL true }
   | "false"                 { BOOL false }
 
-  | ":"                     { COLON }
-  | "="                     { EQUAL }
-  | ";"                     { SEMI_COLON }
+  | ':'                     { COLON }
+  | '='                     { EQUAL }
+  | ';'                     { SEMI_COLON }
   | ','                     { COMMA }
 
   | "<<<"                   { LPRIOR }
@@ -48,6 +48,8 @@ rule token = parse
   | "else"                  { ELSE }
 
   | '_'                     { UNDERSCORE }
+
+  | "->"                    { RIGHT_ARROW }
 
   | identifier as s         { IDENT s }
 
