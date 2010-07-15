@@ -1,17 +1,34 @@
 (* parsed_syntax.mli *)
 (* Define all the structures that are used to represent the code. *)
 
-type parsed_ast =
-    | Parse_prototype of parsed_list_type_proto * parsed_list_expr_proto
-    | Parse_decl of parsed_list_type_decl * parsed_list_type_expr * parsed_expression
 
-and parsed_list_type_proto = (parsed_type_proto * bool) list
+type ast =
+    | Prototype of list_type_proto * list_expr_proto
+    | Decl of list_type_decl * list_type_decl * expression
 
-and parsed_type_proto =
-    | Parsed_expr_proto of parsed_expression
-    | Parsed_type_name_proto of string
-    | Parsed_arrow_proto of parsed_list_type_proto * parsed_list_type_proto
+and list_type_proto = (type_proto * bool) list
 
+and type_proto =
+    | Expr_proto of expression
+    | Type_name_proto of string
+    | Arrow_proto of list_type_proto * list_type_proto
 
-    (* FIXME: finish that file. *)
+and type_decl =
+    | Arrow_decl of type_decl * type_decl
+
+and list_expr_proto = 
+    | Expr_proto_underscore
+    | Expr_proto_ident of string
+
+and list_type_decl = type_decl list
+
+and expression =
+    | Expression_list of expression_item list
+    | Expression_sequence of expression_item list * expression
+
+and expression_item =
+    | Bool of bool
+    | Int of int
+    | Ident of string
+    | Expr of expression
 

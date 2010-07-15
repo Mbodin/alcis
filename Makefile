@@ -70,8 +70,9 @@ VPATH = .:src/parsing
 # The Caml sources (including camlyacc and camllex source files)
 
 SOURCES = \
+	parsed_syntax.mli parsed_syntax.ml \
 	lexer.mll parser.mly \
-	syntax.mli syntax.ml
+
 
 INCLUDE = $(patsubst %,-I %,$(subst :, ,$(VPATH)))
 
@@ -118,62 +119,62 @@ REMOVE   = find . -name $(var) -exec rm -vf {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
 
 $(EXEC): $(OBJS) .depend
-	@echo "\033[33m$@ → $<\033[0m"
+	@echo "\033[33m$< → $@\033[0m"
 	@$(CAMLC) $(INCLUDE) -o $(EXEC) $(LIBS) $(OBJS)
 
 $(EXEC).opt: $(OPTOBJS) .depend
-	@echo "\033[33m$@ → $<\033[0m"
+	@echo "\033[33m$< → $@\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -o $(EXEC).opt $(LIBS:.cma=.cmxa) $(OPTOBJS)
 
 .SUFFIXES:
 .SUFFIXES: .ml .mli .cmo .cmi .cmx .mll .mly
 
 .ml.cmo:
-	@echo "\033[32m$@ → $<\033[0m"
+	@echo "\033[32m$< → $@\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $<
 
 .mli.cmi:
-	@echo "\033[36m$@ → $<\033[0m"
+	@echo "\033[36m$< → $@\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $<
 
 .ml.cmx:
-	@echo "\033[32m$@ → $<\033[0m"
+	@echo "\033[32m$< → $@\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -c $<
 
 .mll.cmo:
 	@$(CAMLLEX) $<
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	@$(CAMLC) $(INCLUDE) -c $*.ml
 
 .mll.cmx:
 	@$(CAMLLEX) $<
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	@$(CAMLOPT) $(INCLUDE) -c $*.ml
 
 .mly.cmo:
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	@$(CAMLYACC) $<
 	@$(CAMLC) $(INCLUDE) -c $*.mli
 	@$(CAMLC) $(INCLUDE) -c $*.ml
 
 .mly.cmx:
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	@$(CAMLYACC) $<
 	@$(CAMLOPT) $(INCLUDE) -c $*.mli
 	@$(CAMLOPT) $(INCLUDE) -c $*.ml
 
 .mly.cmi:
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	@$(CAMLYACC) $<
 	@$(CAMLC) $(INCLUDE) -c $*.mli
 
 .mll.ml:
-	@echo "\033[35m$@ → $<\033[0m"
+	@echo "\033[35m$< → $@\033[0m"
 	$(CAMLLEX) $<
 
 .mly.ml:
-	@echo "\033[35m$@ → $<\033[0m"
-	$(CAMLYACC) $<
+	@echo "\033[35m$< → $@\033[0m"
+	@$(CAMLYACC) $<
 
 ##############################################################
 ################ Compiling C files ###########################
@@ -273,7 +274,7 @@ fixme:
 	@grep -ir FIXME * | grep -e tex -e ml -e mli
 
 .depend: $(SOURCES2)
-	@echo "$(CAMLDEP) ... → $@"
+	@echo "\033[34m$< → $@\033[0m"
 	@$(CAMLDEP) $(INCLUDE) $(foreach var, $(notdir $^), $(shell find . -name $(var))) > $@
 
 -include .depend

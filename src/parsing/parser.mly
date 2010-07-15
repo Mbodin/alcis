@@ -4,7 +4,7 @@
 %}
 
 %token <bool> BOOL
-%token <int> INT
+%token <int> INT /* FIXME: Use string instead of int, so that the program can work with real integer. */
 %token <string> IDENT
 %token LPAREN RPAREN
 %token COLON
@@ -20,7 +20,7 @@
 %left SEMICOLON
 
 %start implementation lex_flot
-%type <string Syntax.expr> implementation
+%type <Parsed_syntax.ast> implementation
 %type <string list> lex_flot
 
 %%
@@ -40,15 +40,25 @@ instruction:
     | expression SEMICOLON                                      { $1 }
 ;
 
+expression_item:
+    | BOOL                                                      { Bool $1 }
+    | INT                                                       { Int $1 }
+    | IDENT                                                     { Ident $1 }
+    | LPAREN expression RPAREN                                  { Expr $2 }
+;
+
 expression:
-    | BOOL                                                      { Parsed_bool $1 }
-    | INT                                                       { Parsed_int $1 }
-    | IDENT                                                     { Parsed_ident $1 }
-    | LPAREN expression RPAREN                                  { $2 }
+    | expression_item_list                                      { Expression_list $1 }
+    | expression_item_list SEMI_COLON expression                { Expression_sequence ($1, $3) }
+;
+
+expression_item_list:
+    | /* empty */                                               { [] }
+    | expression_item expression_item_list                      { $1 :: $2 }
 ;
 
 prototype:
-    | list_type_prototype COMMA list_expr_prototype             { Parse_prototype ($1, $3) }
+    | list_type_prototype COMMA list_expr_prototype             { Prototype ($1, $3) }
 ;
 
 list_type_prototype:
@@ -67,26 +77,32 @@ list_expr_prototype:
     | /* empty */                                               { [] }
 ;
 
+list_expr_decl:
+    | IDENT list_expr_decl                                      { $1 :: $2 }
+    | /* empty */                                               { [] }
+;
+
 type_prototype:
-    | list_expr_prototype RIGHT_ARROW list_expr_prototype       { Parsed_arrow_proto ($1, $3) }
-    | LPAREN expression RPAREN                                  { Parsed_expr_proto $2 }
-    | IDENT                                                     { Parsed_type_name_proto $1 }
+    | list_expr_prototype RIGHT_ARROW list_expr_prototype       { Arrow_proto ($1, $3) }
+    | LPAREN expression RPAREN                                  { Expr_proto $2 }
+    | IDENT                                                     { Type_name_proto $1 }
 ;
 
 type_decl:
-    | list_expr_decl RIGHT_ARROW list_expr_decl                 { Parsed_arrow_decl ($1, $3) }
-    | LPAREN expression RPAREN                                  { Parsed_expr_decl $2 }
-    | IDENT                                                     { Parsed_type_name_decl $1 }
+    | type_decl RIGHT_ARROW type_decl                           { Arrow_decl ($1, $3) }
+    | LPAREN expression RPAREN                                  { Expr_decl $2 }
+    | IDENT                                                     { Type_name_decl $1 }
 ;
 
 expr_prototype:
-    | UNDERSCORE                                                { Parsed_expr_proto_underscore }
-    | IDENT                                                     { Parsed_expr_proto_ident $1 }
+    | UNDERSCORE                                                { Expr_proto_underscore }
+    | IDENT                                                     { Expr_proto_ident $1 }
 ;
 
 declaration:
-    | list_type_decl COMMA list_type_decl EQUAL expression      { Parse_decl ($1, $3, $5) }
+    | list_type_decl COMMA list_type_decl EQUAL expression      { Decl ($1, $3, $5) }
 ;
+
 
 
 /* ================================ */
