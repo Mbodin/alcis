@@ -4,31 +4,21 @@
 
 
 type ast =
-    | Prototype of list_type_proto * expr_proto list
-    | Decl of list_type_decl * expr_decl list * expression
+    | Prototype of list_type * arg list
+    | Decl of list_type * arg list * expression
     | Expression of expression
 
-and list_type_proto = (type_proto * bool) list
+and list_type = (type_item * bool) list
 
-and type_proto =
-    | Expr_proto of expression
-    | Type_name_proto of string
-    | Type_proto
-    | Arrow_proto of list_type_proto * list_type_proto
+and type_item =
+    | Type_expr of expression
+    | Type_name of string
+    | Type
+    | Arrow of list_type * list_type
 
-and type_decl =
-    | Arrow_decl of type_decl * type_decl
-    | Expr_decl of expression
-    | Type_name_decl of string
-    | Type_decl
-
-and expr_proto = 
-    | Expr_proto_underscore
-    | Expr_proto_ident of string
-
-and list_type_decl = type_decl list
-
-and expr_decl = string
+and arg = 
+    | Arg_underscore
+    | Arg_ident of string
 
 and expression =
     | Expression_list of expression_item list

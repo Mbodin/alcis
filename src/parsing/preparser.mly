@@ -43,80 +43,67 @@
 %%
 
 implementation:
-    | structure EOF                                             { $1 }
+    | structure EOF                                                             { $1 }
 ;
 
 structure: /* Split the header and the body. */
-    | prototype structure %prec prec_prototype                  { $1 :: $2 }
-    | declaration structure %prec prec_declaration              { $1 :: $2 }
-    | expression                                                { Expression $1 :: [] }
+    | prototype structure %prec prec_prototype                                  { $1 :: $2 }
+    | declaration structure %prec prec_declaration                              { $1 :: $2 }
+    | expression                                                                { Expression $1 :: [] }
 ;
 
 expression_item:
-    | BOOL                                                      { Bool $1 }
-    | INT                                                       { Int $1 }
-    | IDENT                                                     { Ident $1 }
-    | LPAREN expression RPAREN                                  { Expr $2 }
+    | BOOL                                                                      { Bool $1 }
+    | INT                                                                       { Int $1 }
+    | IDENT                                                                     { Ident $1 }
+    | LPAREN expression RPAREN                                                  { Expr $2 }
 ;
 
 expression:
-    | expression_item_list %prec bw_SEMI_COLON               { Expression_list $1 }
-    | expression_item_list SEMI_COLON expression                { Expression_sequence ($1, $3) }
+    | expression_no_semi_colon %prec bw_SEMI_COLON                              { Expression_list $1 }
+    | expression_no_semi_colon SEMI_COLON expression                            { Expression_sequence ($1, $3) }
 ;
 
-expression_item_list:
-    | expression_item                                           { $1 :: [] }
-    | expression_item expression_item_list                      { $1 :: $2 }
+expression_no_semi_colon:
+    | expression_item                                                           { $1 :: [] }
+    | expression_item expression_no_semi_colon                                  { $1 :: $2 }
 ;
 
 prototype:
-    | list_type_prototype COLON list_expr_prototype             { Prototype ($1, $3) }
+    | list_type_with_prior COLON list_args                                      { Prototype ($1, $3) }
 ;
 
 declaration:
-    | list_type_decl COLON list_expr_decl EQUAL expression      { Decl ($1, $3, $5) }
+    | list_type_without_prior COLON list_args EQUAL expression_no_semi_colon    { Decl ($1, $3, Expression_list $5) }
 ;
 
-list_type_prototype:
-    | LPRIOR type_prototype RPRIOR list_type_prototype          { ($2, true) :: $4 }
-    | type_prototype list_type_prototype %prec bw_RIGHT_ARROW   { ($1, false) :: $2 }
-    | LPRIOR type_prototype RPRIOR                              { ($2, true) :: [] }
-    | type_prototype %prec bw_IDENT                             { ($1, false) :: [] }
+list_type_with_prior:
+    | LPRIOR type_item RPRIOR list_type_with_prior                              { ($2, true) :: $4 }
+    | LPRIOR type_item RPRIOR                                                   { ($2, true) :: [] }
+    | list_type_without_prior                                                   { $1 }
+    | list_type_with_prior RIGHT_ARROW list_type_with_prior                     { (Arrow ($1, $3), false) :: [] }
 ;
 
-list_type_decl:
-    | type_decl list_type_decl                                  { $1 :: $2 }
-    | type_decl                                                 { $1 :: [] }
+list_type_without_prior:
+    | type_item list_type_without_prior                                         { ($1, false) :: $2 }
+    | type_item                                                                 { ($1, false) :: [] }
+    | list_type_without_prior RIGHT_ARROW list_type_without_prior               { (Arrow ($1, $3), false) :: [] }
 ;
 
-list_expr_prototype:
-    | expr_prototype list_expr_prototype                        { $1 :: $2 }
-    | expr_prototype %prec bw_IDENT                             { $1 :: [] }
+list_args:
+    | arg list_args                                                             { $1 :: $2 }
+    | arg %prec bw_IDENT                                                        { $1 :: [] }
 ;
 
-list_expr_decl:
-    | IDENT list_expr_decl                                      { $1 :: $2 }
-    | IDENT                                                     { $1 :: [] }
+type_item:
+    | LPAREN expression RPAREN                                                  { Type_expr $2 }
+    | IDENT                                                                     { Type_name $1 }
+    | TYPE                                                                      { Type }
 ;
 
-type_prototype:
-    | LPAREN type_prototype RPAREN %prec bw_prec_expression     { $2 }
-    | LPAREN expression RPAREN %prec prec_expression            { Expr_proto $2 }
-    | list_type_prototype RIGHT_ARROW list_type_prototype       { Arrow_proto ($1, $3) }
-    | IDENT                                                     { Type_name_proto $1 }
-    | TYPE                                                      { Type_proto }
-;
-
-type_decl:
-    | type_decl RIGHT_ARROW type_decl                           { Arrow_decl ($1, $3) }
-    | LPAREN expression RPAREN                                  { Expr_decl $2 }
-    | IDENT                                                     { Type_name_decl $1 }
-    | TYPE                                                      { Type_decl }
-;
-
-expr_prototype:
-    | UNDERSCORE                                                { Expr_proto_underscore }
-    | IDENT                                                     { Expr_proto_ident $1 }
+arg:
+    | UNDERSCORE                                                                { Arg_underscore }
+    | IDENT                                                                     { Arg_ident $1 }
 ;
 
 
