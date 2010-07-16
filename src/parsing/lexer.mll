@@ -42,9 +42,6 @@ rule token = parse
   | "<<<"                   { LPRIOR }
   | ">>>"                   { RPRIOR }
 
-  | "<<<<"                  { LESSER_PRIOR }
-  | ">>>>"                  { GREATER_PRIOR }
-
   | "fun"                   { FUN }
 
   | "for"                   { FOR }

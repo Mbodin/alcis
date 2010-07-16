@@ -23,5 +23,6 @@ and expression_item =
     | Bool of bool
     | Int of int
     | Ident of string
+    | Underscore
     | Expr of expression
 
