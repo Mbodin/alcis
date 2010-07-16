@@ -11,17 +11,18 @@
 %token <int> INT /* FIXME: Use string instead of int, so that the program can work with real integer. */
 %token <string> IDENT
 %token LPAREN RPAREN
-%token TYPE COLON
+%token COLON
 %token EQUAL
 %token COLON LPRIOR RPRIOR
+%token GREATER_PRIOR LESSER_PRIOR
 %token SEMI_COLON
 %token FUN
 %token FOR IN WHILE IF ELSE
 %token UNDERSCORE
-%token RIGHT_ARROW
 %token EOF
 
 /* FIXME: Priorities to be reread */
+%nonassoc   prec_comparison
 %nonassoc   below_prec_expression
 %nonassoc   prec_expression
 %nonassoc   prec_prototype
@@ -29,12 +30,10 @@
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
 %left       COLON
-%nonassoc   below_RIGHT_ARROW
-%right      RIGHT_ARROW
 %nonassoc   LPAREN RPAREN
 %nonassoc   LPRIOR RPRIOR
 %nonassoc   below_IDENT
-%nonassoc   BOOL INT IDENT TYPE
+%nonassoc   BOOL INT IDENT
 
 %start implementation lex_flot
 %type <Parsed_syntax.ast list> implementation
@@ -47,6 +46,7 @@ implementation:
 ;
 
 structure: /* Split the header and the body. */
+    | comparison structure %prec prec_comparison                                { $1 :: $2 }
     | prototype structure %prec prec_prototype                                  { $1 :: $2 }
     | declaration structure %prec prec_declaration                              { $1 :: $2 }
     | expression %prec prec_expression                                          { Expression $1 :: [] }
@@ -70,24 +70,25 @@ expression_no_semi_colon:
 ;
 
 prototype:
-    | list_type_with_prior COLON list_args                                      { Prototype ($1, $3) }
+    | list_type_with_prior_colon_list_args                                      { let a, b = $1 in Prototype (a, b) }
 ;
 
+list_type_with_prior_colon_list_args:
+    | list_type_with_prior COLON list_args                                      { ($1, $3) }
+
 declaration:
-    | list_type_without_prior COLON list_args EQUAL expression_no_semi_colon    { Decl ($1, $3, Expression_list $5) }
+    |  list_type_with_prior_colon_list_args EQUAL expression_no_semi_colon    { let a, b = $1 in Decl (a, b, Expression_list $3) }
 ;
 
 list_type_with_prior:
-    | LPRIOR type_item RPRIOR list_type_with_prior                              { ($2, true) :: $4 }
-    | LPRIOR type_item RPRIOR                                                   { ($2, true) :: [] }
-    | list_type_without_prior %prec below_RIGHT_ARROW                           { $1 }
-    | list_type_with_prior RIGHT_ARROW list_type_with_prior                     { (Arrow ($1, $3), false) :: [] }
+    | LPRIOR expression_item RPRIOR list_type_with_prior                        { ($2, true) :: $4 }
+    | LPRIOR expression_item RPRIOR                                             { ($2, true) :: [] }
+    | list_type_without_prior                                                   { $1 }
 ;
 
 list_type_without_prior:
-    | type_item list_type_without_prior %prec below_RIGHT_ARROW                 { ($1, false) :: $2 }
-    | type_item %prec below_RIGHT_ARROW                                         { ($1, false) :: [] }
-    | list_type_without_prior RIGHT_ARROW list_type_without_prior               { (Arrow ($1, $3), false) :: [] }
+    | expression_item list_type_without_prior                                   { ($1, false) :: $2 }
+    | expression_item                                                           { ($1, false) :: [] }
 ;
 
 list_args:
@@ -95,16 +96,15 @@ list_args:
     | arg %prec below_IDENT                                                     { $1 :: [] }
 ;
 
-type_item:
-    | expression_item                                                           { Type_expr (Expression_list ($1 :: [])) }
-    | TYPE                                                                      { Type }
-;
-
 arg:
     | UNDERSCORE                                                                { Arg_underscore }
     | IDENT                                                                     { Arg_ident $1 }
 ;
 
+comparison:
+    | list_args GREATER_PRIOR list_args                                         { Comparison ($1, $3) }
+    | list_args LESSER_PRIOR list_args                                          { Comparison ($3, $1) }
+;
 
 
 /* ================================ */

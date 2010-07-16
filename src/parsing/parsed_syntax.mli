@@ -7,13 +7,9 @@ type ast =
     | Prototype of list_type * arg list
     | Decl of list_type * arg list * expression
     | Expression of expression
+    | Comparison of arg list * arg list
 
-and list_type = (type_item * bool) list
-
-and type_item =
-    | Type_expr of expression
-    | Type
-    | Arrow of list_type * list_type
+and list_type = (expression_item * bool) list
 
 and arg = 
     | Arg_underscore

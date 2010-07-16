@@ -42,7 +42,8 @@ rule token = parse
   | "<<<"                   { LPRIOR }
   | ">>>"                   { RPRIOR }
 
-  | "type"                  { TYPE }
+  | "<<<<"                  { LESSER_PRIOR }
+  | ">>>>"                  { GREATER_PRIOR }
 
   | "fun"                   { FUN }
 
@@ -54,8 +55,6 @@ rule token = parse
   | "else"                  { ELSE }
 
   | '_'                     { UNDERSCORE }
-
-  | "->"                    { RIGHT_ARROW }
 
   | identifier as s         { IDENT s }
 
