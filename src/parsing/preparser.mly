@@ -21,17 +21,18 @@
 %token EOF
 
 /* FIXME: Priorities to be reread */
-/*%nonassoc   prec_comparison*//* FIXME */
+%nonassoc   prec_comparison
 %nonassoc   below_prec_expression
 %nonassoc   prec_expression
 %nonassoc   prec_prototype
 %nonassoc   prec_declaration
-%nonassoc   GREATER_PRIOR LESSER_PRIOR
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
 %nonassoc   below_COLON
-%left       COLON
+%nonassoc   COLON
+%nonassoc   below_PAREN
 %nonassoc   LPAREN RPAREN
+%nonassoc   below_PRIOR
 %nonassoc   LPRIOR RPRIOR
 %nonassoc   below_IDENT
 %nonassoc   BOOL INT IDENT UNDERSCORE
@@ -47,7 +48,7 @@ implementation:
 ;
 
 structure: /* Split the header and the body. */
-    /*| comparison structure %prec prec_comparison                                { $1 :: $2 }*//* FIXME */
+    | comparison structure %prec prec_comparison                                { $1 :: $2 }
     | prototype structure %prec prec_prototype                                  { $1 :: $2 }
     | declaration structure %prec prec_declaration                              { $1 :: $2 }
     | expression %prec prec_expression                                          { Expression $1 :: [] }
@@ -84,7 +85,7 @@ list_type_with_prior_item:
 expression_item:
     | BOOL                                                                      { Bool $1 }
     | INT                                                                       { Int $1 }
-    | arg                                                                       { match $1 with
+    | arg %prec below_SEMI_COLON                                                { match $1 with
                                                                                     | Arg_ident i -> Ident i
                                                                                     | Arg_underscore -> Underscore }
     | LPAREN expression RPAREN                                                  { Expr $2 }
@@ -95,17 +96,16 @@ arg:
     | IDENT                                                                     { Arg_ident $1 }
 ;
 
-/* FIXME : Add comparisons. (But the syntax of the current document is ambigous.) */
-/*
 list_args:
     | arg list_args                                                             { $1 :: $2 }
-    | arg %prec below_IDENT                                                     { $1 :: [] }
+    | arg %prec below_PAREN                                                     { $1 :: [] }
 ;
+
 comparison:
-    | list_args RPRIOR list_args                                                { Comparison ($1, $3) }
-    | list_args LPRIOR list_args                                                { Comparison ($3, $1) }
+    | list_args RPRIOR list_args SEMI_COLON                                     { Comparison ($1, $3) }
+    | list_args LPRIOR list_args SEMI_COLON                                     { Comparison ($3, $1) }
 ;
-*/
+
 
 /* ================================ */
 /* Rules used to draw a lexem flow. */
