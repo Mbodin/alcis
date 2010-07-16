@@ -33,7 +33,7 @@ CAMLC = ocamlc -w Ae
 CAMLOPT = ocamlopt -w Ae
 CAMLDEP = ocamldep
 CAMLLEX = ocamllex
-CAMLYACC = ocamlyacc
+CAMLYACC = ocamlyacc -v
 
 ################ End of user's variables #####################
 

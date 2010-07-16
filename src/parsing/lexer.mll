@@ -36,11 +36,13 @@ rule token = parse
 
   | ':'                     { COLON }
   | '='                     { EQUAL }
+
   | ';'                     { SEMI_COLON }
-  | ','                     { COMMA }
 
   | "<<<"                   { LPRIOR }
   | ">>>"                   { RPRIOR }
+
+  | "type"                  { TYPE }
 
   | "fun"                   { FUN }
 
