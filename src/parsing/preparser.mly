@@ -29,11 +29,12 @@
 %nonassoc   prec_declaration
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
+%nonassoc   below_COLON
 %left       COLON
 %nonassoc   LPAREN RPAREN
 %nonassoc   LPRIOR RPRIOR
 %nonassoc   below_IDENT
-%nonassoc   BOOL INT IDENT
+%nonassoc   BOOL INT IDENT UNDERSCORE
 
 %start implementation lex_flot
 %type <Parsed_syntax.ast list> implementation
@@ -65,40 +66,37 @@ expression:
 ;
 
 expression_no_semi_colon:
-    | expression_item %prec below_IDENT                                         { $1 :: [] }
+    | expression_item %prec below_COLON                                         { $1 :: [] }
     | expression_item expression_no_semi_colon                                  { $1 :: $2 }
 ;
 
 prototype:
-    | list_type_with_prior_colon_list_args                                      { let a, b = $1 in Prototype (a, b) }
+    | list_type_with_prior_inv_colon_list_args                                  { let a, b = $1 in Prototype (List.rev a, b) }
 ;
 
-list_type_with_prior_colon_list_args:
-    | list_type_with_prior COLON list_args                                      { ($1, $3) }
+list_type_with_prior_inv_colon_list_args:
+    | list_type_with_prior_item COLON arg                                       { ($1 :: [], $3 :: []) }
+    | list_type_with_prior_item list_type_with_prior_inv_colon_list_args arg    { let a, b = $2 in ($1 :: a, $3 :: b) }
+;
 
 declaration:
-    |  list_type_with_prior_colon_list_args EQUAL expression_no_semi_colon    { let a, b = $1 in Decl (a, b, Expression_list $3) }
+    |  list_type_with_prior_inv_colon_list_args EQUAL expression_no_semi_colon  { let a, b = $1 in Decl (List.rev a, b, Expression_list $3) }
 ;
 
-list_type_with_prior:
-    | LPRIOR expression_item RPRIOR list_type_with_prior                        { ($2, true) :: $4 }
-    | LPRIOR expression_item RPRIOR                                             { ($2, true) :: [] }
-    | list_type_without_prior                                                   { $1 }
+list_type_with_prior_item:
+    | LPRIOR expression_item RPRIOR                                             { ($2, true) }
+    | list_type_without_prior_item                                              { $1 }
 ;
 
-list_type_without_prior:
-    | expression_item list_type_without_prior                                   { ($1, false) :: $2 }
-    | expression_item                                                           { ($1, false) :: [] }
+list_type_without_prior_item:
+    | expression_item                                                           { ($1, false) }
 ;
 
 list_args:
-    | arg list_args                                                             { $1 :: $2 }
-    | arg %prec below_IDENT                                                     { $1 :: [] }
-;
-
-arg:
-    | UNDERSCORE                                                                { Arg_underscore }
-    | IDENT                                                                     { Arg_ident $1 }
+    | UNDERSCORE list_args                                                      { Arg_underscore :: $2 }
+    | IDENT list_args                                                           { Arg_ident $1 :: $2 }
+    | UNDERSCORE %prec below_UNDERSCORE                                         { Arg_underscore :: [] }
+    | IDENT %prec below_UNDERSCORE                                              { Arg_ident $1 :: [] }
 ;
 
 comparison:
