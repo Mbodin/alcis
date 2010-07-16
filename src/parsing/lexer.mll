@@ -43,6 +43,7 @@ rule token = parse
   | ">>>"                   { RPRIOR }
 
   | "fun"                   { FUN }
+  | "->"                    { RIGHT_ARROW }
 
   | "for"                   { FOR }
   | "in"                    { IN }

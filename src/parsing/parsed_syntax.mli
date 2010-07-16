@@ -9,7 +9,9 @@ type ast =
     | Expression of expression
     | Comparison of arg list * arg list
 
-and list_type = (expression_item * bool) list
+and list_type =
+    | Arrow of list_type * list_type
+    | List_type of (expression_item * bool) list
 
 and arg = 
     | Arg_underscore

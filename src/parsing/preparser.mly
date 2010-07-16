@@ -15,7 +15,7 @@
 %token EQUAL
 %token COLON LPRIOR RPRIOR
 %token SEMI_COLON
-%token FUN
+%token FUN RIGHT_ARROW
 %token FOR IN WHILE IF ELSE
 %token UNDERSCORE
 %token EOF
@@ -28,6 +28,7 @@
 %nonassoc   prec_declaration
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
+%right      RIGHT_ARROW
 %nonassoc   below_COLON
 %nonassoc   COLON
 %nonassoc   below_PAREN
@@ -65,19 +66,33 @@ expression_no_semi_colon:
 ;
 
 prototype:
-    | list_type_with_prior_inv_colon_list_args                                  { let a, b = $1 in Prototype (List.rev a, b) }
+    | expr_item_prior_inv_colon_list_args                                       { match $1 with
+                                                                                    | List_type a, b -> Prototype (List_type (List.rev a), b)
+                                                                                    | Arrow (List_type a, c), b -> Prototype (Arrow (List_type (List.rev a), c), b)
+                                                                                    | ((Arrow (Arrow _, _)) as a), b -> Prototype (a, b) }
 ;
 
-list_type_with_prior_inv_colon_list_args:
-    | list_type_with_prior_item COLON arg                                       { ($1 :: [], $3 :: []) }
-    | list_type_with_prior_item list_type_with_prior_inv_colon_list_args arg    { let a, b = $2 in ($1 :: a, $3 :: b) }
+expr_item_prior_inv_colon_list_args:
+    | expression_item_prior RIGHT_ARROW fun_type COLON arg                      { (Arrow (List_type ($1 :: []), $3), $5 :: []) }
+    | expression_item_prior COLON arg                                           { (List_type ($1 :: []), $3 :: []) }
+    | expression_item_prior expr_item_prior_inv_colon_list_args arg             { match $2 with
+                                                                                    | List_type a, b -> (List_type ($1 :: a), $3 :: b)
+                                                                                    | Arrow (List_type a, c), b -> (Arrow (List_type ($1 :: a), c), $3 :: b)
+                                                                                    | Arrow (Arrow _, _), _ -> Errors.error "Internal Error" } /* FIXME: A better error file. */
 ;
+
+fun_type:
+    | expression_no_semi_colon                                                  { List_type (List.map (fun e -> (e, false)) $1) }
+    | fun_type RIGHT_ARROW fun_type                                             { Arrow ($1, $3) }
 
 declaration:
-    |  list_type_with_prior_inv_colon_list_args EQUAL expression_no_semi_colon  { let a, b = $1 in Decl (List.rev a, b, Expression_list $3) }
+    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon       { match $1 with
+                                                                                    | List_type a, b -> Decl (List_type (List.rev a), b, Expression_list $3)
+                                                                                    | Arrow (List_type a, c), b -> Decl (Arrow(List_type (List.rev a), c), b, Expression_list $3)
+                                                                                    | Arrow (Arrow _, _), _ -> Errors.error "Internal Error" } /* FIXME */
 ;
 
-list_type_with_prior_item:
+expression_item_prior:
     | LPRIOR expression_item RPRIOR                                             { ($2, true) }
     | expression_item %prec below_COLON                                         { ($1, false) }
 ;
