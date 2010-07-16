@@ -1,66 +1,4 @@
-#*********************************************************************#
-#                                                                     #
-#                           Objective Caml                            #
-#                                                                     #
-#            Pierre Weis, projet Cristal, INRIA Rocquencourt          #
-#                                                                     #
-# Copyright 1998, 2004 Institut National de Recherche en Informatique #
-# et en Automatique. Distributed only by permission.                  #
-#                                                                     #
-#*********************************************************************#
 
-#                   Generic Makefile for Objective Caml Programs
-
-# $Id: Exp $
-
-############################ Documentation ######################
-#
-# To use this Makefile:
-# -- You must fix the value of the variable SOURCES below.
-# (The variable SOURCES is the list of your Caml source files.)
-# -- You must create a file .depend, using
-# $touch .depend
-# (This file will contain the dependancies between your Caml modules,
-#  automatically computed by this Makefile.)
-
-# Usage of this Makefile:
-# To incrementally recompile the system, type
-#     make
-# To recompute dependancies between modules, type
-#     make depend
-# To remove the executable and all the compiled files, type
-#     make clean
-# To compile using the native code compiler
-#     make opt
-#
-##################################################################
-
-
-##################################################################
-#
-# Advanced usage:
-# ---------------
-
-# If you want to fix the name of the executable, set the variable
-# EXEC, for instance, if you want to obtain a program named my_prog:
-# EXEC = my_prog
-
-# If you need special libraries provided with the Caml system,
-# (graphics, arbitrary precision numbers, regular expression on strings, ...),
-# you must set the variable LIBS to the proper set of libraries. For
-# instance, to use the graphics library set LIBS to $(WITHGRAPHICS):
-# LIBS=$(WITHGRAPHICS)
-
-# You may use any of the following predefined variable
-# WITHGRAPHICS : provides the graphics library
-# WITHUNIX : provides the Unix interface library
-# WITHSTR : provides the regular expression string manipulation library
-# WITHNUMS : provides the arbitrary precision arithmetic package
-# WITHTHREADS : provides the byte-code threads library
-# WITHDBM : provides the Data Base Manager library
-#
-#
-########################## End of Documentation ####################
 
 VPATH = .:src/parsing:src/interface
 
@@ -72,7 +10,7 @@ VPATH = .:src/parsing:src/interface
 SOURCES = \
 	errors.ml \
 	parsed_syntax.ml \
-	lexer.mll parser.mly \
+	lexer.mll preparser.mly \
 
 
 INCLUDE = $(patsubst %,-I %,$(subst :, ,$(VPATH)))
@@ -104,7 +42,7 @@ CAMLYACC = ocamlyacc
 ################ This part should be generic #################
 ################ Nothing to set up or fix here ###############
 ##############################################################
-.PHONY: all pdf pres sweep clobber clean mrproper fixme
+.PHONY: all pdf clean mrproper fixme
 
 all : $(EXEC)
 
@@ -178,100 +116,25 @@ $(EXEC).opt: $(OPTOBJS) .depend
 	@$(CAMLYACC) $<
 
 ##############################################################
-################ Compiling C files ###########################
-##############################################################
-
-CC	= gcc
-PEDANTIC_PARANOID_FREAK =       -O3 -Wshadow -Wcast-align \
-				-Waggregate-return -Wmissing-prototypes -Wmissing-declarations \
-				-Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
-				-Wmissing-noreturn -Wredundant-decls -Wnested-externs \
-				-Wpointer-arith -Wwrite-strings -finline-functions --pedantic -Wall
-NORMAL = -Wall
-WARNINGS = $(PEDANTIC_PARANOID_FREAK)
-#WARNINGS = $(NORMAL)
-CFLAGS = -D_REENTRANT -g $(WARNINGS) $(LIBS) $(INCLUDE)
-
-.SUFFIXES: .c .o .bin
-
-.c.bin:
-	@echo "$(<F) → $(@F)"
-	@$(CC) $(CFLAGS) -o $@ $<
-
-.c.o:
-	@echo "$(<F) → $(@F)"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
-##############################################################
-################ Compiling Latex files #######################
-##############################################################
-
-DVITOPDF = dvipdfm
-TEXTODVI = latex -interaction=nonstopmode
-DVITOPS = dvips
-PSTOPDF = ps2pdf
-
-.SUFFIXES: .tex .aux .dvi .ps .pdf
-
-pdf: $(DOC)
-
-pres : $(SLIDES)
-
-.tex.dvi:
-	@echo $(<F) → $@
-	@find . -name $(<F) -execdir ${TEXTODVI} {} 1> /dev/null \;
-	@find . -name $(<F) -execdir ${TEXTODVI} {} 1> /dev/null \;
-
-.dvi.ps:
-	@echo $(<F)→ $@
-	@find . -name $(<F) -execdir ${DVITOPS} {} 2> /dev/null \;
-
-.ps.pdf:
-	@echo $(<F) → $@
-	@find . -name $(<F) -exec ${PSTOPDF} {} 2> /dev/null \;
-
-#.dvi.pdf:
-#	@echo $(<F) → $@
-#	@find . -name $(<F) -exec $(DVITOPDF) {} 2> /dev/null \;
-
-##############################################################
 ################### Other generic rules ######################
 ##############################################################
 
-sweep:
-	# produced c files
-	#@find ./examples -name "*.c" -exec rm -vf {} \;
-	# binary files
-	#@$(foreach var,"*.bin",$(REMOVE);)
-
-clobber:
-	# temporary doc files
-	#@rm -vf $(addprefix $(DOCPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.snm)
-	# temporary slides files
-	#@rm -vf $(addprefix $(SLIDESPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.vrb *.snm)
-
-clean: sweep clobber
-	# dependencies
+clean:
+	@# dependencies
 	@rm -vf ".depend"
-	# libraries
+	@# libraries
 	@$(foreach var,"*.cm[iox]" "*~" ".*~",$(REMOVE);)
-	# object files
-	#@$(foreach var,"*.o",$(REMOVE);)
-	# lexer
+	@# lexer
 	@$(foreach var,$(PRODLEX),$(REMOVE);)
-	# parser
+	@# parser
 	@$(foreach var,$(PRODYACC),$(REMOVE);)
-	# machine
-	#@$(foreach var,$(MBASE).ml,$(REMOVE);)
 
-mrproper: clean clobber
-	# executable
+mrproper: clean
+	@# executable
 	@$(foreach var,$(EXEC) $(EXEC).opt,$(REMOVE);)
-	# documentation files
-	@$(foreach var,$(DOC) $(SLIDES),$(REMOVE);)
 
 fixme:
-	# debuging
+	@# debuging
 	@grep -ir FIXME * | grep -e tex -e ml -e mli
 
 .depend: $(SOURCES2)
@@ -279,4 +142,68 @@ fixme:
 	@$(CAMLDEP) $(INCLUDE) $(foreach var, $(notdir $^), $(shell find . -name $(var))) > $@
 
 -include .depend
+
+#*********************************************************************#
+#                                                                     #
+#                           Objective Caml                            #
+#                                                                     #
+#            Pierre Weis, projet Cristal, INRIA Rocquencourt          #
+#                                                                     #
+# Copyright 1998, 2004 Institut National de Recherche en Informatique #
+# et en Automatique. Distributed only by permission.                  #
+#                                                                     #
+#*********************************************************************#
+
+#                   Generic Makefile for Objective Caml Programs
+
+# $Id: Exp $
+
+############################ Documentation ######################
+#
+# To use this Makefile:
+# -- You must fix the value of the variable SOURCES below.
+# (The variable SOURCES is the list of your Caml source files.)
+# -- You must create a file .depend, using
+# $touch .depend
+# (This file will contain the dependancies between your Caml modules,
+#  automatically computed by this Makefile.)
+
+# Usage of this Makefile:
+# To incrementally recompile the system, type
+#     make
+# To recompute dependancies between modules, type
+#     make depend
+# To remove the executable and all the compiled files, type
+#     make clean
+# To compile using the native code compiler
+#     make opt
+#
+##################################################################
+
+
+##################################################################
+#
+# Advanced usage:
+# ---------------
+
+# If you want to fix the name of the executable, set the variable
+# EXEC, for instance, if you want to obtain a program named my_prog:
+# EXEC = my_prog
+
+# If you need special libraries provided with the Caml system,
+# (graphics, arbitrary precision numbers, regular expression on strings, ...),
+# you must set the variable LIBS to the proper set of libraries. For
+# instance, to use the graphics library set LIBS to $(WITHGRAPHICS):
+# LIBS=$(WITHGRAPHICS)
+
+# You may use any of the following predefined variable
+# WITHGRAPHICS : provides the graphics library
+# WITHUNIX : provides the Unix interface library
+# WITHSTR : provides the regular expression string manipulation library
+# WITHNUMS : provides the arbitrary precision arithmetic package
+# WITHTHREADS : provides the byte-code threads library
+# WITHDBM : provides the Data Base Manager library
+#
+#
+########################## End of Documentation ####################
 

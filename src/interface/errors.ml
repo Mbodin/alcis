@@ -1,5 +1,6 @@
 (* errors.ml *)
 (* Functions to handle errors and a list of booleans that describe what to do if there is one. *)
+(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 let error mesg =
     prerr_string (Sys.executable_name ^ ": error: ");

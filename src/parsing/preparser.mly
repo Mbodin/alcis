@@ -1,4 +1,12 @@
+
+copyrev: da449e6786a78887dd45c8638432d3f0f7cfc70f
+copy: src/parsing/parser.mly
+
 %{
+(* preparser.mly *)
+(* Preparse the input. *)
+(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
+
   open Parsed_syntax
   exception Eof
 %}

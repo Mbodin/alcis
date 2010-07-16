@@ -1,5 +1,6 @@
 (* parsed_syntax.ml *)
 (* Define all the structures that are used to represent the code. *)
+(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 
 type ast =
