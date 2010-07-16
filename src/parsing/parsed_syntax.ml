@@ -12,7 +12,6 @@ and list_type = (type_item * bool) list
 
 and type_item =
     | Type_expr of expression
-    | Type_name of string
     | Type
     | Arrow of list_type * list_type
 
