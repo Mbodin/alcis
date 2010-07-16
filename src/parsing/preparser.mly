@@ -22,10 +22,10 @@
 %token EOF
 
 /* FIXME: Priorities to be reread */
-%nonassoc   prec_prototype
-%nonassoc   prec_declaration
 %nonassoc   below_prec_expression
 %nonassoc   prec_expression
+%nonassoc   prec_prototype
+%nonassoc   prec_declaration
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
 %left       COLON
@@ -49,7 +49,7 @@ implementation:
 structure: /* Split the header and the body. */
     | prototype structure %prec prec_prototype                                  { $1 :: $2 }
     | declaration structure %prec prec_declaration                              { $1 :: $2 }
-    | expression                                                                { Expression $1 :: [] }
+    | expression %prec prec_expression                                          { Expression $1 :: [] }
 ;
 
 expression_item:
