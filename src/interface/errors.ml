@@ -3,9 +3,9 @@
 (* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 let prmesg file premesg = function
-    | [] -> prerr_string file; prerr_string premesg; prerr_string "<no error message ! (shouldn’t happen)>"
+    | [] -> prerr_string file; prerr_string premesg; prerr_string "<no error message ! (shouldn’t happen)>\n"
     | first :: l -> prerr_string file; prerr_string premesg; prerr_string first;
-                    List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m) l
+                    List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m; prerr_newline ()) l
 
 let error mesg =
     prmesg Sys.executable_name ": error: " mesg;
@@ -19,12 +19,11 @@ let internal_error () =
 
 
 
-let warnings = Hashtbl.create 42
-
-let define_warning name default =
-    Hashtbl.add warnings name default;
+let define_warning name default descr =
+    Choices.add_boolean_option ("W" ^ name) default descr;
     ()
 
 let get_warning name =
-    Hashtbl.find warnings name
+    match Choices.get_value ("W" ^ name) with
+    | Choices.Bool b -> b
 

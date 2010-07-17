@@ -7,6 +7,6 @@ val warn : string list -> unit
 val internal_error : unit -> 'a
 
 
-val define_warning : string -> bool -> unit
+val define_warning : string -> bool -> string -> unit
 val get_warning : string -> bool
 

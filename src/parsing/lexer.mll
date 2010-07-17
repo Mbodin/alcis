@@ -5,6 +5,8 @@
 
     open Preparser
     let eof_reached = ref false
+
+    let _ = Errors.define_warning "comments" true "Activate all warnings concerning comments"
 }
 
 let blank = [' ' '\t' '\n' '\r']
