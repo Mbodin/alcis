@@ -11,6 +11,7 @@ SOURCES = \
 	errors.ml \
 	parsed_syntax.ml \
 	lexer.mll preparser.mly \
+	parser.ml \
 
 
 INCLUDE = $(patsubst %,-I %,$(subst :, ,$(VPATH)))

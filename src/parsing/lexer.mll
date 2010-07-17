@@ -60,21 +60,26 @@ rule token = parse
 
   | eof                     { eof_reached := true; EOF }
   | _                       { Errors.error
-                                (Printf.sprintf "unrecognised token : ‘%s’ near %d-%d"
+                                [Printf.sprintf "I’m really sorry, but I don’t recognize the token ‘%s’ near %d-%d."
                                 (Lexing.lexeme lexbuf)
                                 (Lexing.lexeme_start lexbuf)
-                                (Lexing.lexeme_end lexbuf))
+                                (Lexing.lexeme_end lexbuf);
+                                "Perhaps you misspell it."]
                             }
 
 and comment = shortest (* ignore comments *)
-  | ")"                     { if Errors.warning_comments () then Errors.warn
-                            (
-                                Printf.sprintf "this will be considered as a open comment : ‘%s’ near %d-%d"
+  | ")"                     { if Errors.get_warning "comments" then Errors.warn
+                            [
+                                Printf.sprintf "This comment is ambigous ‘%s’ near %d-%d."
                                 (Lexing.lexeme lexbuf)
                                 (Lexing.lexeme_start lexbuf)
-                                (Lexing.lexeme_end lexbuf)
-                            ); comment lexbuf }
+                                (Lexing.lexeme_end lexbuf);
+                                "I will consider it as the beginning of a comment.";
+                                "You should add a space there."
+                            ]; comment lexbuf }
   | (_)*"(*"                { comment lexbuf; comment lexbuf }
   | (_)*"*)"                { }
-  | (_)* as s eof           { if Errors.warning_comments () then Errors.warn ("unfinished comment : “" ^ s ^ "”") }
+  | (_)* as s eof           { if Errors.get_warning "comments" then Errors.warn
+                                ["I’m afraid that the following comment is not finished : “" ^ s ^ "”";
+                                "You should had “*)” at the end of the file."] }
 
