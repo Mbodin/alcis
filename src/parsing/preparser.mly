@@ -25,7 +25,7 @@
 %nonassoc   below_prec_expression
 %nonassoc   prec_expression
 %nonassoc   prec_prototype
-%nonassoc   prec_declaration
+%nonassoc   prec_constante
 %nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
 %right      RIGHT_ARROW
@@ -38,24 +38,32 @@
 %nonassoc   below_IDENT
 %nonassoc   BOOL INT IDENT UNDERSCORE
 
-%start implementation lex_flot
-%type <Parsed_syntax.ast list> implementation
+%start header body lex_flot
+%type <Parsed_syntax.header list> header
+%type <Parsed_syntax.expression> body
 %type <string list> lex_flot
 
 %%
 
-implementation:
-    | structure EOF                                                             { $1 }
+header:
+    | structure_header EOF                                                      { $1 }
 ;
 
-structure: /* Split the header and the body. */
-    | comparison structure %prec prec_comparison                                { $1 :: $2 }
-    | prototype structure %prec prec_prototype                                  { $1 :: $2 }
-    | declaration structure %prec prec_declaration                              { $1 :: $2 }
-    | expression %prec prec_expression                                          { Expression $1 :: [] }
+body:
+    | structure_body EOF                                                        { $1 }
+;
+
+structure_header:
+    | comparison structure_header %prec prec_comparison                         { $1 :: $2 }
+    | prototype structure_header %prec prec_prototype                           { $1 :: $2 }
+;
+
+structure_body:
+    | expression %prec prec_expression                                          { $1 }
 ;
 
 expression:
+    | constante %prec prec_constante                                            { Constante $1 }
     | expression_no_semi_colon %prec below_SEMI_COLON                           { Expression_list $1 }
     | expression_no_semi_colon SEMI_COLON expression                            { Expression_sequence ($1, $3) }
 ;
@@ -85,10 +93,10 @@ fun_type:
     | expression_no_semi_colon                                                  { List_type $1 }
     | fun_type RIGHT_ARROW fun_type                                             { Arrow ($1, $3) }
 
-declaration:
-    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon       { match $1 with
-                                                                                    | List_type a, b -> Decl (List_type (List.rev a), b, Expression_list $3)
-                                                                                    | Arrow (List_type a, c), b -> Decl (Arrow(List_type (List.rev a), c), b, Expression_list $3)
+constante:
+    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON      { match $1 with
+                                                                                    | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
+                                                                                    | Arrow (List_type a, c), b -> (Arrow(List_type (List.rev a), c), b, Expression_list $3)
                                                                                     | Arrow (Arrow _, _), _ -> Errors.error "Internal Error" } /* FIXME */
 ;
 

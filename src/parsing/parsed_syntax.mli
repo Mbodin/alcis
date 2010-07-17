@@ -3,10 +3,8 @@
 (* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 
-type ast =
+type header =
     | Prototype of list_type * arg list
-    | Decl of list_type * arg list * expression
-    | Expression of expression
     | Comparison of (expression_item * bool) list * (expression_item * bool) list
 
 and list_type =
@@ -18,6 +16,7 @@ and arg =
     | Arg_ident of string
 
 and expression =
+    | Constante of (list_type * arg list * expression)
     | Expression_list of (expression_item * bool) list
     | Expression_sequence of (expression_item * bool) list * expression
 
