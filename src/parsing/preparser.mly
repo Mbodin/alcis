@@ -61,8 +61,8 @@ expression:
 ;
 
 expression_no_semi_colon:
-    | expression_item %prec below_COLON                                         { $1 :: [] }
-    | expression_item expression_no_semi_colon                                  { $1 :: $2 }
+    | expression_item_prior %prec below_COLON                                   { $1 :: [] }
+    | expression_item_prior expression_no_semi_colon                            { $1 :: $2 }
 ;
 
 prototype:
@@ -82,7 +82,7 @@ expr_item_prior_inv_colon_list_args:
 ;
 
 fun_type:
-    | expression_no_semi_colon                                                  { List_type (List.map (fun e -> (e, false)) $1) }
+    | expression_no_semi_colon                                                  { List_type $1 }
     | fun_type RIGHT_ARROW fun_type                                             { Arrow ($1, $3) }
 
 declaration:
@@ -111,14 +111,9 @@ arg:
     | IDENT                                                                     { Arg_ident $1 }
 ;
 
-list_args:
-    | arg list_args                                                             { $1 :: $2 }
-    | arg %prec below_PAREN                                                     { $1 :: [] }
-;
-
 comparison:
-    | list_args RPRIOR list_args SEMI_COLON                                     { Comparison ($1, $3) }
-    | list_args LPRIOR list_args SEMI_COLON                                     { Comparison ($3, $1) }
+    | expression_no_semi_colon RPRIOR expression_no_semi_colon SEMI_COLON       { Comparison ($1, $3) }
+    | expression_no_semi_colon LPRIOR expression_no_semi_colon SEMI_COLON       { Comparison ($3, $1) }
 ;
 
 

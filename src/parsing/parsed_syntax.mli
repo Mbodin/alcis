@@ -7,7 +7,7 @@ type ast =
     | Prototype of list_type * arg list
     | Decl of list_type * arg list * expression
     | Expression of expression
-    | Comparison of arg list * arg list
+    | Comparison of (expression_item * bool) list * (expression_item * bool) list
 
 and list_type =
     | Arrow of list_type * list_type
@@ -18,8 +18,8 @@ and arg =
     | Arg_ident of string
 
 and expression =
-    | Expression_list of expression_item list
-    | Expression_sequence of expression_item list * expression
+    | Expression_list of (expression_item * bool) list
+    | Expression_sequence of (expression_item * bool) list * expression
 
 and expression_item =
     | Bool of bool
