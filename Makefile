@@ -1,9 +1,7 @@
 
-
-VPATH = .:src/parsing:src/interface
+VPATH = .:doc:src/parsing:src/interface
 
 ########################## User's variables #####################
-
 
 # The Caml sources (including camlyacc and camllex source files)
 
@@ -22,16 +20,24 @@ EXEC = compiler
 
 ECHO = echo
 
+# The document to be created
+
+DOC = implementation.pdf standard.pdf
+
+DOCPATH = doc
+
 ########################## Advanced user's variables #####################
-#
-# The Caml compilers.
-# You may fix here the path to access the Caml compiler on your machine
+
+# The Caml compiler
 CAML = ocaml
 CAMLC = ocamlc -w Ae
 CAMLOPT = ocamlopt -w Ae
 CAMLDEP = ocamldep
 CAMLLEX = ocamllex
 CAMLYACC = ocamlyacc -v
+
+# The LaTeX compiler
+PDFLATEX = pdflatex
 
 ################ End of user's variables #####################
 
@@ -40,9 +46,9 @@ CAMLYACC = ocamlyacc -v
 ################ This part should be generic #################
 ################ Nothing to set up or fix here ###############
 ##############################################################
-.PHONY: all pdf clean mrproper fixme
+.PHONY: all documentation clean mrproper fixme
 
-all : $(EXEC)
+all : $(EXEC) documentation
 
 opt : $(EXEC).opt
 
@@ -52,7 +58,7 @@ PRODLEX  = $(patsubst %.mll, %.ml, $(filter %.mll,$(SOURCES)))
 PRODYACC = $(patsubst %.mly, %.ml, $(filter %.mly,$(SOURCES))) $(patsubst %.mly, %.mli, $(filter %.mly,$(SOURCES)))
 OBJS     = $(SOURCES2:.ml=.cmo)
 OPTOBJS  = $(SOURCES2:.ml=.cmx)
-REMOVE   = find . -name $(var) -exec rm -vf {} \;
+REMOVE   = find . -name $(var) -exec rm -f {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
 
 $(EXEC): $(OBJS) .depend
@@ -114,22 +120,40 @@ $(EXEC).opt: $(OPTOBJS) .depend
 	@$(CAMLYACC) $<
 
 ##############################################################
+################### Creating documentation ###################
+##############################################################
+
+documentation: ${DOC}
+	
+
+.SUFFIXES: .tex .pdf
+
+.tex.pdf:
+	@${ECHO} "\033[33m$(<F) → $@\033[0m"
+	@find . -name $(<F) -execdir ${PDFLATEX} {} 2> /dev/null \;
+	@mv ${DOCPATH}/$@ .
+
+##############################################################
 ################### Other generic rules ######################
 ##############################################################
 
 clean:
 	@# dependencies
-	@rm -vf ".depend"
+	@rm -f ".depend"
 	@# libraries
 	@$(foreach var,"*.cm[iox]" "*~" ".*~",$(REMOVE);)
 	@# lexer
 	@$(foreach var,$(PRODLEX),$(REMOVE);)
 	@# parser
 	@$(foreach var,$(PRODYACC),$(REMOVE);)
+	@# documentation files
+	@rm -f $(addprefix $(DOCPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.snm)
 
 mrproper: clean
 	@# executable
 	@$(foreach var,$(EXEC) $(EXEC).opt,$(REMOVE);)
+	@# documentation files
+	@$(foreach var,${DOC},$(REMOVE);)
 
 fixme:
 	@# debuging
@@ -140,68 +164,4 @@ fixme:
 	@$(CAMLDEP) $(INCLUDE) $(foreach var, $(notdir $^), $(shell find . -name $(var))) > $@
 
 -include .depend
-
-#*********************************************************************#
-#                                                                     #
-#                           Objective Caml                            #
-#                                                                     #
-#            Pierre Weis, projet Cristal, INRIA Rocquencourt          #
-#                                                                     #
-# Copyright 1998, 2004 Institut National de Recherche en Informatique #
-# et en Automatique. Distributed only by permission.                  #
-#                                                                     #
-#*********************************************************************#
-
-#                   Generic Makefile for Objective Caml Programs
-
-# $Id: Exp $
-
-############################ Documentation ######################
-#
-# To use this Makefile:
-# -- You must fix the value of the variable SOURCES below.
-# (The variable SOURCES is the list of your Caml source files.)
-# -- You must create a file .depend, using
-# $touch .depend
-# (This file will contain the dependancies between your Caml modules,
-#  automatically computed by this Makefile.)
-
-# Usage of this Makefile:
-# To incrementally recompile the system, type
-#     make
-# To recompute dependancies between modules, type
-#     make depend
-# To remove the executable and all the compiled files, type
-#     make clean
-# To compile using the native code compiler
-#     make opt
-#
-##################################################################
-
-
-##################################################################
-#
-# Advanced usage:
-# ---------------
-
-# If you want to fix the name of the executable, set the variable
-# EXEC, for instance, if you want to obtain a program named my_prog:
-# EXEC = my_prog
-
-# If you need special libraries provided with the Caml system,
-# (graphics, arbitrary precision numbers, regular expression on strings, ...),
-# you must set the variable LIBS to the proper set of libraries. For
-# instance, to use the graphics library set LIBS to $(WITHGRAPHICS):
-# LIBS=$(WITHGRAPHICS)
-
-# You may use any of the following predefined variable
-# WITHGRAPHICS : provides the graphics library
-# WITHUNIX : provides the Unix interface library
-# WITHSTR : provides the regular expression string manipulation library
-# WITHNUMS : provides the arbitrary precision arithmetic package
-# WITHTHREADS : provides the byte-code threads library
-# WITHDBM : provides the Data Base Manager library
-#
-#
-########################## End of Documentation ####################
 
