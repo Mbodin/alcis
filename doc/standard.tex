@@ -14,6 +14,7 @@
 \usepackage{array}
 \usepackage{hyperref}
 \usepackage{wasysym}
+\usepackage{listings}
 
 \definecolor{darkblue}{rgb}{0,0,.5}
 \hypersetup{unicode=true, colorlinks=false}
@@ -77,6 +78,58 @@ There is no extensions forced with thoses different types of files\footnote
 
 \section{\Alcis Header}
 
+An \Alcis header is a succession of prototypes and priorities.
+
+(And files including using the keyword \texttt{needed})
+
+\subsection{prototypes}
+
+A prototype is a way to express that the type of a function or a variable.
+
+It is expressed by:
+\[
+    <type>~\textrm{\tt:}~<variable>
+\]
+
+In the case of a function, by:
+\[
+    <function~type>~\textrm{\tt->}~<returned~type>~\textrm{\tt:}~<function>
+\]
+
+The function type indicate the way the function is called.
+It’s expressed by a succession of types and keyword \lstinline$fun$.
+In the second part of the expression (after the keyword \lstinline$:$) — in the same order — the function argument and function name are writen.
+It is possible not to name something (for instance argument): it is done simply by naming it \texttt{\_}.
+For instance a function \lstinline$f$ that takes one integer to the right as an argument can be expressed by
+\begin{lstlisting}
+fun int : f _
+\end{lstlisting}
+
+When a function takes more than one arguments, it is possible to set a prioroty between these argument (for parsing).
+It is done by writing the type of the corresponding argument between \lstinline$<<<$ and \lstinline$>>>$.
+For instance, if a prototype is declared with
+\begin{lstlisting}
+int fun <<< int >>> fun int -> int : _ # _ # _
+\end{lstlisting}
+Then the expression \lstinline$1 # 2 # 3 # 4 # 5$ means \lstinline$1 # (2 # 3 # 4) # 5$.
+If no priority is defined and that the compiler meet ambigous expression (such as the one defined later), then an error should happen.
+
+Note that there must be at least one keyword \lstinline$fun$ in a functional type, but that there not necessarily an argument.
+For instance, the following code is correct:
+\begin{lstlisting}
+fun -> int : counter
+\end{lstlisting}
+The function is then called whenever the variable is written.
+Such functions are unadvised because of the difficulty to understand a code they raise, but are accepted for the completeness of the language.
+
+When there is a succession of functionnal type, the keyword \lstinline$->$ has a right priority: \lstinline$a -> b -> c$ means \lstinline$a -> (b -> c)$.
+
+It is possible to put an expression inside parenthesis to indicate a type if this expression returns a type. The parenthesis are there unoptionnal.
+Thus, even if \lstinline$f$ has the type (for instance) \lstinline$fun int -> type$, it is impossible to write \lstinline$f 0 : a$.
+It can be writen nonetheless \lstinline$(f 0) : a$.
+
+\subsection{priorities}
+
 \FIXME
 
 \section{\Alcis Source Code}
@@ -86,6 +139,14 @@ There is no extensions forced with thoses different types of files\footnote
 \section{\Alcis Compiled Interface}
 
 \FIXME
+
+\section{List of Reserved Keyword}
+
+\FIXME
+
+\section{Standard Library}
+
+\FIXME: the loop for, while ; strings, lists ; the operators +, *, \ldots
 
 \end{document}
 
