@@ -19,6 +19,23 @@
 \definecolor{darkblue}{rgb}{0,0,.5}
 \hypersetup{unicode=true, colorlinks=false}
 
+\lstdefinelanguage{alcis}
+{
+	keywords={fun,->,:,<<<,>>>},
+    morekeywords={int},
+	sensitive,
+	comment=[s]{(*}{*)}
+}
+
+\lstset
+{
+	numbers=left,
+	numberstyle=\tiny,
+	language=alcis,
+	tabsize=2
+}
+
+
 \renewcommand{\ge}{\geqslant}
 \renewcommand{\le}{\leqslant}
 \renewcommand{\preceq}{\preccurlyeq}
@@ -76,6 +93,13 @@ There is no extensions forced with thoses different types of files\footnote
 \hline
 \end{tabular}\end{center}
 
+\section{Common standard}
+
+Whatever the file type, commentary are expressed by \lstinline$(*$ and \lstinline$*)$.
+It is possible to put commentary inside commentary. (As in \textsc{OCaml})
+
+\FIXME
+
 \section{\Alcis Header}
 
 An \Alcis header is a succession of prototypes and priorities.
@@ -130,7 +154,28 @@ It can be writen nonetheless \lstinline$(f 0) : a$.
 
 \subsection{priorities}
 
-\FIXME
+Priorities are to define function priorities when parsing.
+If there is no priority define to desambigous an ambigious expression, this expression is to be refused by the compiler.
+For instance the code \lstinline$1 + 2 * 3$ won’t work if the header defining \lstinline$+$ and \lstinline$*$ is just
+\begin{lstlisting}
+int fun int -> int : _ + _
+int fun int -> int : _ * _
+\end{lstlisting}
+There must be a priority defined, or parenthesis.
+
+A priority is defined by one of the followings patterns:
+\[
+    <operator~1>~\textrm{\lstinline$>>>$}~<operator~2>
+    <operator~2>~\textrm{\lstinline$<<<$}~<operator~1>
+\]
+Which mean that the operator $1$ has a higer priority of the operator $2$.
+
+The operator is defined by replacing all the \lstinline$fun$ of its functionnal type by the proper name.
+
+For instance, to set a higher priority for \lstinline$*$ than \lstinline$+$, the following line have to be added in a header:
+\begin{lstlisting}
+int * int >>> int + int
+\end{lstlisting}
 
 \section{\Alcis Source Code}
 
