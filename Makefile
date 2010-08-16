@@ -1,5 +1,6 @@
 
-VPATH = .:doc:src/parsing:src/interface
+VPATH = doc \
+		src/parsing src/interface
 
 ########################## User's variables #####################
 
@@ -12,7 +13,7 @@ SOURCES = \
 	parser.ml \
 
 
-INCLUDE = $(patsubst %,-I %,$(subst :, ,$(VPATH)))
+INCLUDE = $(patsubst %,-I %,$(VPATH))
 
 # The executable file to generate (default a.out under Unix)
 
@@ -157,7 +158,7 @@ mrproper: clean
 
 fixme:
 	@# debuging
-	@grep -ir FIXME * | grep -e tex -e ml -e mli
+	@grep -i FIXME $(foreach d,${VPATH},$(foreach e,tex ml mli mll mly,$d/*.$e)) 2> /dev/null ; true
 
 .depend: $(SOURCES2)
 	@${ECHO} "\033[34m$(SOURCES2) → $@\033[0m"
