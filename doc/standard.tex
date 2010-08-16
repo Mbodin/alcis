@@ -23,7 +23,12 @@
 \renewcommand{\preceq}{\preccurlyeq}
 \renewcommand{\succeq}{\succcurlyeq}
 
-\title{\textsc{Alcis} Standards}
+\newcommand{\Alcis}{\textsc{Alcis}~}
+\renewcommand{\C}{\textsc{C}~}
+
+\newcommand{\FIXME}{~\textbf{FIXME}~}
+
+\title{\Alcis Standards}
 \author{Martin \textsc{Bodin}}
 \date{}
 
@@ -38,7 +43,49 @@
 
 \newpage
 
-\section{}
+\paragraph{Introduction}
+{
+    The language \Alcis is compiled to a \C code.
+    It’s main feature is to permit the programmer to create notations at will.
+    It’s a strong typed, object-oriented language.
+    It has been design to be soft and easy to code with.
+}
+
+\section{Files Types}
+
+Here are the list of all the type of \Alcis files there exists:
+\begin{itemize}
+    \item \Alcis Header. It contains prototypes of functions and variables, and contains parsing informations.
+    \item \Alcis Source Code. It contains declarations of functions and variables.
+    \item \Alcis Compiled Interface. It contains the \C equivalent of a group of function and variables.
+\end{itemize}
+
+There is no extensions forced with thoses different types of files\footnote
+{
+    In fact \Alcis is design to manipulate extensionless files.
+}, but in the case an extension is needed (for instance in the case of the use of a Makefile), here is the advised extension for the \Alcis files:
+
+\begin{center}\begin{tabular}{|c||c|}
+\hline File & Extension \\
+\hline \Alcis Header & \tt .ah \\
+\hline \Alcis Source Code & \tt .ac \\
+\hline \Alcis Compiled Interface & \tt .ai \\
+\hline \C Header & \tt .h \\
+\hline \C Source Code & \tt .c \\
+\hline
+\end{tabular}\end{center}
+
+\section{\Alcis Header}
+
+\FIXME
+
+\section{\Alcis Source Code}
+
+\FIXME
+
+\section{\Alcis Compiled Interface}
+
+\FIXME
 
 \end{document}
 
