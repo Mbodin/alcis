@@ -1,7 +1,7 @@
 {
 (* lexer.mll *)
 (* Lex the input. *)
-(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
+(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
     open Preparser
     let eof_reached = ref false

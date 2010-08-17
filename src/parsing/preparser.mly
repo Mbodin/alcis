@@ -1,7 +1,7 @@
 %{
 (* preparser.mly *)
 (* Preparse the input. *)
-(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
+(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
   open Parsed_syntax
   exception Eof
@@ -40,7 +40,7 @@
 
 %start header body lex_flot
 %type <Parsed_syntax.header list> header
-%type <Parsed_syntax.expression> body
+%type <Parsed_syntax.expression list> body
 %type <string list> lex_flot
 
 %%
@@ -59,7 +59,8 @@ structure_header:
 ;
 
 structure_body:
-    | expression %prec prec_expression                                          { $1 }
+    | expression structure_body %prec prec_expression                           { $1 :: $2 }
+    | /* empty */                                                               { [] }
 ;
 
 expression:

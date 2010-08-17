@@ -1,6 +1,6 @@
 (* errors.ml *)
 (* Functions to handle errors and a list of booleans that describe what to do if there is one. *)
-(* author : Martin BODIN <martin.bodin@ens-lyon.org> *)
+(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 let prmesg file premesg = function
     | [] -> prerr_string file; prerr_string premesg; prerr_string "<no error message ! (shouldn’t happen)>\n"
