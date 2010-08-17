@@ -46,84 +46,84 @@
 %%
 
 header:
-    | structure_header EOF                                                      { $1 }
+    | structure_header EOF                                                                  { $1 }
 ;
 
 body:
-    | structure_body EOF                                                        { $1 }
+    | structure_body EOF                                                                    { $1 }
 ;
 
 structure_header:
-    | comparison structure_header %prec prec_comparison                         { $1 :: $2 }
-    | prototype structure_header %prec prec_prototype                           { $1 :: $2 }
-    | /* empty */                                                               { [] }
+    | comparison structure_header %prec prec_comparison                                     { $1 :: $2 }
+    | prototype structure_header %prec prec_prototype                                       { $1 :: $2 }
+    | /* empty */                                                                           { [] }
 ;
 
 structure_body:
-    | definition structure_body %prec prec_definition                           { Definition $1 :: $2 }
-    | expression structure_body %prec prec_expression                           { Expression $1 :: $2 }
-    | /* empty */                                                               { [] }
+    | definition structure_body %prec prec_definition                                       { Definition $1 :: $2 }
+    | expression structure_body %prec prec_expression                                       { Expression $1 :: $2 }
+    | /* empty */                                                                           { [] }
 ;
 
 expression:
-    | expression_no_semi_colon %prec below_SEMI_COLON                           { Expression_list $1 }
-    | expression_no_semi_colon SEMI_COLON expression                            { Expression_sequence ($1, $3) }
+    | expression_no_semi_colon %prec below_SEMI_COLON                                       { Expression_list $1 }
+    | expression_no_semi_colon SEMI_COLON expression                                        { Expression_sequence ($1, $3) }
 ;
 
 expression_no_semi_colon:
-    | expression_item_prior %prec below_COLON                                   { $1 :: [] }
-    | expression_item_prior expression_no_semi_colon                            { $1 :: $2 }
+    | expression_item_prior %prec below_COLON                                               { $1 :: [] }
+    | expression_item_prior expression_no_semi_colon                                        { $1 :: $2 }
 ;
 
 prototype:
-    | expr_item_prior_inv_colon_list_args                                       { match $1 with
-                                                                                    | List_type a, b -> Prototype (List_type (List.rev a), b)
-                                                                                    | Arrow (List_type a, c), b -> Prototype (Arrow (List_type (List.rev a), c), b)
-                                                                                    | ((Arrow (Arrow _, _)) as a), b -> Prototype (a, b) }
+    | expr_item_prior_inv_colon_list_args                                                   { match $1 with
+                                                                                                | List_type a, b -> Prototype (List_type (List.rev a), b)
+                                                                                                | Arrow (List_type a, c), b -> Prototype (Arrow (List_type (List.rev a), c), b)
+                                                                                                | ((Arrow (Arrow _, _)) as a), b -> Prototype (a, b) }
 ;
 
 expr_item_prior_inv_colon_list_args:
-    | expression_item_prior RIGHT_ARROW fun_type COLON arg                      { (Arrow (List_type ($1 :: []), $3), $5 :: []) }
-    | expression_item_prior COLON arg                                           { (List_type ($1 :: []), $3 :: []) }
-    | expression_item_prior expr_item_prior_inv_colon_list_args arg             { match $2 with
-                                                                                    | List_type a, b -> (List_type ($1 :: a), $3 :: b)
-                                                                                    | Arrow (List_type a, c), b -> (Arrow (List_type ($1 :: a), c), $3 :: b)
-                                                                                    | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+    | expression_item_prior RIGHT_ARROW fun_type COLON arg                                  { (Arrow (List_type ($1 :: []), $3), $5 :: []) }
+    | expression_item_prior COLON arg                                                       { (List_type ($1 :: []), $3 :: []) }
+    | expression_item_prior expr_item_prior_inv_colon_list_args arg                         { match $2 with
+                                                                                                | List_type a, b -> (List_type ($1 :: a), $3 :: b)
+                                                                                                | Arrow (List_type a, c), b -> (Arrow (List_type ($1 :: a), c), $3 :: b)
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
 ;
 
 fun_type:
-    | expression_no_semi_colon                                                  { List_type $1 }
-    | fun_type RIGHT_ARROW fun_type                                             { Arrow ($1, $3) }
+    | expression_no_semi_colon                                                              { List_type $1 }
+    | fun_type RIGHT_ARROW fun_type                                                         { Arrow ($1, $3) }
 
 definition:
-    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON      { match $1 with
-                                                                                    | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
-                                                                                    | Arrow (List_type a, c), b -> (Arrow(List_type (List.rev a), c), b, Expression_list $3)
-                                                                                    | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON        { match $1 with
+                                                                                                | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
+                                                                                                | Arrow (List_type a, c), b -> (Arrow(List_type (List.rev a), c), b, Expression_list $3)
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
 ;
 
 expression_item_prior:
-    | LPRIOR expression_item RPRIOR                                             { ($2, true) }
-    | expression_item %prec below_COLON                                         { ($1, false) }
+    | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
+    | expression_item %prec below_COLON                                                     { ($1, false) }
 ;
 
 expression_item:
-    | BOOL                                                                      { Bool $1 }
-    | INT                                                                       { Int $1 }
-    | arg %prec below_SEMI_COLON                                                { match $1 with
-                                                                                    | Arg_ident i -> Ident i
-                                                                                    | Arg_underscore -> Underscore }
-    | LPAREN expression RPAREN                                                  { Expr $2 }
+    | BOOL                                                                                  { Bool $1 }
+    | INT                                                                                   { Int $1 }
+    | arg %prec below_SEMI_COLON                                                            { match $1 with
+                                                                                                | Arg_ident i -> Ident i
+                                                                                                | Arg_underscore -> Underscore }
+    | LPAREN expression RPAREN                                                              { Expr $2 }
 ;
 
 arg:
-    | UNDERSCORE                                                                { Arg_underscore }
-    | IDENT                                                                     { Arg_ident $1 }
+    | UNDERSCORE                                                                            { Arg_underscore }
+    | IDENT                                                                                 { Arg_ident $1 }
 ;
 
 comparison:
-    | expression_no_semi_colon RPRIOR expression_no_semi_colon SEMI_COLON       { Comparison ($1, $3) }
-    | expression_no_semi_colon LPRIOR expression_no_semi_colon SEMI_COLON       { Comparison ($3, $1) }
+    | expression_no_semi_colon RPRIOR expression_no_semi_colon SEMI_COLON                   { Comparison ($1, $3) }
+    | expression_no_semi_colon LPRIOR expression_no_semi_colon SEMI_COLON                   { Comparison ($3, $1) }
 ;
 
 

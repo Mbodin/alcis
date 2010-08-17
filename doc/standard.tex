@@ -123,7 +123,7 @@ In the case of a function, by:
 The function type indicate the way the function is called.
 It’s expressed by a succession of types and keyword \lstinline$fun$.
 In the second part of the expression (after the keyword \lstinline$:$) — in the same order — the function argument and function name are writen.
-It is possible not to name something (for instance argument): it is done simply by naming it \lstinline$\_$.
+It is possible not to name something (for instance argument): it is done simply by naming it \lstinline$_$.
 For instance a function \lstinline$f$ that takes one integer to the right as an argument can be expressed by
 \begin{lstlisting}
 fun int : f _
@@ -181,7 +181,15 @@ int * int >>> int + int
 
 \section{\Alcis Source Code}
 
-\FIXME
+There is two things in those files: definitions and expressions.
+
+Definitions associate the code of a function or variable.
+They looks like prototypes of headers, but are followed by the symbol \lstinline$=$, then by the expression which will be the definition of the function or variable.
+There can be only one definition for all function and variables.
+
+The expressions directly in all the \Alcis source code will be executed at the beginning of the program, in the order they appear in the code.
+But there is no rules for the execution order of the expressions that appear in two different source files.
+The compiler will then refuse such a code with an undefined behaviour.
 
 \section{\Alcis Compiled Interface}
 
