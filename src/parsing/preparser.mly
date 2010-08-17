@@ -66,6 +66,7 @@ structure_body:
 ;
 
 expression:
+    | LPAREN body RPAREN                                                                    { Body $2 }
     | expression_no_semi_colon %prec below_SEMI_COLON                                       { Expression_list $1 }
     | expression_no_semi_colon SEMI_COLON expression                                        { Expression_sequence ($1, $3) }
 ;

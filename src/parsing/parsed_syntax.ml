@@ -20,6 +20,7 @@ and arg =
     | Arg_ident of string
 
 and expression =
+    | Body of body list
     | Expression_list of (expression_item * bool) list
     | Expression_sequence of (expression_item * bool) list * expression
 
