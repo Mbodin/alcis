@@ -112,7 +112,7 @@ expression_item:
     | arg %prec below_SEMI_COLON                                                            { match $1 with
                                                                                                 | Arg_ident i -> Ident i
                                                                                                 | Arg_underscore -> Underscore }
-    | LPAREN expression RPAREN                                                              { Expr $2 }
+    | LPAREN expression RPAREN                                                              { Expr $2 } /* FIXME: If then it reduce to body, there must be additionnal parenthesis... Wich shouldn’t be. */
 ;
 
 arg:
