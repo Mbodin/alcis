@@ -7,7 +7,6 @@
   exception Eof
 %}
 
-%token <bool> BOOL
 %token <int> INT /* FIXME: Use string instead of int, so that the program can work with real integer. */
 %token <string> IDENT
 %token LPAREN RPAREN
@@ -16,7 +15,7 @@
 %token COLON LPRIOR RPRIOR
 %token SEMI_COLON
 %token FUN RIGHT_ARROW
-%token FOR IN WHILE IF ELSE
+%token IF ELSE
 %token UNDERSCORE
 %token EOF
 
@@ -36,7 +35,7 @@
 %nonassoc   below_PRIOR
 %nonassoc   LPRIOR RPRIOR
 %nonassoc   below_IDENT
-%nonassoc   BOOL INT IDENT UNDERSCORE
+%nonassoc   INT IDENT UNDERSCORE
 
 %start header body lex_flot
 %type <Parsed_syntax.header list> header
@@ -109,7 +108,6 @@ expression_item_prior:
 ;
 
 expression_item:
-    | BOOL                                                                                  { Bool $1 }
     | INT                                                                                   { Int $1 }
     | arg %prec below_SEMI_COLON                                                            { match $1 with
                                                                                                 | Arg_ident i -> Ident i
@@ -135,13 +133,10 @@ lex_flot:
   | LPAREN lex_flot                                 { "LPAREN" :: $2 }
   | RPAREN lex_flot                                 { "RPAREN" :: $2 }
   | INT lex_flot                                    { (Printf.sprintf "INT (%d)" $1) :: $2 }
-  | BOOL lex_flot                                   { (Printf.sprintf "BOOL (%B)" $1) :: $2 }
   | EQUAL lex_flot                                  { "EQUAL" :: $2 }
   | SEMI_COLON lex_flot                             { "SEMI_COLON" :: $2 }
   | COLON lex_flot                                  { "COLON" :: $2 }
   | FUN lex_flot                                    { "FUN" :: $2 }
-  | IN lex_flot                                     { "IN" :: $2 }
-  | WHILE lex_flot                                  { "WHILE" :: $2 }
   | IF lex_flot                                     { "IF" :: $2 }
   | ELSE lex_flot                                   { "ELSE" :: $2 }
   | UNDERSCORE lex_flot                             { "UNDERSCORE" :: $2 }

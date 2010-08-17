@@ -33,9 +33,6 @@ rule token = parse
 
   | integer_literal as k    { INT (int_of_string k) }
 
-  | "true"                  { BOOL true }
-  | "false"                 { BOOL false }
-
   | ':'                     { COLON }
   | '='                     { EQUAL }
 
@@ -46,10 +43,6 @@ rule token = parse
 
   | "fun"                   { FUN }
   | "->"                    { RIGHT_ARROW }
-
-  | "for"                   { FOR }
-  | "in"                    { IN }
-  | "while"                 { WHILE }
 
   | "if"                    { IF }
   | "else"                  { ELSE }
