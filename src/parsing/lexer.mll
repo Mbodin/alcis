@@ -31,7 +31,7 @@ rule token = parse
   | '('                     { LPAREN }
   | ')'                     { RPAREN }
 
-  | integer_literal as k    { INT (int_of_string k) }
+  | integer_literal as k    { INT k }
 
   | ':'                     { COLON }
   | '='                     { EQUAL }

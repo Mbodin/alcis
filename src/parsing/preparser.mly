@@ -10,7 +10,7 @@
 
 %}
 
-%token <int> INT /* FIXME: Use string instead of int, so that the program can work with real integer. */
+%token <string> INT /* The Ocaml int type would be two small for real integers. */
 %token <string> IDENT
 %token LPAREN RPAREN
 %token COLON
@@ -130,7 +130,7 @@ comparison:
 lex_flot:
   | LPAREN lex_flot                                 { "LPAREN" :: $2 }
   | RPAREN lex_flot                                 { "RPAREN" :: $2 }
-  | INT lex_flot                                    { (Printf.sprintf "INT (%d)" $1) :: $2 }
+  | INT lex_flot                                    { (Printf.sprintf "INT (%s)" $1) :: $2 }
   | EQUAL lex_flot                                  { "EQUAL" :: $2 }
   | SEMI_COLON lex_flot                             { "SEMI_COLON" :: $2 }
   | COLON lex_flot                                  { "COLON" :: $2 }

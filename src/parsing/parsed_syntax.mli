@@ -22,8 +22,7 @@ and expression =
     | Expression_sequence of expression * expression
 
 and expression_item =
-    | Bool of bool
-    | Int of int
+    | Int of string
     | Ident of string
     | Underscore
     | Expr of expression
