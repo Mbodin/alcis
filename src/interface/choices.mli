@@ -16,3 +16,5 @@ val do_action : string -> string list -> unit
 
 val list_options : unit -> unit
 
+val set_internal_error_function : (string list -> unit) -> unit
+

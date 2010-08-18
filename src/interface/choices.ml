@@ -3,6 +3,12 @@
 (* author: Martin BODIN <martin.bodin@ens-lyon.fr> *)
 
 
+let set_internal_error_function, internal_error = (* For typing problems, I’m afraid I’m forced to take a default answer in argument. *)
+    let default = fun a _ -> a in
+    let internal_error_function = ref default in
+    (fun f -> internal_error_function := (fun a b -> f b; a)),
+    fun a -> (!internal_error_function a)
+
 type arg =
     | Bool of bool
 
@@ -15,12 +21,12 @@ let add_boolean_option name default description =
     Hashtbl.add actions ("-" ^ name)
     ((function
         | [] -> Hashtbl.add options name (Bool true)
-        | _ -> exit 1 (* FIXME: Launch an error *)
+        | l -> internal_error () ["The option “-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
     ), 0, description);
     Hashtbl.add actions ("-no-" ^ name)
     ((function
         | [] -> Hashtbl.add options name (Bool false)
-        | _ -> exit 1 (* FIXME *)
+        | l -> internal_error () ["The option “-no-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
     ), 0, "Disable the option -" ^ name);
     ()
 
@@ -29,7 +35,7 @@ let get_value name =
     | Not_found -> prerr_string
      (Sys.executable_name ^ ": error: I’m afraid that the option “" ^ name ^ "” is unavailable.\n"
     ^ Sys.executable_name ^ ":        This is an internal error and should not have happenned.\n"
-    ^ Sys.executable_name ^ ":        Please repport it to Martin BODIN (martin.bodin@ens-lyon.fr).\n");
+    ^ Sys.executable_name ^ ":        Please repport it to Martin BODIN (martin.bodin@ens-lyon.fr).\n"); (* FIXME *)
                     exit 1
 
 let get_boolean name =
@@ -44,9 +50,13 @@ let get_nb_arg name =
 let do_action action args =
     let f, n, _ =
         try Hashtbl.find actions action with
-        | Not_found -> exit 1 (* FIXME *)
+        | Not_found ->
+                let default = (fun _ -> ()), 0, "" in (* FIXME *)
+                internal_error default ["The action associated to the option “" ^ action ^ "” is requested to be called, but no such option exists.";
+                "For information, there was too " ^ (string_of_int (List.length args)) ^ " argument given to it."]
     in
-    if n <> List.length args then exit 1 (* FIXME *)
+    if n <> List.length args then
+        internal_error () ["The action associated to the option “" ^ action ^ "” received " ^ (string_of_int (List.length args)) ^ " arguments, but " (string_of_int n) ^ " where expected."]
     else f args
 
 let list_options () =
@@ -57,7 +67,7 @@ let list_options () =
 let help_action =
     ((function
         | [] -> list_options ()
-        | _ -> exit 1 (* FIXME *)
+        | _ -> internal_error () ["There was at least an argument given to the help action." :: "I’m very sorry you to read this: you probably obtain it while calling help."]
     ), 0, "Display this help")
 
 let _ = Hashtbl.add actions "-help" help_action
