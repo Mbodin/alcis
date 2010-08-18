@@ -39,7 +39,7 @@
 
 %start header body lex_flot
 %type <Parsed_syntax.header list> header
-%type <Parsed_syntax.body list> body
+%type <Parsed_syntax.expression> body
 %type <string list> lex_flot
 
 %%
@@ -59,15 +59,14 @@ structure_header:
 ;
 
 structure_body:
-    | definition structure_body %prec prec_definition                                       { Definition $1 :: $2 }
-    | expression structure_body %prec prec_expression                                       { Expression $1 :: $2 }
-    | /* empty */                                                                           { [] }
+    | expression                                                                            { $1 }
 ;
 
 expression:
-    | LPAREN body RPAREN                                                                    { Body $2 }
+    | definition                                                                            { let a, b, c = $1 in Constant (a, b, c) }
+    | declaration                                                                           { let a, b = $1 in Variable (a, b) }
     | expression_no_semi_colon %prec below_SEMI_COLON                                       { Expression_list $1 }
-    | expression_no_semi_colon SEMI_COLON expression                                        { Expression_sequence ($1, $3) }
+    | expression SEMI_COLON expression                                                      { Expression_sequence ($1, $3) }
 ;
 
 expression_no_semi_colon:
@@ -96,9 +95,16 @@ fun_type:
     | fun_type RIGHT_ARROW fun_type                                                         { Arrow ($1, $3) }
 
 definition:
-    |  expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON        { match $1 with
+    | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON         { match $1 with
                                                                                                 | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
-                                                                                                | Arrow (List_type a, c), b -> (Arrow(List_type (List.rev a), c), b, Expression_list $3)
+                                                                                                | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b, Expression_list $3)
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+;
+
+declaration:
+    | expr_item_prior_inv_colon_list_args SEMI_COLON                                        { match $1 with
+                                                                                                | List_type a, b -> (List_type (List.rev a), b)
+                                                                                                | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b)
                                                                                                 | Arrow (Arrow _, _), _ -> Errors.internal_error () }
 ;
 

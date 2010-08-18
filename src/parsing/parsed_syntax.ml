@@ -7,10 +7,6 @@ type header =
     | Prototype of list_type * arg list
     | Comparison of (expression_item * bool) list * (expression_item * bool) list
 
-and body =
-    | Definition of (list_type * arg list * expression)
-    | Expression of expression
-
 and list_type =
     | Arrow of list_type * list_type
     | List_type of (expression_item * bool) list
@@ -20,9 +16,10 @@ and arg =
     | Arg_ident of string
 
 and expression =
-    | Body of body list
+    | Constant of list_type * arg list * expression
+    | Variable of list_type * arg list
     | Expression_list of (expression_item * bool) list
-    | Expression_sequence of (expression_item * bool) list * expression
+    | Expression_sequence of expression * expression
 
 and expression_item =
     | Bool of bool
