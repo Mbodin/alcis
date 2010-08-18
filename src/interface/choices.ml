@@ -51,14 +51,14 @@ let do_action action args =
 
 let list_options () =
     Hashtbl.iter 
-    (fun name -> fun (_, _, desc) -> print_string ("\t" ^ name ^ "\t\t" ^ desc))
+    (fun name -> fun (_, _, desc) -> print_string ("\t" ^ name ^ "\t\t" ^ desc ^ "\n"))
     actions
 
 let help_action =
     ((function
         | [] -> list_options ()
         | _ -> exit 1 (* FIXME *)
-    ), 0, "Display this help and exit")
+    ), 0, "Display this help")
 
 let _ = Hashtbl.add actions "-help" help_action
 let _ = Hashtbl.add actions "-h" help_action

@@ -20,8 +20,13 @@ let rec load_options = function
             Choices.do_action action args;
             load_options queue
 
+let queue_sys = function
+    | _ :: l -> l
+    | [] -> Errors.internal_warning ["The array argv is empty."; "Maybe it’s a system error."];
+        []
+
 let main () =
-    load_options (Array.to_list Sys.argv);
+    load_options (queue_sys (Array.to_list Sys.argv));
     ()
 
 let _ = main ()
