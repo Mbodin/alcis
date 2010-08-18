@@ -184,7 +184,10 @@ int * int >>> int + int
 There is two things in those files: definitions and expressions.
 
 Definitions associate the code of a function or variable.
-They looks like prototypes of headers, but are followed by the symbol \lstinline$=$, then by the expression which will be the definition of the function or variable.
+In the case of constant, they looks like prototypes of headers, but are followed by the symbol \lstinline$=$, then by the expression which will be the definition of the function or variable, then a semicolon.
+Such function or variable cannot be modified later.
+In the case of real variable or modifiable function, there must be first a declaration, that looks exactly like a prototype with a semicolon at the end.
+Then it is possible to et a value for this function or variable.
 There can be only one definition for all function and variables.
 
 The expressions directly in all the \Alcis source code will be executed at the beginning of the program, in the order they appear in the code.
