@@ -13,9 +13,15 @@ let actions = Hashtbl.create 100
 let add_boolean_option name default description =
     Hashtbl.add options name (Bool default);
     Hashtbl.add actions ("-" ^ name)
-    ((fun () -> Hashtbl.add options name (Bool true)), 0, description);
+    ((function
+        | [] -> Hashtbl.add options name (Bool true)
+        | _ -> exit 1 (* FIXME: Launch an error *)
+    ), 0, description);
     Hashtbl.add actions ("-no-" ^ name)
-    ((fun () -> Hashtbl.add options name (Bool false)), 0, "Disable the option -" ^ name);
+    ((function
+        | [] -> Hashtbl.add options name (Bool false)
+        | _ -> exit 1 (* FIXME *)
+    ), 0, "Disable the option -" ^ name);
     ()
 
 let get_value name =
@@ -30,15 +36,30 @@ let get_boolean name =
     match get_value name with
     | Bool b -> b
 
+
 let get_nb_arg name =
     try Some (let _, a, _ = Hashtbl.find actions name in a) with
     | Not_found -> None
+
+let do_action action args =
+    let f, n, _ =
+        try Hashtbl.find actions action with
+        | Not_found -> exit 1 (* FIXME *)
+    in
+    if n <> List.length args then exit 1 (* FIXME *)
+    else f args
 
 let list_options () =
     Hashtbl.iter 
     (fun name -> fun (_, _, desc) -> print_string ("\t" ^ name ^ "\t\t" ^ desc))
     actions
 
-let _ = Hashtbl.add actions "-help" ((fun () -> list_options ()), 0, "Display this help and exit")
-let _ = Hashtbl.add actions "-h" ((fun () -> list_options ()), 0, "Display this help and exit")
+let help_action =
+    ((function
+        | [] -> list_options ()
+        | _ -> exit 1 (* FIXME *)
+    ), 0, "Display this help and exit")
+
+let _ = Hashtbl.add actions "-help" help_action
+let _ = Hashtbl.add actions "-h" help_action
 

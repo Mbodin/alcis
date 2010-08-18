@@ -12,6 +12,7 @@ val get_value : string -> arg
 val get_boolean : string -> bool
 
 val get_nb_arg : string -> int option
+val do_action : string -> string list -> unit
 
 val list_options : unit -> unit
 
