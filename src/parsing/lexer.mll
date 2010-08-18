@@ -76,5 +76,5 @@ and comment = shortest (* ignore comments *)
   | (_)*"*)"                { }
   | (_)* as s eof           { if Errors.get_warning "comments" then Errors.warn
                                 ["I’m afraid that the following comment is not finished : “" ^ s ^ "”";
-                                "You should had “*)” at the end of the file."] }
+                                "You should add “*)” at the end of the file, or at an other correct place."] }
 

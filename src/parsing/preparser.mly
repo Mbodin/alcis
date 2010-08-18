@@ -19,22 +19,11 @@
 %token UNDERSCORE
 %token EOF
 
-/* FIXME: Priorities to be reread */
-%nonassoc   prec_comparison
-%nonassoc   below_prec_expression
-%nonassoc   prec_expression
-%nonassoc   prec_definition
-%nonassoc   prec_prototype
-%nonassoc   below_SEMI_COLON
 %left       SEMI_COLON
 %right      RIGHT_ARROW
 %nonassoc   below_COLON
 %nonassoc   COLON
-%nonassoc   below_PAREN
-%nonassoc   LPAREN RPAREN
-%nonassoc   below_PRIOR
-%nonassoc   LPRIOR RPRIOR
-%nonassoc   below_IDENT
+%nonassoc   LPAREN RPAREN LPRIOR RPRIOR
 %nonassoc   INT IDENT UNDERSCORE
 
 %start header body lex_flot
@@ -53,8 +42,8 @@ body:
 ;
 
 structure_header:
-    | comparison structure_header %prec prec_comparison                                     { $1 :: $2 }
-    | prototype structure_header %prec prec_prototype                                       { $1 :: $2 }
+    | comparison structure_header                                                           { $1 :: $2 }
+    | prototype structure_header                                                            { $1 :: $2 }
     | /* empty */                                                                           { [] }
 ;
 
@@ -65,7 +54,7 @@ structure_body:
 expression:
     | definition                                                                            { let a, b, c = $1 in Constant (a, b, c) }
     | declaration                                                                           { let a, b = $1 in Variable (a, b) }
-    | expression_no_semi_colon %prec below_SEMI_COLON                                       { Expression_list $1 }
+    | expression_no_semi_colon                                                              { Expression_list $1 }
     | expression SEMI_COLON expression                                                      { Expression_sequence ($1, $3) }
 ;
 
@@ -110,12 +99,12 @@ declaration:
 
 expression_item_prior:
     | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
-    | expression_item %prec below_COLON                                                     { ($1, false) }
+    | expression_item                                                                       { ($1, false) }
 ;
 
 expression_item:
     | INT                                                                                   { Int $1 }
-    | arg %prec below_SEMI_COLON                                                            { match $1 with
+    | arg                                                                                   { match $1 with
                                                                                                 | Arg_ident i -> Ident i
                                                                                                 | Arg_underscore -> Underscore }
     | LPAREN expression RPAREN                                                              { Expr $2 }
