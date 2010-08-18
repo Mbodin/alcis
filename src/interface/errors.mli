@@ -4,7 +4,7 @@
 
 val error : string list -> 'a
 val warn : string list -> unit
-val internal_error : unit -> 'a
+val internal_error : string list -> 'a
 
 
 val define_warning : string -> bool -> string -> unit

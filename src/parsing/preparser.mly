@@ -5,6 +5,9 @@
 
   open Parsed_syntax
   exception Eof
+
+  let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]
+
 %}
 
 %token <int> INT /* FIXME: Use string instead of int, so that the program can work with real integer. */
@@ -76,7 +79,7 @@ expr_item_prior_inv_colon_list_args:
     | expression_item_prior expr_item_prior_inv_colon_list_args arg                         { match $2 with
                                                                                                 | List_type a, b -> (List_type ($1 :: a), $3 :: b)
                                                                                                 | Arrow (List_type a, c), b -> (Arrow (List_type ($1 :: a), c), $3 :: b)
-                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error double_arrow_error }
 ;
 
 fun_type:
@@ -87,14 +90,14 @@ definition:
     | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON         { match $1 with
                                                                                                 | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
                                                                                                 | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b, Expression_list $3)
-                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error double_arrow_error }
 ;
 
 declaration:
     | expr_item_prior_inv_colon_list_args SEMI_COLON                                        { match $1 with
                                                                                                 | List_type a, b -> (List_type (List.rev a), b)
                                                                                                 | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b)
-                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error () }
+                                                                                                | Arrow (Arrow _, _), _ -> Errors.internal_error double_arrow_error }
 ;
 
 expression_item_prior:
