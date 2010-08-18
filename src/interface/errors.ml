@@ -37,7 +37,6 @@ let internal_warning mesg =
 let internal_error mesg =
     internal error mesg
 
-let _ = Choices.add_boolean_option "failure-stop" true "Stop the program at any internal error, even if it seems it could be ignored."
-
-let _ = define_warning "error" false "Transforms all warnings to errors."
+let _ = Choices.add_boolean_option "failure-stop" true "Stop the program at any internal error, even if it seems it could be ignored"
+let _ = define_warning "error" false "Transforms all warnings to errors"
 

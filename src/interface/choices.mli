@@ -11,5 +11,7 @@ val add_boolean_option : string -> bool -> string -> unit
 val get_value : string -> arg
 val get_boolean : string -> bool
 
+val get_nb_arg : string -> int option
+
 val list_options : unit -> unit
 
