@@ -13,10 +13,9 @@
   let parse_error s =
       parsing_error [s]
 
-  let expecting expct receive =
+  let expecting expct =
       parsing_error [
-          "I was expecting an expression of the pattern “" ^ expct ^ "”,";
-          "But receive the token “" ^ receive ^ "”."
+          "I was expecting an expression of the pattern “" ^ expct ^ "”.";
       ]
 
   let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]
@@ -73,7 +72,7 @@ expression:
     | declaration                                                                           { let a, b = $1 in Variable (a, b) }
     | expression_no_semi_colon                                                              { Expression_list $1 }
     | expression SEMI_COLON expression                                                      { Expression_sequence ($1, $3) }
-    | /* empty */ %prec error                                                               { expecting "<expression>" "<nothing>" }
+    | /* empty */ %prec error                                                               { expecting "<expression>" }
 ;
 
 expression_no_semi_colon:
@@ -98,15 +97,15 @@ expr_item_prior_inv_colon_list_args:
 ;
 
 fun_type:
-    | /* empty */ %prec error                                                               { expecting "<type>" "<nothing>" }
+    | /* empty */ %prec error                                                               { expecting "<type>" }
     | expression_no_semi_colon                                                              { List_type $1 }
     | fun_type RIGHT_ARROW fun_type                                                         { Arrow ($1, $3) }
 ;
 
 definition:
-    | expr_item_prior_inv_colon_list_args %prec error                                       { expecting "=" "<nothing>" }
-    | expr_item_prior_inv_colon_list_args EQUAL %prec error                                 { expecting "<expression>" "<nothing>" }
-    | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon %prec error        { expecting ";" "<nothing>" }
+    | expr_item_prior_inv_colon_list_args %prec error                                       { expecting "=" }
+    | expr_item_prior_inv_colon_list_args EQUAL %prec error                                 { expecting "<expression>" }
+    | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon %prec error        { expecting ";" }
     | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON         { match $1 with
                                                                                                 | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
                                                                                                 | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b, Expression_list $3)
@@ -121,8 +120,8 @@ declaration:
 ;
 
 expression_item_prior:
-    | LPRIOR %prec error                                                                    { expecting "<expression> >>>" "<nothing>" }
-    | LPRIOR expression_item %prec error                                                    { expecting ">>>" "<nothing>" }
+    | LPRIOR %prec error                                                                    { expecting "<expression> >>>" }
+    | LPRIOR expression_item %prec error                                                    { expecting ">>>" }
     | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
     | expression_item                                                                       { ($1, false) }
 ;
@@ -133,9 +132,7 @@ expression_item:
                                                                                                 | Arg_ident i -> Ident i
                                                                                                 | Arg_underscore -> Underscore }
     | LPAREN expression RPAREN                                                              { Expr $2 }
-    | LPAREN expression                                                                     { expecting ")" "<nothing>" }
-/*    | LPAREN token                                                                          { expecting ")" "<nothing>" }
-    | LPAREN { expecting "<expression> )" "<nothing>" }*/
+    | LPAREN expression                                                                     { expecting ")" }
 ;
 
 arg:
