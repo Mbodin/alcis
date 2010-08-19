@@ -7,7 +7,7 @@ type arg =
 
 
 val add_boolean_option : string -> bool -> string -> unit
-val add_action : string -> int -> string -> (string list -> unit) -> unit
+val add_action : string -> int -> (string list) -> string -> (string list -> unit) -> unit
 
 val get_value : string -> arg
 val get_boolean : string -> bool
