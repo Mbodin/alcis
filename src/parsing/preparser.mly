@@ -6,6 +6,19 @@
   open Parsed_syntax
   exception Eof
 
+  let parsing_error l =
+      Errors.error
+      ((Printf.sprintf "I’m sorry, but I don’t understand the input, and I think it’s a syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l)
+
+  let parse_error s =
+      parsing_error [s]
+
+  let expecting expct receive =
+      parsing_error [
+          "I was expecting an expression of the pattern “" ^ expct ^ "”,";
+          "But receive the token “" ^ receive ^ "”."
+      ]
+
   let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]
 
 %}
@@ -128,18 +141,22 @@ comparison:
 /* Rules used to draw a lexem flow. */
 /* ================================ */
 lex_flot:
-  | LPAREN lex_flot                                 { "LPAREN" :: $2 }
-  | RPAREN lex_flot                                 { "RPAREN" :: $2 }
-  | INT lex_flot                                    { (Printf.sprintf "INT (%s)" $1) :: $2 }
-  | EQUAL lex_flot                                  { "EQUAL" :: $2 }
-  | SEMI_COLON lex_flot                             { "SEMI_COLON" :: $2 }
-  | COLON lex_flot                                  { "COLON" :: $2 }
-  | FUN lex_flot                                    { "FUN" :: $2 }
-  | IF lex_flot                                     { "IF" :: $2 }
-  | ELSE lex_flot                                   { "ELSE" :: $2 }
-  | UNDERSCORE lex_flot                             { "UNDERSCORE" :: $2 }
-  | IDENT lex_flot                                  { (Printf.sprintf "IDENT (%s) " $1) :: $2 }
-  | EOF                                             { "EOF" :: [] }
+    | token lex_flot                                                                        { $1 :: $2 }
+    | /* empty */                                                                           { [] }
+
+token:
+  | LPAREN                                                                                  { "LPAREN" }
+  | RPAREN                                                                                  { "RPAREN" }
+  | INT                                                                                     { (Printf.sprintf "INT (%s)" $1) }
+  | EQUAL                                                                                   { "EQUAL" }
+  | SEMI_COLON                                                                              { "SEMI_COLON" }
+  | COLON                                                                                   { "COLON" }
+  | FUN                                                                                     { "FUN" }
+  | IF                                                                                      { "IF" }
+  | ELSE                                                                                    { "ELSE" }
+  | UNDERSCORE                                                                              { "UNDERSCORE" }
+  | IDENT                                                                                   { (Printf.sprintf "IDENT (%s) " $1) }
+  | EOF                                                                                     { "EOF" }
 ;
 
 %%
