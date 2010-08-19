@@ -3,10 +3,17 @@
 (* author: Martin BODIN <martin.bodin@ens-lyon.fr> *)
 
 
-let set_internal_error_function, internal_error =
+let set_internal_error_function, internal_error, error =
+    let no_error_function_given () =
+        prerr_string (Sys.executable_name ^ ": An internal error appears: It seems that the file errors.ml does not initialize the errors functions in the file choices.ml.\n"
+        ^ Sys.executable_name ^ ": Please repport it to Martin BODIN (martin.bodin@ens-lyon.fr).\n");
+        exit 1
+    in
     let internal_error_function = ref (fun _ -> ()) in
-    (fun f -> internal_error_function := f),
-    fun a -> !internal_error_function a; exit 1
+    let error_function = ref (fun _ -> ()) in
+    (fun fintern f -> internal_error_function := fintern; error_function := f),
+    (fun a -> !internal_error_function a; no_error_function_given ()),
+    (fun a -> !error_function a; no_error_function_given ())
 
 type arg =
     | Bool of bool
@@ -19,7 +26,7 @@ let max_size_action_name = ref 0
 
 let add_action name nb_arg arg_descr descr f =
     Hashtbl.add actions name (f, nb_arg, arg_descr, descr);
-    max_size_action_name := max !max_size_action_name (String.length name);
+    max_size_action_name := max !max_size_action_name (List.fold_left (fun i s -> i + 2 + String.length s) (3 + String.length name) arg_descr);
     ()
 
 let add_boolean_option name default description =
@@ -60,17 +67,23 @@ let do_action action args =
         internal_error ["The action associated to the option “" ^ action ^ "” received " ^ (string_of_int (List.length args)) ^ " arguments, but " ^ (string_of_int n) ^ " where expected."]
     else f args
 
+let usage_option name arg_descr desc =
+        let name_plus_arg =
+            name ^ " " ^
+            (match arg_descr with
+            | [] -> ""
+            | first :: l -> (List.fold_left (fun a b -> a ^ ", " ^ b) ("<" ^ first) l) ^ ">"
+            )
+        in
+        "\t" ^ name_plus_arg ^ (String.make (!max_size_action_name - String.length name_plus_arg) ' ') ^ "\t\t" ^ desc ^ "\n"
+
 let list_options () =
     print_string ("Usage:\n\t" ^ Sys.executable_name ^ " [options]\n\nHere is the list of the available options:\n");
     List.iter print_string
     (List.sort compare
     (Hashtbl.fold
     (fun name -> fun (_, _, arg_descr, desc) -> fun l ->
-        ("\t" ^ name ^ (String.make (!max_size_action_name - String.length name) ' ') ^ " " ^
-        (match arg_descr with
-        | [] -> ""
-        | first :: l -> (List.fold_left (fun a b -> a ^ ", " ^ b) ("<" ^ first) l) ^ ">"
-        ) ^ "\t\t" ^ desc ^ "\n") :: l)
+    usage_option name arg_descr desc :: l)
     actions []));
     ()
 
@@ -81,4 +94,16 @@ let help_action = function
 
 let _ = add_action "-help" 0 [] "Display this help" help_action
 let _ = add_action "-h" 0 [] "Display this help" help_action
+
+let _ = add_action "-about" 1 ["option"] "Display the usage of the given option"
+    (function
+        | opt :: [] ->
+                let _, _, arg_descr, desc =
+                    try Hashtbl.find actions opt with
+                    | Not_found -> error ["The argument “" ^ opt ^ "” given to the option “-about” does not correspond to a existing option.";
+                                            "The option “-help” can list all the available options."]
+                in
+                print_string (usage_option opt arg_descr desc)
+        | l -> internal_error ["The about option requests one argument, but " ^ (string_of_int (List.length l)) ^ " were given to it.";
+                                "I’m very sorry you to read this: you probably obtain it while calling help."])
 
