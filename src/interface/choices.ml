@@ -31,12 +31,12 @@ let add_action name nb_arg arg_descr descr f =
 
 let add_boolean_option name default description =
     Hashtbl.add options name (Bool default);
-    add_action ("-" ^ name) 0 [] description
+    add_action ("-" ^ name) 0 [] (description ^ (if default then " (default)" else ""))
     (function
         | [] -> Hashtbl.add options name (Bool true)
         | l -> internal_error ["The option “-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
     );
-    add_action ("-no-" ^ name) 0 [] description
+    add_action ("-no-" ^ name) 0 [] ("Disable the option “-" ^ name ^ "”" ^ (if not default then " (default)" else ""))
     (function
         | [] -> Hashtbl.add options name (Bool false)
         | l -> internal_error ["The option “-no-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
@@ -93,7 +93,6 @@ let help_action = function
                                 "I’m very sorry you to read this: you probably obtain it while calling help."]
 
 let _ = add_action "-help" 0 [] "Display this help" help_action
-let _ = add_action "-h" 0 [] "Display this help" help_action
 
 let _ = add_action "-about" 1 ["option"] "Display the usage of the given option"
     (function
