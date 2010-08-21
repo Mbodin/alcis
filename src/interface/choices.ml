@@ -16,17 +16,10 @@ let set_internal_error_function, internal_error, error =
     (fun a -> !error_function a; no_error_function_given ())
 
 
-type file_type =
-    | Alcis_header
-    | Alcis_source_code
-    | Alcis_C_interface
-    | C_header
-    | C_source_code
-
 type arg =
     | Bool of bool
     | String of string
-    | Input_list of (in_channel * file_type) list
+    | Input_list of (in_channel * Position.file_type) list
 
 
 let options = Hashtbl.create 100

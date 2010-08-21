@@ -7,7 +7,7 @@ VPATH = doc \
 # The Caml sources (including camlyacc and camllex source files)
 
 SOURCES = \
-	choices.ml errors.ml \
+	position.ml choices.ml errors.ml \
 	parsed_syntax.ml \
 	lexer.mll preparser.mly \
 	parser.ml \

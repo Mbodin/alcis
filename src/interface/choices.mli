@@ -2,17 +2,10 @@
 (* Handle all the options of the program. *)
 (* author: Martin BODIN <martin.bodin@ens-lyon.fr> *)
 
-type file_type =
-    | Alcis_header
-    | Alcis_source_code
-    | Alcis_C_interface
-    | C_header
-    | C_source_code
-
 type arg =
     | Bool of bool
     | String of string
-    | Input_list of (in_channel * file_type) list
+    | Input_list of (in_channel * Position.file_type) list
 
 
 val add_boolean_option : string -> bool -> string -> unit

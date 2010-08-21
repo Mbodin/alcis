@@ -22,7 +22,7 @@ let rec prmesg file premesg = function
     | first :: l -> prerr_string file; prerr_string premesg; prerr_string first; prerr_newline ();
                     List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m; prerr_newline ()) l
 
-let error mesg =
+let error pos mesg =
     prmesg (Sys.executable_name ^ ": ") "error: " mesg;
     exit 1
 
