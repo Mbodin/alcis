@@ -15,8 +15,18 @@ let set_internal_error_function, internal_error, error =
     (fun a -> !internal_error_function a; no_error_function_given ()),
     (fun a -> !error_function a; no_error_function_given ())
 
+
+type file_type =
+    | Alcis_header
+    | Alcis_source_code
+    | Alcis_C_interface
+    | C_header
+    | C_source_code
+
 type arg =
     | Bool of bool
+    | String of string
+    | Input_list of (in_channel * file_type) list
 
 
 let options = Hashtbl.create 100
@@ -29,16 +39,30 @@ let add_action name nb_arg arg_descr descr f =
     max_size_action_name := max !max_size_action_name (List.fold_left (fun i s -> i + 2 + String.length s) (3 + String.length name) arg_descr);
     ()
 
+let add_option name default =
+    try let _ = Hashtbl.find options name in internal_error ["The option “" ^ name ^ "” has been declared twice."] with
+    | Not_found -> Hashtbl.add options name default
+
+let get_value name =
+    try Hashtbl.find options name with
+    | Not_found -> internal_error ["The option “" ^ name ^ "” is requested, but does not stand in the available options."]
+
+let set_value name value =
+    Hashtbl.add options name value
+
+let set_boolean name b =
+    set_value name (Bool b)
+
 let add_boolean_option name default description =
-    Hashtbl.add options name (Bool default);
+    add_option name (Bool default);
     add_action ("-" ^ name) 0 [] (description ^ (if default then " (default)" else ""))
     (function
-        | [] -> Hashtbl.add options name (Bool true)
+        | [] -> set_boolean name true
         | l -> internal_error ["The option “-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
     );
     add_action ("-no-" ^ name) 0 [] ("Disable the option “-" ^ name ^ "”" ^ (if not default then " (default)" else ""))
     (function
-        | [] -> Hashtbl.add options name (Bool false)
+        | [] -> set_boolean name false
         | l -> internal_error ["The option “-no-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
     );
     ()
@@ -50,6 +74,7 @@ let get_value name =
 let get_boolean name =
     match get_value name with
     | Bool b -> b
+    | _ -> internal_error ["The option “" ^ name ^ "” seems not to be of boolean type, but a boolean value were requested."]
 
 
 let get_nb_arg name =
