@@ -17,25 +17,31 @@ let internal errorfun mesg =
     :: "There follows a description of the error:" :: mesg)
 
 let rec prmesg file premesg = function
-    | [] -> internal (prmesg Sys.executable_name "error: ")
+    | [] -> internal (prmesg (Sys.executable_name ^ ": ") "error: ")
             ["No error message given to prmseg in file error.ml."]
     | first :: l -> prerr_string file; prerr_string premesg; prerr_string first; prerr_newline ();
                     List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m; prerr_newline ()) l
 
+let precision_line_colon pos =
+    match Position.get_line pos, Position.get_colon pos with
+    | None, _ -> ""
+    | Some l, None -> (string_of_int l) ^ ": "
+    | Some l, Some c -> (string_of_int l) ^ ": " ^ (string_of_int c) ^ ": "
+
 let error pos mesg =
-    prmesg (Sys.executable_name ^ ": ") "error: " mesg;
+    prmesg (Position.get_filename pos ^ ": ") (precision_line_colon pos ^ "error: ") mesg;
     exit 1
 
-let warn mesg =
-    if get_warning "error" then error mesg
-    else prmesg (Sys.executable_name ^ ": ") "warning: " mesg
+let warn pos mesg =
+    if get_warning "error" then error pos mesg
+    else prmesg (Position.get_filename pos ^ ": ") (precision_line_colon pos ^ "warning: ") mesg
 
 let internal_warning mesg =
-    internal (if Choices.get_boolean "failure-stop" then error else warn) mesg;
+    internal ((if Choices.get_boolean "failure-stop" then error else warn) Position.global) mesg;
     ()
 
 let internal_error mesg =
-    internal error mesg
+    internal (error Position.global) mesg
 
 let _ = Choices.set_internal_error_function internal_error error
 

@@ -7,7 +7,7 @@
   exception Eof
 
   let parsing_error l =
-      Errors.error
+      Errors.error Position.global (* FIXME *)
       ((Printf.sprintf "I’m sorry, but I don’t understand the input, and I think it’s a syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l)
 
   let parse_error s =

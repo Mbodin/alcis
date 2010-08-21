@@ -54,8 +54,8 @@ rule token = parse
   | "(*"                    { comment lexbuf ; token lexbuf }
 
   | eof                     { eof_reached := true; EOF }
-  | _                       { Errors.error
-                                [Printf.sprintf "I’m really sorry, but I don’t recognize the token ‘%s’ near %d-%d."
+  | _                       { Errors.error Position.global (*Position.make (Position.get_current_filename ()) (Position.current_line ()) (Position.current_char ()*) (* FIXME *)
+                                [Printf.sprintf "I’m really sorry, but I don’t recognize the token ‘%s’ near the characters %d-%d."
                                 (Lexing.lexeme lexbuf)
                                 (Lexing.lexeme_start lexbuf)
                                 (Lexing.lexeme_end lexbuf);
@@ -63,7 +63,7 @@ rule token = parse
                             }
 
 and comment = shortest (* ignore comments *)
-  | ")"                     { if Errors.get_warning "comments" then Errors.warn
+  | ")"                     { if Errors.get_warning "comments" then Errors.warn Position.global (* FIXME *)
                             [
                                 Printf.sprintf "This comment is ambigous ‘%s’ near %d-%d."
                                 (Lexing.lexeme lexbuf)
@@ -74,7 +74,7 @@ and comment = shortest (* ignore comments *)
                             ]; comment lexbuf }
   | (_)*"(*"                { comment lexbuf; comment lexbuf }
   | (_)*"*)"                { }
-  | (_)* as s eof           { if Errors.get_warning "comments" then Errors.warn
+  | (_)* as s eof           { if Errors.get_warning "comments" then Errors.warn Position.global (* FIXME *)
                                 ["I’m afraid that the following comment is not finished : “" ^ s ^ "”";
                                 "You should add “*)” at the end of the file, or at an other correct place."] }
 

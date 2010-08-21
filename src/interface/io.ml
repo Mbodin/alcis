@@ -17,7 +17,7 @@ let set_extension opt filename filetype =
         | l -> Errors.internal_error ["The option “" ^ opt ^ "” requests one argument, but " ^ (string_of_int (List.length l)) ^ " were given to it."] (* FIXME: Make a generic function for this message. *)
     )
 
-let _ = set_extension "-ah" "an Alcis header" Choices.Alcis_header
-let _ = set_extension "-ac" "an Alcis source code" Choices.Alcis_source_code
-let _ = set_extension "-ai" "an Alcis interface for C" Choices.Alcis_C_interface
+let _ = set_extension "-ah" "an Alcis header" Position.Alcis_header
+let _ = set_extension "-ac" "an Alcis source code" Position.Alcis_source_code
+let _ = set_extension "-ai" "an Alcis interface for C" Position.Alcis_C_interface
 

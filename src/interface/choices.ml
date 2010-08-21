@@ -10,10 +10,10 @@ let set_internal_error_function, internal_error, error =
         exit 1
     in
     let internal_error_function = ref (fun _ -> ()) in
-    let error_function = ref (fun _ -> ()) in
+    let error_function = ref (fun _ _ -> ()) in
     (fun fintern f -> internal_error_function := fintern; error_function := f),
     (fun a -> !internal_error_function a; no_error_function_given ()),
-    (fun a -> !error_function a; no_error_function_given ())
+    (fun a b -> !error_function a b; no_error_function_given ())
 
 
 type arg =
@@ -117,7 +117,7 @@ let _ = add_action "-about" 1 ["option"] "Display the usage of the given option"
         | opt :: [] ->
                 let _, _, arg_descr, desc =
                     try Hashtbl.find actions opt with
-                    | Not_found -> error ["The argument “" ^ opt ^ "” given to the option “-about” does not correspond to a existing option.";
+                    | Not_found -> error Position.global ["The argument “" ^ opt ^ "” given to the option “-about” does not correspond to a existing option.";
                                             "The option “-help” can list all the available options."]
                 in
                 print_string (usage_option opt arg_descr desc)

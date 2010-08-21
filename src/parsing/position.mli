@@ -9,5 +9,13 @@ type file_type =
     | C_header
     | C_source_code
 
-type t = string * ((int * int) option)
+type t
+
+val get_filename : t -> string
+val get_line : t -> int option
+val get_colon : t -> int option
+
+val make : string -> int option -> int option -> t
+
+val global : t
 
