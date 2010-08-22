@@ -43,7 +43,7 @@ and name_expr = name_expr_item list Position.e (* The position correspond to whe
 
 and name_expr_item =
     | Expr_ident of string
-    | Expr_underscore (* FIXME: Should we memorize the type there? *)
+    | Expr_underscore of type_expr_item
 
 and parsed_expression =
     | Name of name_expr Position.e
