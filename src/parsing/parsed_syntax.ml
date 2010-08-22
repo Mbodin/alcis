@@ -47,6 +47,6 @@ and name_expr_item =
 
 and parsed_expression =
     | Name of name_expr Position.e
-    | Application of (name_expr * parsed_expression list) Position.e
+    | Application of (parsed_expression * parsed_expression list) Position.e
     | Sequence of (parsed_expression * parsed_expression) Position.e
 
