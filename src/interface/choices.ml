@@ -46,20 +46,6 @@ let set_value name value =
 let set_boolean name b =
     set_value name (Bool b)
 
-let add_boolean_option name default description =
-    add_option name (Bool default);
-    add_action ("-" ^ name) 0 [] (description ^ (if default then " (default)" else ""))
-    (function
-        | [] -> set_boolean name true
-        | l -> internal_error ["The option “-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
-    );
-    add_action ("-no-" ^ name) 0 [] ("Disable the option “-" ^ name ^ "”" ^ (if not default then " (default)" else ""))
-    (function
-        | [] -> set_boolean name false
-        | l -> internal_error ["The option “-no-" ^ name ^ "” requests no argument, but it is called with " ^ (string_of_int (List.length l)) ^ " ones."]
-    );
-    ()
-
 let get_value name =
     try Hashtbl.find options name with
     | Not_found -> internal_error ["I’m afraid that the option “" ^ name ^ "” is unavailable."; "This error was cause while executing the function “Choices.get_value”."]
@@ -118,7 +104,7 @@ let _ = add_action "-about" 1 ["option"] "Display the usage of the given option"
                 let _, _, arg_descr, desc =
                     try Hashtbl.find actions opt with
                     | Not_found -> error Position.global ["The argument “" ^ opt ^ "” given to the option “-about” does not correspond to a existing option.";
-                                            "The option “-help” can list all the available options."]
+                                                            "The option “-help” can list all the available options."]
                 in
                 print_string (usage_option opt arg_descr desc)
         | l -> internal_error ["The about option requests one argument, but " ^ (string_of_int (List.length l)) ^ " were given to it.";
@@ -129,7 +115,7 @@ let wrong_arg_number_error opt nb_requested args =
     let l = List.length args in
     if l = nb_requested then
         internal_error
-        ["The option “" ^ opt ^ "”, that claims to request " ^ string_of_int nb_requested ^ " arguments, raised an error that was supposed to be because of a wrong number of argument, altough it receive " ^ string_of_int l ^ "arguments.";
+        ["The option “" ^ opt ^ "”, that claims to request " ^ string_of_int nb_requested ^ " arguments, raised an error that was supposed to be because of a wrong number of argument, altough it received " ^ string_of_int l ^ "arguments.";
         "I prefer checking, just in case:";
         "To my knowledge, the real number of arguments of the option “" ^ opt ^ "” is "
         ^ (match get_nb_arg opt with
@@ -148,4 +134,18 @@ let wrong_arg_number_error opt nb_requested args =
     in
     internal_error
     ["The option “" ^ opt ^ "” requests " ^ str_arg ^ ", but " ^ (string_of_int l) ^ " were given to it."]
+
+let add_boolean_option name default description =
+    add_option name (Bool default);
+    add_action ("-" ^ name) 0 [] (description ^ (if default then " (default)" else ""))
+    (function
+        | [] -> set_boolean name true
+        | l -> wrong_arg_number_error ("-" ^ name) 0 l
+    );
+    add_action ("-no-" ^ name) 0 [] ("Disable the option “-" ^ name ^ "”" ^ (if not default then " (default)" else ""))
+    (function
+        | [] -> set_boolean name false
+        | l -> wrong_arg_number_error ("-" ^ name) 0 l
+    );
+    ()
 
