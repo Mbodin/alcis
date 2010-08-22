@@ -1,4 +1,4 @@
 (* parser.ml *)
-(* Parse a input file with using the preparser. *)
+(* Parse a preparsed file *)
 (* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 

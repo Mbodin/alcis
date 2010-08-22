@@ -1,5 +1,5 @@
 (* parsed_syntax.mli *)
-(* Define all the structures that are used to represent the code. *)
+(* Define all the structures that are used to represent the code while parsing. *)
 (* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 
@@ -26,4 +26,27 @@ and expression_item =
     | Ident of string Position.e
     | Underscore of Position.t
     | Expr of expression
+
+
+type parsed_header = (name_expr, type_expr) Hashtbl.t
+
+and parsed_source_code = (name_expr, type_expr * parsed_expression) Hashtbl.t * parsed_expression
+
+and type_expr = type_expr_item list
+
+and type_expr_item =
+    | Fun
+    | Type
+    | Type_expr of parsed_expression (* The identifier case in included in that case. *)
+
+and name_expr = name_expr_item list Position.e (* The position correspond to where the notation has been defined. *)
+
+and name_expr_item =
+    | Expr_ident of string
+    | Expr_underscore
+
+and parsed_expression =
+    | Name of name_expr Position.e
+    | Application of (name_expr * parsed_expression list) Position.e
+    | Sequence of (parsed_expression * parsed_expression) Position.e
 
