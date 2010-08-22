@@ -22,19 +22,13 @@ let rec prmesg file premesg = function
     | first :: l -> prerr_string file; prerr_string premesg; prerr_string first; prerr_newline ();
                     List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m; prerr_newline ()) l
 
-let precision_line_colon pos =
-    match Position.get_line pos, Position.get_colon pos with
-    | None, _ -> ""
-    | Some l, None -> (string_of_int l) ^ ": "
-    | Some l, Some c -> (string_of_int l) ^ ": " ^ (string_of_int c) ^ ": "
-
 let error pos mesg =
-    prmesg (Position.get_filename pos ^ ": ") (precision_line_colon pos ^ "error: ") mesg;
+    prmesg (Position.get_filename pos ^ ": ") (Position.infile_to_string pos ^ "error: ") mesg;
     exit 1
 
 let warn pos mesg =
     if get_warning "error" then error pos mesg
-    else prmesg (Position.get_filename pos ^ ": ") (precision_line_colon pos ^ "warning: ") mesg
+    else prmesg (Position.get_filename pos ^ ": ") (Position.infile_to_string pos ^ "warning: ") mesg
 
 let internal_warning mesg =
     internal ((if Choices.get_boolean "failure-stop" then error else warn) Position.global) mesg;

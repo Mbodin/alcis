@@ -6,7 +6,7 @@
 let _ = Choices.add_option "input" (Choices.Input_list [])
 
 let set_extension opt filename filetype =
-    Choices.add_action opt 1 ["file"] ("Read the file as " ^ filename ^ " (“-” stand for the standard input)")
+    Choices.add_action opt 1 ["file"] ("Read the file as " ^ filename ^ " (“-” stands for the standard input)")
     (function
         | f :: [] ->
             Choices.set_value "input"

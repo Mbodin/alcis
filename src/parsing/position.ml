@@ -23,6 +23,18 @@ let get_line (_, p) =
     | None -> None
     | Some (l, _) -> Some l
 
+let infile_to_string (_, p) =
+    match p with
+    | None -> ""
+    | Some (l, None) -> "line " ^ string_of_int l
+    | Some (l, Some c) -> "line " ^ string_of_int l ^ ", character " ^ string_of_int c
+
+let to_string ((f, _) as p) =
+    "file " ^ f ^
+    (match infile_to_string p with
+    | "" -> ""
+    | s -> ", " ^ s)
+
 let make f = function
     | None -> fun _ -> f, None
     | Some l -> fun c -> f, Some (l, c)

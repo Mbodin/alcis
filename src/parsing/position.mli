@@ -15,6 +15,9 @@ val get_filename : t -> string
 val get_line : t -> int option
 val get_colon : t -> int option
 
+val to_string : t -> string
+val infile_to_string : t -> string
+
 val make : string -> int option -> int option -> t
 
 val global : t
