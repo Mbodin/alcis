@@ -29,3 +29,21 @@ let make f = function
 
 let global = make Sys.executable_name None None
 
+type 'a e = 'a * t
+
+let get_pos (_, p) = p
+let get_val (a, _) = a
+
+
+let current_pos = ref global
+
+let get_position () = !current_pos
+
+let set_filename name =
+    current_pos := (name, Some (0, Some 0))
+
+let new_line () =
+    match !current_pos with
+    | (f, Some (l, c)) -> current_pos := (f, Some (l + 1, c))
+    | (f, None) -> current_pos := (f, Some (1, None)) (* I think that’s simplier than calling an internal error. *)
+
