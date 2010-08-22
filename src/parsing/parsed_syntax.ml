@@ -12,8 +12,8 @@ and list_type =
     | List_type of (expression_item * bool) list
 
 and arg = 
-    | Arg_underscore
-    | Arg_ident of string
+    | Arg_underscore of Position.t
+    | Arg_ident of string Position.e
 
 and expression =
     | Constant of list_type * arg list * expression
@@ -22,8 +22,8 @@ and expression =
     | Expression_sequence of expression * expression
 
 and expression_item =
-    | Int of string
-    | Ident of string
-    | Underscore
+    | Int of string Position.e
+    | Ident of string Position.e
+    | Underscore of Position.t
     | Expr of expression
 

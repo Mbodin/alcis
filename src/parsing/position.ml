@@ -34,10 +34,15 @@ type 'a e = 'a * t
 let get_pos (_, p) = p
 let get_val (a, _) = a
 
+let etiq a p = (a, p)
 
 let current_pos = ref global
 
 let get_position () = !current_pos
+
+let cetiq a =
+    (a, get_position ())
+
 
 let set_filename name =
     current_pos := (name, None)

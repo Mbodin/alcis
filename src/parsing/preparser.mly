@@ -7,7 +7,7 @@
   exception Eof
 
   let parsing_error l =
-      Errors.error Position.global (* FIXME *)
+      Errors.error (Position.get_position ())
       ((Printf.sprintf "I’m sorry, but I don’t understand the input, and I think it’s a syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l)
 
   let parse_error s =
@@ -22,8 +22,8 @@
 
 %}
 
-%token <string> INT /* The Ocaml int type would be two small for real integers. */
-%token <string> IDENT
+%token <string Position.e> INT /* The Ocaml int type would be two small for real integers. */
+%token <string Position.e> IDENT
 %token LPAREN RPAREN
 %token COLON
 %token EQUAL
@@ -31,7 +31,7 @@
 %token SEMI_COLON
 %token FUN RIGHT_ARROW
 %token IF ELSE
-%token UNDERSCORE
+%token <Position.t> UNDERSCORE
 %token EOF
 
 %nonassoc   error
@@ -130,13 +130,13 @@ expression_item:
     | INT                                                                                   { Int $1 }
     | arg                                                                                   { match $1 with
                                                                                                 | Arg_ident i -> Ident i
-                                                                                                | Arg_underscore -> Underscore }
+                                                                                                | Arg_underscore p -> Underscore p }
     | LPAREN expression RPAREN                                                              { Expr $2 }
     | LPAREN expression                                                                     { expecting ")" }
 ;
 
 arg:
-    | UNDERSCORE                                                                            { Arg_underscore }
+    | UNDERSCORE                                                                            { Arg_underscore $1 }
     | IDENT                                                                                 { Arg_ident $1 }
 ;
 
@@ -157,7 +157,7 @@ lex_flot:
 token:
   | LPAREN                                                                                  { "LPAREN" }
   | RPAREN                                                                                  { "RPAREN" }
-  | INT                                                                                     { (Printf.sprintf "INT (%s)" $1) }
+  | INT                                                                                     { (Printf.sprintf "INT (%s)" (Position.get_val $1)) }
   | EQUAL                                                                                   { "EQUAL" }
   | SEMI_COLON                                                                              { "SEMI_COLON" }
   | COLON                                                                                   { "COLON" }
@@ -165,7 +165,7 @@ token:
   | IF                                                                                      { "IF" }
   | ELSE                                                                                    { "ELSE" }
   | UNDERSCORE                                                                              { "UNDERSCORE" }
-  | IDENT                                                                                   { (Printf.sprintf "IDENT (%s) " $1) }
+  | IDENT                                                                                   { (Printf.sprintf "IDENT (%s) " (Position.get_val $1)) }
   | EOF                                                                                     { "EOF" }
 ;
 

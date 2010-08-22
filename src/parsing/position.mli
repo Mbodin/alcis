@@ -24,6 +24,9 @@ type 'a e
 val get_pos : 'a e -> t
 val get_val : 'a e -> 'a
 
+val etiq : 'a -> t -> 'a e
+val cetiq : 'a -> 'a e
+
 val set_filename : string -> unit
 val new_line : unit -> unit
 val characters_read : int -> unit
