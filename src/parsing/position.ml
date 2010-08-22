@@ -40,10 +40,16 @@ let current_pos = ref global
 let get_position () = !current_pos
 
 let set_filename name =
-    current_pos := (name, Some (0, Some 0))
+    current_pos := (name, None)
 
 let new_line () =
     match !current_pos with
-    | (f, Some (l, c)) -> current_pos := (f, Some (l + 1, c))
-    | (f, None) -> current_pos := (f, Some (1, None)) (* I think that’s simplier than calling an internal error. *)
+    | (f, Some (l, _)) -> current_pos := (f, Some (l + 1, Some 0))
+    | (f, None) -> current_pos := (f, Some (1, None))
+
+let characters_read n =
+    match !current_pos with
+    | (f, Some (l, Some c)) -> current_pos := (f, Some (l, Some (c + n)))
+    | (f, Some (l, None)) -> current_pos := (f, Some (l, Some n))
+    | (f, None) -> current_pos := (f, Some (0, Some n))
 
