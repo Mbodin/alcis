@@ -22,7 +22,7 @@ let rec load_options = function
 
 let queue_sys = function
     | _ :: l -> l
-    | [] -> Errors.internal_warning ["The array argv is empty."; "Maybe it’s a system error."];
+    | [] -> Errors.internal_warning ["The array argv seems to be empty."; "Maybe it’s a system error."];
         []
 
 let main () =

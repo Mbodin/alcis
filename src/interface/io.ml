@@ -14,7 +14,7 @@ let set_extension opt filename filetype =
                 | "-", Choices.Input_list l -> (stdin, filetype) :: l
                 | f, Choices.Input_list l -> (open_in f, filetype) :: l
                 | _ -> Errors.internal_error ["The option “input” does not contain an input list."]))
-        | l -> Errors.internal_error ["The option “" ^ opt ^ "” requests one argument, but " ^ (string_of_int (List.length l)) ^ " were given to it."] (* FIXME: Make a generic function for this message. *)
+        | l -> Choices.wrong_arg_number_error opt 1 l
     )
 
 let _ = set_extension "-ah" "an Alcis header" Position.Alcis_header

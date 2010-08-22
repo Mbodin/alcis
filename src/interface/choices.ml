@@ -124,3 +124,28 @@ let _ = add_action "-about" 1 ["option"] "Display the usage of the given option"
         | l -> internal_error ["The about option requests one argument, but " ^ (string_of_int (List.length l)) ^ " were given to it.";
                                 "I’m very sorry you to read this: you probably obtain it while calling help."])
 
+
+let wrong_arg_number_error opt nb_requested args =
+    let l = List.length args in
+    if l = nb_requested then
+        internal_error
+        ["The option “" ^ opt ^ "”, that claims to request " ^ string_of_int nb_requested ^ " arguments, raised an error that was supposed to be because of a wrong number of argument, altough it receive " ^ string_of_int l ^ "arguments.";
+        "I prefer checking, just in case:";
+        "To my knowledge, the real number of arguments of the option “" ^ opt ^ "” is "
+        ^ (match get_nb_arg opt with
+        | Some n -> string_of_int n ^ "."
+        | None -> "not defined, as well as the option “" ^ opt ^ "” himself!")]
+    else
+    let str_arg =
+        (
+            match nb_requested with
+            | 0 -> "no"
+            | 1 -> "one"
+            | 2 -> "two"
+            | n -> string_of_int n
+        ) ^ " argument"
+        ^ (if abs nb_requested > 1 then "s" else "")
+    in
+    internal_error
+    ["The option “" ^ opt ^ "” requests " ^ str_arg ^ ", but " ^ (string_of_int l) ^ " were given to it."]
+

@@ -23,5 +23,7 @@ val do_action : string -> string list -> unit
 
 val list_options : unit -> unit
 
+val wrong_arg_number_error : string -> int -> string list -> 'a
+
 val set_internal_error_function : (string list -> unit) -> (Position.t -> string list -> unit) -> unit
 
