@@ -20,4 +20,6 @@ let set_extension opt filename filetype =
 let _ = set_extension "-ah" "an Alcis header" Position.Alcis_header
 let _ = set_extension "-ac" "an Alcis source code" Position.Alcis_source_code
 let _ = set_extension "-ai" "an Alcis interface for C" Position.Alcis_C_interface
+let _ = set_extension "-c" "a C source code" Position.C_source_code
+let _ = set_extension "-h" "a C header" Position.C_header
 
