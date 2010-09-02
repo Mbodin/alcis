@@ -68,5 +68,5 @@ let characters_read n =
     match !current_pos with
     | (f, Some (l, Some c)) -> current_pos := (f, Some (l, Some (c + n)))
     | (f, Some (l, None)) -> current_pos := (f, Some (l, Some n))
-    | (f, None) -> current_pos := (f, Some (0, Some n))
+    | (f, None) -> current_pos := (f, Some (1, Some n))
 

@@ -151,13 +151,15 @@ comparison:
 /* ================================ */
 lex_flot:
     | token lex_flot                                                                        { $1 :: $2 }
-    | /* empty */                                                                           { [] }
+    | EOF                                                                                   { "EOF" :: [] }
 ;
 
 token:
   | LPAREN                                                                                  { "LPAREN" }
   | RPAREN                                                                                  { "RPAREN" }
-  | INT                                                                                     { (Printf.sprintf "INT (%s)" (Position.get_val $1)) }
+  | LPRIOR                                                                                  { "LPRIOR" }
+  | RPRIOR                                                                                  { "RPRIOR" }
+  | INT                                                                                     { (Printf.sprintf "INT (“%s”)" (Position.get_val $1)) }
   | EQUAL                                                                                   { "EQUAL" }
   | SEMI_COLON                                                                              { "SEMI_COLON" }
   | COLON                                                                                   { "COLON" }
@@ -165,8 +167,7 @@ token:
   | IF                                                                                      { "IF" }
   | ELSE                                                                                    { "ELSE" }
   | UNDERSCORE                                                                              { "UNDERSCORE" }
-  | IDENT                                                                                   { (Printf.sprintf "IDENT (%s) " (Position.get_val $1)) }
-  | EOF                                                                                     { "EOF" }
+  | IDENT                                                                                   { (Printf.sprintf "IDENT (“%s”)" (Position.get_val $1)) }
 ;
 
 %%
