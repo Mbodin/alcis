@@ -27,7 +27,7 @@
 %token LPAREN RPAREN
 %token COLON
 %token EQUAL
-%token COLON LPRIOR RPRIOR
+%token LPRIOR RPRIOR
 %token SEMI_COLON
 %token <Position.t> FUN
 %token RIGHT_ARROW
@@ -161,15 +161,16 @@ token:
   | RPAREN                                                                                  { "RPAREN" }
   | LPRIOR                                                                                  { "LPRIOR" }
   | RPRIOR                                                                                  { "RPRIOR" }
-  | INT                                                                                     { (Printf.sprintf "INT (“%s”)" (Position.get_val $1)) }
+  | INT                                                                                     { (Printf.sprintf "INT(“%s”)" (Position.get_val $1)) }
   | EQUAL                                                                                   { "EQUAL" }
   | SEMI_COLON                                                                              { "SEMI_COLON" }
   | COLON                                                                                   { "COLON" }
   | FUN                                                                                     { "FUN" }
+  | RIGHT_ARROW                                                                             { "RIGHT_ARROW" }
   | IF                                                                                      { "IF" }
   | ELSE                                                                                    { "ELSE" }
   | UNDERSCORE                                                                              { "UNDERSCORE" }
-  | IDENT                                                                                   { (Printf.sprintf "IDENT (“%s”)" (Position.get_val $1)) }
+  | IDENT                                                                                   { (Printf.sprintf "IDENT(“%s”)" (Position.get_val $1)) }
 ;
 
 %%

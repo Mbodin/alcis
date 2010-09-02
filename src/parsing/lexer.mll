@@ -27,13 +27,11 @@ let identifier = (symbol | letter)(symbol | letter | ['0'-'9'])*
 
 rule token = parse
 
-  | blank+ as s             { characters_read (String.length s); token lexbuf }    (* blank are ignored. *)
+  | blank+ as s             { characters_read (String.length s); token lexbuf }    (* blanks are ignored. *)
   | '\n'                    { new_line (); token lexbuf }
 
   | '('                     { characters_read 1; LPAREN }
   | ')'                     { characters_read 1; RPAREN }
-
-  | integer_literal as k    { characters_read (String.length k); INT (cetiq k) }
 
   | ':'                     { characters_read 1; COLON }
   | '='                     { characters_read 1; EQUAL }
@@ -56,6 +54,9 @@ rule token = parse
   | "(*"                    { comment lexbuf ; token lexbuf }
 
   | eof                     { eof_reached := true; EOF }
+
+  | integer_literal as k    { characters_read (String.length k); INT (cetiq k) }
+
   | _                       { Errors.error (get_position ())
                                 [Printf.sprintf "I’m really sorry, but I don’t recognize the token ‘%s’ near the characters %d-%d."
                                 (Lexing.lexeme lexbuf)
