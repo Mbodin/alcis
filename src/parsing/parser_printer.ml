@@ -4,9 +4,37 @@
 
 open Parsed_syntax
 
-let print_preparsed_header _ _ = Errors.not_implemented "print_preparsed_header." (* FIXME *)
+let decal out i =
+    output_string out (String.make i '\t')
 
-let print_preparsed_expression _ _ _ = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
+let rec print_preparsed_header out l =
+    let print_aux = function
+        | Prototype (lt, argl) -> output_string out "Prototype (\n";
+                                  print_preparsed_list_type out 1 lt;
+                                  output_string out "\t,\n";
+                                  List.iter (print_preparsed_arg out 1) argl;
+                                  output_string out "\t)\n"
+        | Comparison (l1, l2) -> Errors.not_implemented "print_preparsed_header" (* FIXME *)
+    in
+    List.iter print_aux l
+
+and print_preparsed_list_type out d = function
+    | Arrow (l1, l2) -> decal out d;
+                        output_string out "Arrow (\n";
+                        print_preparsed_list_type out (d + 1) l1;
+                        decal out d;
+                        output_string out "\t,\n";
+                        print_preparsed_list_type out (d + 1) l2;
+                        decal out d;
+                        output_string out "\t)\n"
+    | List_type l -> Errors.not_implemented "print_preparsed_list_type" (* FIXME *)
+
+and print_preparsed_arg out d = function
+    | Arg_underscore _ -> decal out d;
+                        output_string out "_\n"
+    | Arg_ident name -> decal out d;
+                    output_string out ("“" ^ Position.get_val name ^ "”\n")
+and print_preparsed_expression _ _ _ = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
 
 let set_output name descr fu = Choices.add_action ("-o-" ^ name) 1 ["file"] descr
     (function

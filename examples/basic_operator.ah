@@ -4,6 +4,8 @@
 
 type : int
 
+(* FIXME: The following line are not well parsed. *)
+
 (*int fun <<< int >>> -> int : _ + _
 int fun <<< int >>> -> int : _ * _
 
