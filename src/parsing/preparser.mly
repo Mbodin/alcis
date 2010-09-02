@@ -11,7 +11,7 @@
       ((Printf.sprintf "I’m sorry, but I don’t understand the input, and I think it’s a syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l)
 
   let parse_error s =
-      parsing_error [s]
+      parsing_error (if s = "syntax error" then [] else [s])
 
   let expecting expct =
       parsing_error [
