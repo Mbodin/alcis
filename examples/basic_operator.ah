@@ -2,8 +2,10 @@
 (* Contains all the basic arithmetic operator. *)
 (* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
-int fun <<< int >>> : _ + _
-int fun <<< int >>> : _ * _
+type : int
+
+int fun <<< int >>> -> int : _ + _
+int fun <<< int >>> -> int : _ * _
 
 int * int >>> _ + _
 

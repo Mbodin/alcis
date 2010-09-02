@@ -17,11 +17,11 @@ let set_extension opt filename filetype =
         | l -> Choices.wrong_arg_number_error opt 1 l
     )
 
-let _ = set_extension "-ah" "an Alcis header" Position.Alcis_header
-let _ = set_extension "-ac" "an Alcis source code" Position.Alcis_source_code
-let _ = set_extension "-ai" "an Alcis interface for C" Position.Alcis_C_interface
-let _ = set_extension "-c" "a C source code" Position.C_source_code
-let _ = set_extension "-h" "a C header" Position.C_header
+let _ = set_extension "-i-ah" "an Alcis header" Position.Alcis_header
+let _ = set_extension "-i-ac" "an Alcis source code" Position.Alcis_source_code
+let _ = set_extension "-i-ai" "an Alcis interface for C" Position.Alcis_C_interface
+let _ = set_extension "-i-c" "a C source code" Position.C_source_code
+let _ = set_extension "-i-h" "a C header" Position.C_header
 
 let get_file_type n =
     let check_with e =
@@ -41,7 +41,7 @@ let get_file_type n =
     | _ when check_with ".c" -> Position.C_source_code
     | _ when check_with ".h" -> Position.C_header
     | _ -> Errors.error Position.global ["I’m really sorry, but I don’t recognize the extension of the file “" ^ n ^ "”.";
-    "You may retry with one of the option “-ah”, “-ac”, “-ai”, etc. insteed of “-i”."]
+    "You may retry with one of the option “-i-ah”, “-i-ac”, “-i-ai”, etc. insteed of “-i”."]
 
 let _ = Choices.add_action "-i" 1 ["file"] "Read the file depending on its extension"
     (function

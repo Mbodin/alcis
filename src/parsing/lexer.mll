@@ -43,7 +43,7 @@ rule token = parse
   | "<<<"                   { characters_read 3; LPRIOR }
   | ">>>"                   { characters_read 3; RPRIOR }
 
-  | "fun"                   { characters_read 3; FUN }
+  | "fun"                   { characters_read 3; FUN (get_position ()) }
   | "->"                    { characters_read 2; RIGHT_ARROW }
 
   | "if"                    { characters_read 2; IF }

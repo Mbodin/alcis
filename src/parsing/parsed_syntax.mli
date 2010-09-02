@@ -25,6 +25,7 @@ and expression_item =
     | Int of string Position.e
     | Ident of string Position.e
     | Underscore of Position.t
+    | Expr_fun of Position.t
     | Expr of expression
 
 

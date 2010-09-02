@@ -29,7 +29,8 @@
 %token EQUAL
 %token COLON LPRIOR RPRIOR
 %token SEMI_COLON
-%token FUN RIGHT_ARROW
+%token <Position.t> FUN
+%token RIGHT_ARROW
 %token IF ELSE
 %token <Position.t> UNDERSCORE
 %token EOF
@@ -40,7 +41,7 @@
 %nonassoc   below_COLON
 %nonassoc   COLON
 %nonassoc   LPAREN RPAREN LPRIOR RPRIOR
-%nonassoc   INT IDENT UNDERSCORE
+%nonassoc   FUN INT IDENT UNDERSCORE
 
 %start header body lex_flot
 %type <Parsed_syntax.header list> header
@@ -123,6 +124,7 @@ expression_item_prior:
     | LPRIOR %prec error                                                                    { expecting "<expression> >>>" }
     | LPRIOR expression_item %prec error                                                    { expecting ">>>" }
     | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
+    | FUN                                                                                   { (Expr_fun $1, false) }
     | expression_item                                                                       { ($1, false) }
 ;
 
