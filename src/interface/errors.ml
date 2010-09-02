@@ -37,6 +37,14 @@ let internal_warning mesg =
 let internal_error mesg =
     internal (error Position.global) mesg
 
+let not_implemented funct =
+    internal_error ["I’m really sorry, but there seems to stay unimplemented functions inside myself.";
+                    "Here the missing function needed is named “" ^ funct ^ "”.";
+                    "You probably get a beta version: try update it."]
+
+let misstyped opt t =
+    internal_error ["The option “" ^ opt ^ "” does not contain " ^ t ^ "."]
+
 let _ = Choices.set_internal_error_function internal_error error
 
 let _ = Choices.add_boolean_option "failure-stop" true "Stop the program at any internal error, even if it seems it could be ignored"

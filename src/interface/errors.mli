@@ -6,6 +6,8 @@ val error : Position.t -> string list -> 'a
 val warn : Position.t -> string list -> unit
 val internal_error : string list -> 'a
 val internal_warning : string list -> unit
+val not_implemented : string -> 'a
+val misstyped : string -> string -> 'a
 
 val define_warning : string -> bool -> string -> unit
 val get_warning : string -> bool

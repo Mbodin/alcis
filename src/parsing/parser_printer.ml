@@ -4,9 +4,9 @@
 
 open Parsed_syntax
 
-let print_preparsed_header _ _ = Errors.internal_error ["Sorry, not implemented function: print_preparsed_header."] (* FIXME *)
+let print_preparsed_header _ _ = Errors.not_implemented "print_preparsed_header." (* FIXME *)
 
-let print_preparsed_expression _ _ _ = Errors.internal_error ["Sorry, not implemented function: print_preparsed_expression."] (* FIXME *)
+let print_preparsed_expression _ _ _ = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
 
 let set_output name descr fu = Choices.add_action ("-o-" ^ name) 1 ["file"] descr
     (function
@@ -15,7 +15,7 @@ let set_output name descr fu = Choices.add_action ("-o-" ^ name) 1 ["file"] desc
             List.iter (fu out)
             (match Choices.get_value "input" with
             | Choices.Input_list l -> l
-            | _ -> Errors.internal_error ["The option “input” does not contain an input list."]) (* FIXME: A generic message for this. *)
+            | _ -> Errors.misstyped "input" "an input list")
         | l -> Choices.wrong_arg_number_error "-o-lexemes" 1 l
     )
 
@@ -43,6 +43,6 @@ let _ = set_dev "preparsed"
             | Position.Alcis_source_code ->
                     let result = Preparser.body Lexer.token buf in
                     print_preparsed_expression out 0 result
-            | _ -> Errors.internal_error ["Sorry, not implemented."] (* FIXME *)
+            | _ -> Errors.not_implemented "preparsed in parser_printer.ml" (* FIXME *)
                 )
 

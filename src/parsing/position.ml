@@ -61,7 +61,7 @@ let set_filename name =
 
 let new_line () =
     match !current_pos with
-    | (f, Some (l, _)) -> current_pos := (f, Some (l + 1, Some 0))
+    | (f, Some (l, _)) -> current_pos := (f, Some (l + 1, Some 1))
     | (f, None) -> current_pos := (f, Some (1, None))
 
 let characters_read n =

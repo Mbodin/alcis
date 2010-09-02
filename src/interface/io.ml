@@ -13,7 +13,7 @@ let set_extension opt filename filetype =
                 (Choices.Input_list (match f, Choices.get_value "input" with
                 | "-", Choices.Input_list l -> (stdin, filetype) :: l
                 | f, Choices.Input_list l -> (open_in f, filetype) :: l
-                | _ -> Errors.internal_error ["The option “input” does not contain an input list."]))
+                | _ -> Errors.misstyped "input" "an input list"))
         | l -> Choices.wrong_arg_number_error opt 1 l
     )
 
@@ -49,7 +49,7 @@ let _ = Choices.add_action "-i" 1 ["file"] "Read the file depending on its exten
                 Choices.set_value "input"
                 (Choices.Input_list (match Choices.get_value "input" with
                 | Choices.Input_list l -> (open_in f, get_file_type f) :: l
-                | _ -> Errors.internal_error ["The option “input” does not contain an input list."]))
+                | _ -> Errors.misstyped "input" "an input list."))
         | l -> Choices.wrong_arg_number_error "-i" 1 l
     )
 

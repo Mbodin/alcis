@@ -63,7 +63,7 @@ let comparable a b =
     (greater a b) or (lesser a b)
 
 
-let parse_header _ = Errors.internal_error ["Not implemented function: parse_header."] (* FIXME *)
+let parse_header _ = Errors.not_implemented "parse_header." (* FIXME *)
 
-let parse_source_code _ = Errors.internal_error ["Not implemented function: parse_source_code."] (* FIXME *)
+let parse_source_code _ = Errors.not_implemented "parse_source_code." (* FIXME *)
 
