@@ -10,7 +10,7 @@ SOURCES = \
 	position.ml choices.ml errors.ml \
 	parsed_syntax.ml \
 	lexer.mll preparser.mly \
-	parser.ml \
+	parser.ml parser_printer.ml \
 	io.ml \
 	main.ml
 
