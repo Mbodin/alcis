@@ -27,14 +27,42 @@ and print_preparsed_list_type out d = function
                         print_preparsed_list_type out (d + 1) l2;
                         decal out d;
                         output_string out "\t)\n"
-    | List_type l -> Errors.not_implemented "print_preparsed_list_type" (* FIXME *)
+    | List_type l -> decal out d;
+                        output_string out "List_type (\n";
+                        List.iter
+                        (function
+                            | (e, false) -> print_preparsed_expression_item out (d + 1) e
+                            | (e, true) -> decal out (d + 1);
+                                            output_string out "Prior (\n";
+                                            print_preparsed_expression_item out (d + 2) e;
+                                            decal out (d + 2);
+                                            output_string out ")\n"
+                        ) l
 
 and print_preparsed_arg out d = function
     | Arg_underscore _ -> decal out d;
                         output_string out "_\n"
     | Arg_ident name -> decal out d;
                     output_string out ("“" ^ Position.get_val name ^ "”\n")
-and print_preparsed_expression _ _ _ = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
+
+and print_preparsed_expression out d e = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
+
+and print_preparsed_expression_item out d = function
+    | Expr e -> decal out d;
+                output_string out "Expr (\n";
+                print_preparsed_expression out (d + 1) e;
+                decal out d;
+                output_string out "\t)\n"
+    | e ->
+        decal out d;
+        output_string out
+        (match e with
+            | Int i -> "Int (" ^ Position.get_val i ^ ")\n"
+            | Ident i -> "Ident (" ^ Position.get_val i ^ ")\n"
+            | Underscore _ -> "Underscore\n"
+            | Expr_fun _ -> "Fun\n"
+            | Expr _ -> Errors.internal_error ["A value changed itself while reading it."]
+        )
 
 let set_output name descr fu = Choices.add_action ("-o-" ^ name) 1 ["file"] descr
     (function
