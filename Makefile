@@ -18,7 +18,7 @@ INCLUDE = $(patsubst %,-I %,$(VPATH))
 
 # The executable file to generate (default a.out under Unix)
 
-EXEC = compiler
+EXEC = alcix
 
 ECHO = echo
 
