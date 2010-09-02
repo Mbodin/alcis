@@ -23,7 +23,7 @@ let rec prmesg file premesg = function
                     List.iter (fun m -> prerr_string file; prerr_string (String.make (String.length premesg) ' '); prerr_string m; prerr_newline ()) l
 
 let error pos mesg =
-    prmesg (Position.get_filename pos ^ ": ") (Position.infile_to_string pos ^ "error: ") mesg;
+    prmesg (Position.get_filename pos ^ ": ") (Position.infile_to_string pos ^ ": error: ") mesg;
     exit 1
 
 let warn pos mesg =

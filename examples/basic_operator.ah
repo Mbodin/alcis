@@ -1,0 +1,9 @@
+(* Basic operator.ah *)
+(* Contains all the basic arithmetic operator. *)
+(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
+
+int fun <<< int >>> : _ + _
+int fun <<< int >>> : _ * _
+
+int * int >>> _ + _
+
