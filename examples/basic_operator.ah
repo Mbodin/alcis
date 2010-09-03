@@ -14,6 +14,5 @@ fun int -> int : f _
 int fun <<< int >>> -> int : _ + _
 int fun <<< int >>> -> int : _ * _
 
-(* FIXME: The following line are not well parsed. *)
-(*int * int >>> _ + _*)
+int * int >>> _ + _;
 
