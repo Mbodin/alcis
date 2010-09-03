@@ -14,7 +14,11 @@ let rec print_preparsed_header out l =
                                   output_string out "\t,\n";
                                   List.iter (print_preparsed_arg out 1) argl;
                                   output_string out "\t)\n"
-        | Comparison (l1, l2) -> Errors.not_implemented "print_preparsed_header" (* FIXME *)
+        | Comparison (l1, l2) -> output_string out "Comparison (\n";
+                                    List.iter (fun (e, _) -> print_preparsed_expression_item out 1 e) l1;
+                                    output_string out "\t,\n";
+                                    List.iter (fun (e, _) -> print_preparsed_expression_item out 1 e) l2;
+                                    output_string out "\t)\n"
     in
     List.iter print_aux l
 
@@ -37,13 +41,15 @@ and print_preparsed_list_type out d = function
                                             print_preparsed_expression_item out (d + 2) e;
                                             decal out (d + 2);
                                             output_string out ")\n"
-                        ) l
+                        ) l;
+                        decal out d;
+                        output_string out "\t)\n"
 
 and print_preparsed_arg out d = function
     | Arg_underscore _ -> decal out d;
                         output_string out "_\n"
     | Arg_ident name -> decal out d;
-                    output_string out ("“" ^ Position.get_val name ^ "”\n")
+                        output_string out ("“" ^ Position.get_val name ^ "”\n")
 
 and print_preparsed_expression out d e = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
 
@@ -58,7 +64,7 @@ and print_preparsed_expression_item out d = function
         output_string out
         (match e with
             | Int i -> "Int (" ^ Position.get_val i ^ ")\n"
-            | Ident i -> "Ident (" ^ Position.get_val i ^ ")\n"
+            | Ident i -> "Ident (“" ^ Position.get_val i ^ "”)\n"
             | Underscore _ -> "Underscore\n"
             | Expr_fun _ -> "Fun\n"
             | Expr _ -> Errors.internal_error ["A value changed itself while reading it."]

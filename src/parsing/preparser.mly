@@ -134,7 +134,7 @@ expression_item:
                                                                                                 | Arg_ident i -> Ident i
                                                                                                 | Arg_underscore p -> Underscore p }
     | LPAREN expression RPAREN                                                              { Expr $2 }
-    | LPAREN expression                                                                     { expecting ")" }
+    | LPAREN expression %prec error                                                         { expecting ")" }
 ;
 
 arg:
