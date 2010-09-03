@@ -51,7 +51,17 @@ and print_preparsed_arg out d = function
     | Arg_ident name -> decal out d;
                         output_string out ("“" ^ Position.get_val name ^ "”\n")
 
-and print_preparsed_expression out d e = Errors.not_implemented "print_preparsed_expression." (* FIXME *)
+and print_preparsed_expression out d = function
+    | Expression_list l -> decal out d;
+                            output_string out "Expression_list (\n";
+                            List.iter (function
+                                | e, false -> print_preparsed_expression_item out (d + 1) e
+                                | _, true -> decal out (d + 1);
+                                                output_string out "<prioritary expression (probably a syntax error not yet detected there.)>\n"
+                            ) l;
+                            decal out d;
+                            output_string out "\t)\n"
+    | _ -> Errors.not_implemented "print_preparsed_expression." (* FIXME *)
 
 and print_preparsed_expression_item out d = function
     | Expr e -> decal out d;
