@@ -37,9 +37,9 @@
 
 %nonassoc   error
 %left       SEMI_COLON
-%right      RIGHT_ARROW
 %nonassoc   below_COLON
 %nonassoc   COLON
+%right      RIGHT_ARROW
 %nonassoc   LPAREN RPAREN LPRIOR RPRIOR
 %nonassoc   FUN INT IDENT UNDERSCORE
 
