@@ -13,10 +13,10 @@
   let parse_error s =
       parsing_error (if s = "syntax error" then [] else [s])
 
-  let expecting expct =
-      parsing_error [
-          "I was expecting an expression of the pattern “" ^ expct ^ "”.";
-      ]
+  let expecting expct l =
+      parsing_error (
+          ("I was expecting an expression of the pattern “" ^ expct ^ "”.")
+          :: l)
 
   let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]
 
@@ -24,10 +24,12 @@
 
 %token <string Position.e> INT /* The Ocaml int type would be two small for real integers. */
 %token <string Position.e> IDENT
-%token LPAREN RPAREN
+%token <Position.t> LPAREN
+%token RPAREN
 %token COLON
 %token EQUAL
-%token LPRIOR RPRIOR
+%token <Position.t> LPRIOR
+%token RPRIOR
 %token SEMI_COLON
 %token <Position.t> FUN
 %token RIGHT_ARROW
@@ -73,7 +75,7 @@ expression:
     | declaration                                                                           { let a, b = $1 in Variable (a, b) }
     | expression_no_semi_colon                                                              { Expression_list $1 }
     | expression SEMI_COLON expression                                                      { Expression_sequence ($1, $3) }
-    | /* empty */ %prec error                                                               { expecting "<expression>" }
+    | /* empty */ %prec error                                                               { expecting "<expression>" ["Something should be there something there."] }
 ;
 
 expression_no_semi_colon:
@@ -98,15 +100,15 @@ expr_item_prior_inv_colon_list_args:
 ;
 
 fun_type:
-    | /* empty */ %prec error                                                               { expecting "<type>" }
+    | /* empty */ %prec error                                                               { expecting "<type>" ["Try adding a type there."] }
     | expression_no_semi_colon                                                              { List_type $1 }
     | fun_type RIGHT_ARROW fun_type                                                         { Arrow ($1, $3) }
 ;
 
 definition:
-    | expr_item_prior_inv_colon_list_args %prec error                                       { expecting "=" }
-    | expr_item_prior_inv_colon_list_args EQUAL %prec error                                 { expecting "<expression>" }
-    | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon %prec error        { expecting ";" }
+    | expr_item_prior_inv_colon_list_args %prec error                                       { expecting "=" ["Type an initialisation value there."] }
+    | expr_item_prior_inv_colon_list_args EQUAL %prec error                                 { expecting "<expression>" ["There is an equal symbol, but I’m afraid it’s not followed by any expression."] }
+    | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon %prec error        { expecting ";" ["I’m afraid there miss a semicolon."] }
     | expr_item_prior_inv_colon_list_args EQUAL expression_no_semi_colon SEMI_COLON         { match $1 with
                                                                                                 | List_type a, b -> (List_type (List.rev a), b, Expression_list $3)
                                                                                                 | Arrow (List_type a, c), b -> (Arrow (List_type (List.rev a), c), b, Expression_list $3)
@@ -121,8 +123,8 @@ declaration:
 ;
 
 expression_item_prior:
-    | LPRIOR %prec error                                                                    { expecting "<expression> >>>" }
-    | LPRIOR expression_item %prec error                                                    { expecting ">>>" }
+    | LPRIOR %prec error                                                                    { expecting "<expression> >>>" [] }
+    | LPRIOR expression_item %prec error                                                    { expecting ">>>" ["The prior at position " ^ Position.infile_to_string $1 ^ " would be unmatched."] }
     | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
     | FUN                                                                                   { (Expr_fun $1, false) }
     | expression_item                                                                       { ($1, false) }
@@ -134,7 +136,7 @@ expression_item:
                                                                                                 | Arg_ident i -> Ident i
                                                                                                 | Arg_underscore p -> Underscore p }
     | LPAREN expression RPAREN                                                              { Expr $2 }
-    | LPAREN expression %prec error                                                         { expecting ")" }
+    | LPAREN expression %prec error                                                         { expecting ")" ["The parenthesis at position " ^ Position.infile_to_string $1 ^ " would be unmatced."] }
 ;
 
 arg:

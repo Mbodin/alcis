@@ -30,7 +30,7 @@ rule token = parse
   | blank+ as s             { characters_read (String.length s); token lexbuf }    (* blanks are ignored. *)
   | '\n'                    { new_line (); token lexbuf }
 
-  | '('                     { characters_read 1; LPAREN }
+  | '('                     { characters_read 1; LPAREN (get_position ()) }
   | ')'                     { characters_read 1; RPAREN }
 
   | ':'                     { characters_read 1; COLON }
@@ -38,7 +38,7 @@ rule token = parse
 
   | ';'                     { characters_read 1; SEMI_COLON }
 
-  | "<<<"                   { characters_read 3; LPRIOR }
+  | "<<<"                   { characters_read 3; LPRIOR (get_position ()) }
   | ">>>"                   { characters_read 3; RPRIOR }
 
   | "fun"                   { characters_read 3; FUN (get_position ()) }
