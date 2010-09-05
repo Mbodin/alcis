@@ -94,19 +94,16 @@ let set_output name descr fu = Choices.add_action ("-o-" ^ name) 1 ["file"] desc
 let set_dev name f = set_output name "(Only used by developpers)" f
 
 let _ = set_dev "lexemes"
-    (fun out (channel, _) ->
-            Lexer.eof_reached := false;
+    (fun out (name, channel, _) ->
+            Position.set_filename name;
             let buf = Lexing.from_channel channel in
-            while !Lexer.eof_reached = false
-            do
-                let result = Preparser.lex_flot Lexer.token buf in
-                List.iter (fun s -> output_string out (s ^ " ")) result
-            done
+            let result = Preparser.lex_flot Lexer.token buf in
+            List.iter (fun s -> output_string out (s ^ " ")) result
     )
 
 let _ = set_dev "preparsed"
-    (fun out (channel, t) ->
-            Lexer.eof_reached := false;
+    (fun out (name, channel, t) ->
+            Position.set_filename name;
             let buf = Lexing.from_channel channel in
             match t with
             | Position.Alcis_header ->

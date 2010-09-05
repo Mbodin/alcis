@@ -5,7 +5,7 @@
 type arg =
     | Bool of bool
     | String of string
-    | Input_list of (in_channel * Position.file_type) list
+    | Input_list of (string * in_channel * Position.file_type) list
 
 
 val add_boolean_option : string -> bool -> string -> unit

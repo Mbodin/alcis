@@ -5,7 +5,6 @@
 
     open Preparser
     open Position
-    let eof_reached = ref false
 
     let _ = Errors.define_warning "comments" true "Activate all warnings concerning comments"
 }
@@ -53,7 +52,7 @@ rule token = parse
 
   | "(*"                    { comment lexbuf ; token lexbuf }
 
-  | eof                     { eof_reached := true; EOF }
+  | eof                     { EOF }
 
   | integer_literal as k    { characters_read (String.length k); INT (cetiq k) }
 

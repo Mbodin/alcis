@@ -19,7 +19,7 @@ let set_internal_error_function, internal_error, error =
 type arg =
     | Bool of bool
     | String of string
-    | Input_list of (in_channel * Position.file_type) list
+    | Input_list of (string * in_channel * Position.file_type) list
 
 
 let options = Hashtbl.create 100

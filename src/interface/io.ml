@@ -3,7 +3,7 @@
 (* author: Martin BODIN <martin.bodin@ens-lyon.fr> *)
 
 
-let _ = Choices.add_option "input" (Choices.Input_list [])
+let _ = Choices.add_option "input" (Choices.Input_list []) (* FIXME: Make that we only read one time each file at input, and that computations are not redone for each output. *)
 
 let set_extension opt filename filetype =
     Choices.add_action opt 1 ["file"] ("Read the file as " ^ filename ^ " (“-” stands for the standard input)")
@@ -11,8 +11,8 @@ let set_extension opt filename filetype =
         | f :: [] ->
             Choices.set_value "input"
                 (Choices.Input_list (match f, Choices.get_value "input" with
-                | "-", Choices.Input_list l -> (stdin, filetype) :: l
-                | f, Choices.Input_list l -> (open_in f, filetype) :: l
+                | "-", Choices.Input_list l -> ("stdin", stdin, filetype) :: l
+                | f, Choices.Input_list l -> (f, open_in f, filetype) :: l
                 | _ -> Errors.misstyped "input" "an input list"))
         | l -> Choices.wrong_arg_number_error opt 1 l
     )
@@ -48,7 +48,7 @@ let _ = Choices.add_action "-i" 1 ["file"] "Read the file depending on its exten
         | f :: [] ->
                 Choices.set_value "input"
                 (Choices.Input_list (match Choices.get_value "input" with
-                | Choices.Input_list l -> (open_in f, get_file_type f) :: l
+                | Choices.Input_list l -> (f, open_in f, get_file_type f) :: l
                 | _ -> Errors.misstyped "input" "an input list."))
         | l -> Choices.wrong_arg_number_error "-i" 1 l
     )

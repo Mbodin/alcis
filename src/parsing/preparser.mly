@@ -4,7 +4,6 @@
 (* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
   open Parsed_syntax
-  exception Eof
 
   let parsing_error l =
       Errors.error (Position.get_position ())
@@ -124,7 +123,7 @@ declaration:
 
 expression_item_prior:
     | LPRIOR %prec error                                                                    { expecting "<expression> >>>" [] }
-    | LPRIOR expression_item %prec error                                                    { expecting ">>>" ["The prior at position " ^ Position.infile_to_string $1 ^ " would be unmatched."] }
+    | LPRIOR expression_item %prec error                                                    { expecting ">>>" ["The “<<<” at position " ^ Position.infile_to_string $1 ^ " would be unmatched."] }
     | LPRIOR expression_item RPRIOR                                                         { ($2, true) }
     | FUN                                                                                   { (Expr_fun $1, false) }
     | expression_item                                                                       { ($1, false) }
