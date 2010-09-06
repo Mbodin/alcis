@@ -9,7 +9,7 @@ type file_type =
     | C_header
     | C_source_code
 
-type t = string * ((int * (int option)) option)
+type t = string * ((int * (int option)) option) (* FIXME: This type should contain a begin and an end position. *)
 
 let get_filename (s, _) = s
 
