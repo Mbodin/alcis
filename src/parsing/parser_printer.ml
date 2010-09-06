@@ -61,7 +61,33 @@ and print_preparsed_expression out d = function
                             ) l;
                             decal out d;
                             output_string out "\t)\n"
-    | _ -> Errors.not_implemented "print_preparsed_expression." (* FIXME *)
+    | Expression_sequence (e1, e2) -> decal out d;
+                                      output_string out "(\n";
+                                      print_preparsed_expression out d e1;
+                                      decal out d;
+                                      output_string out ";\n";
+                                      print_preparsed_expression out d e2;
+                                      decal out d;
+                                      output_string out ")\n"
+    | Constant (l, a, e) -> decal out d;
+                            output_string out "Constant (\n";
+                            print_preparsed_list_type out (d + 1) l;
+                            decal out d;
+                            output_string out "\t,\n";
+                            List.iter (print_preparsed_arg out (d + 1)) a;
+                            decal out d;
+                            output_string out "\t,\n";
+                            print_preparsed_expression out (d + 1) e;
+                            decal out d;
+                            output_string out "\t)\n"
+     | Variable (l, a) -> decal out d;
+                            output_string out "Variable (\n";
+                            print_preparsed_list_type out (d + 1) l;
+                            decal out d;
+                            output_string out "\t,\n";
+                            List.iter (print_preparsed_arg out (d + 1)) a;
+                            decal out d;
+                            output_string out "\t)\n"
 
 and print_preparsed_expression_item out d = function
     | Expr e -> decal out d;
