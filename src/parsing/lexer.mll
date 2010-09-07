@@ -43,9 +43,6 @@ rule token = parse
   | "fun"                   { characters_read 3; FUN (get_position ()) }
   | "->"                    { characters_read 2; RIGHT_ARROW }
 
-  | "if"                    { characters_read 2; IF }
-  | "else"                  { characters_read 4; ELSE }
-
   | '_'                     { characters_read 1; UNDERSCORE (get_position ()) }
 
   | identifier as s         { characters_read (String.length s); IDENT (cetiq s) }

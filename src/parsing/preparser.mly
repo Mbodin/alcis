@@ -32,7 +32,6 @@
 %token SEMI_COLON
 %token <Position.t> FUN
 %token RIGHT_ARROW
-%token IF ELSE
 %token <Position.t> UNDERSCORE
 %token EOF
 
@@ -168,8 +167,6 @@ token:
   | COLON                                                                                   { "COLON" }
   | FUN                                                                                     { "FUN" }
   | RIGHT_ARROW                                                                             { "RIGHT_ARROW" }
-  | IF                                                                                      { "IF" }
-  | ELSE                                                                                    { "ELSE" }
   | UNDERSCORE                                                                              { "UNDERSCORE" }
   | IDENT                                                                                   { (Printf.sprintf "IDENT(“%s”)" (Position.get_val $1)) }
 ;
