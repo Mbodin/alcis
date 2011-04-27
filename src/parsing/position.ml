@@ -55,6 +55,8 @@ let get_position () = !current_pos
 let cetiq a =
     (a, get_position ())
 
+let apply f a =
+	etiq (f (get_val a)) (get_pos a)
 
 let set_filename name =
     current_pos := (name, None)

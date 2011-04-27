@@ -9,13 +9,12 @@ let gv = Position.get_val
 
 let filename = ref Position.global
 
-let priorities = Hashtbl.create 50
-(* There follow the prototype of it. *)
-(* val priorities : (name_expr, name_expr list) Hashtbl.t *)
+let priorities : (name_expr, name_expr list) Hashtbl.t = Hashtbl.create 100
 (* Each element of a name_expr are all the element less important than it. *)
 
 
 let rec string_of_parsed_expression = function
+	| Integer i -> gv i
     | Name p -> string_of_name_expr (gv p)
     | Application p ->
             let f, args = gv p in
@@ -50,6 +49,7 @@ let unknown_name_expr name =
         "This variable is declared in " ^ Position.to_string (Position.get_pos name) ^ "."
     ]
 
+
 let get_priorities a =
     try Hashtbl.find priorities a with
     | Not_found -> unknown_name_expr a
@@ -63,7 +63,21 @@ let comparable a b =
     (greater a b) or (lesser a b)
 
 
-let parse_header _ = Errors.not_implemented "parse_header." (* FIXME *)
+let name_expr_of_expression_item = function (* FIXME: Explain precisely the goal of this function: I thonk I just don’t need the following FIXME… *)
+	| Int i -> Integer i
+	| Ident se -> Name (Position.apply (fun s -> Position.cetiq (* FIXME: The position does not correspond to what is expected! *) [Expr_ident s]) se)
+	| Underscore p -> Name (Position.etiq (Position.cetiq (* FIXME: Same problem as above. *) [Expr_underscore Type (* FIXME: add an “unknow” type just for this part of the process? *)]) p)
+	| Expr_fun p -> Name (Position.etiq (Position.cetiq (* FIXME: Same problem as above. *) [Expr_underscore Type (* FIXME: To be reread… *) ]) p)
+	| Expr e -> Errors.not_implemented "name_expr_of_expression_item." (* FIXME *)
 
 let parse_source_code _ = Errors.not_implemented "parse_source_code." (* FIXME *)
+
+let parse_header_part ph = function
+	| Prototype (list_types, args) -> Errors.not_implemented "parse_header." (* FIXME *)
+	| Comparison (el1, el2) -> Errors.not_implemented "parse_header." (* FIXME *)
+
+let parse_header h =
+	let ph : parsed_header = Hashtbl.create 50 in
+	List.iter (parse_header_part ph) h ;
+	ph
 

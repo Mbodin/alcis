@@ -22,7 +22,7 @@ and expression =
     | Expression_sequence of expression * expression
 
 and expression_item =
-    | Int of string Position.e
+    | Int of string Position.e	(* Not that int are treated through string to allow using as long integers as wanted. *)
     | Ident of string Position.e
     | Underscore of Position.t
     | Expr_fun of Position.t
@@ -38,16 +38,17 @@ and type_expr = type_expr_item list
 and type_expr_item =
     | Fun
     | Type
-    | Type_expr of parsed_expression (* The identifier case in included in that case. *)
+    | Type_expr of parsed_expression (* The identifier case is included in that case. *)
 
-and name_expr = name_expr_item list Position.e (* The position correspond to where the notation has been defined. *)
+and name_expr = name_expr_item list Position.e (* The position corresponds to where the notation has been defined. *)
 
 and name_expr_item =
     | Expr_ident of string
     | Expr_underscore of type_expr_item
 
 and parsed_expression =
-    | Name of name_expr Position.e
+	| Integer of string Position.e
+    | Name of name_expr Position.e (* The position corresponds to where it has been used. *)
     | Application of (parsed_expression * parsed_expression list) Position.e
     | Sequence of (parsed_expression * parsed_expression) Position.e
 

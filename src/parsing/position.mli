@@ -30,6 +30,8 @@ val get_val : 'a e -> 'a
 val etiq : 'a -> t -> 'a e
 val cetiq : 'a -> 'a e
 
+val apply : ('a -> 'b) -> 'a e -> 'b e
+
 val set_filename : string -> unit
 val new_line : unit -> unit
 val characters_read : int -> unit

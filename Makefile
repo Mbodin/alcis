@@ -6,7 +6,14 @@ VPATH = doc \
 
 # The Caml sources (including camlyacc and camllex source files)
 
+# FIXME: This Makefile has to be changed… It doesn’t support mli files it seems.
 SOURCES = \
+	position.mli choices.mli errors.mli \
+	parsed_syntax.mli \
+	parser.mli parser_printer.mli \
+	io.mli \
+	main.mli \
+	\
 	position.ml choices.ml errors.ml \
 	parsed_syntax.ml \
 	lexer.mll preparser.mly \
@@ -58,7 +65,8 @@ SOURCES1 = $(SOURCES:.mly=.ml)
 SOURCES2 = $(SOURCES1:.mll=.ml)
 PRODLEX  = $(patsubst %.mll, %.ml, $(filter %.mll,$(SOURCES)))
 PRODYACC = $(patsubst %.mly, %.ml, $(filter %.mly,$(SOURCES))) $(patsubst %.mly, %.mli, $(filter %.mly,$(SOURCES)))
-OBJS     = $(SOURCES2:.ml=.cmo)
+SOURCES3 = ${filter %.ml, ${SOURCES2}}
+OBJS     = ${SOURCES3:.ml=.cmo}
 OPTOBJS  = $(SOURCES2:.ml=.cmx)
 REMOVE   = find . -name $(var) -exec rm -f {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
