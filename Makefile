@@ -1,13 +1,19 @@
+# Makefile
+# Well… It’s the global Makefile!
+# author: Martin BODIN <martin.bodin@ens-lyon.fr>
 
-VPATH = doc \
-		src/parsing src/interface
+CAML = ocaml
+CAMLC = ocamlc -w Ae
+CAMLOPT = ocamlopt -w Ae
+CAMLDEP = ocamldep
+CAMLLEX = ocamllex
+CAMLYACC = ocamlyacc
 
-########################## User's variables #####################
+LIBS = unix.cma
 
-# The Caml sources (including camlyacc and camllex source files)
+EXEC = alcix
 
-# FIXME: This Makefile has to be changed… It doesn’t support mli files it seems.
-SOURCES = \
+FILES = \
 	position.mli choices.mli errors.mli \
 	parsed_syntax.mli \
 	parser.mli parser_printer.mli \
@@ -21,113 +27,136 @@ SOURCES = \
 	io.ml \
 	main.ml
 
-INCLUDE = $(patsubst %,-I %,$(VPATH))
+COMPILE = compile
+SRC = src
+SUBFOLDERS = \
+			parsing \
+			interface
 
-# The executable file to generate (default a.out under Unix)
-
-EXEC = alcix
-
+OTHER_FOLDERS = 
 ECHO = echo
 
-# The document to be created
+VPATH = ${COMPILE}:${foreach dir, ${SUBFOLDERS}, ${SRC}/${dir}}${foreach dir, ${OTHER_FOLDERS}, :${dir}}:.
+INCLUDE = ${patsubst %,-I %,${subst :, ,${VPATH}}}
 
-DOC = implementation.pdf standard.pdf
+.PHONY: all opt clean mrproper recycle fixme
 
-DOCPATH = doc
-
-########################## Advanced user's variables #####################
-
-# The Caml compiler
-CAML = ocaml
-CAMLC = ocamlc -w Ae
-CAMLOPT = ocamlopt -w Ae
-CAMLDEP = ocamldep
-CAMLLEX = ocamllex
-CAMLYACC = ocamlyacc -v
-
-# The LaTeX compiler
-PDFLATEX = pdflatex
-
-################ End of user's variables #####################
+all: ${EXEC}
 
 
-##############################################################
-################ This part should be generic #################
-################ Nothing to set up or fix here ###############
-##############################################################
-.PHONY: all documentation clean mrproper fixme
+opt: ${EXEC}.opt
 
-all : $(EXEC) documentation
+recycle:
+	@rm -rf *~
+	@rm -rf ${SRC}/*~ ${SRC}/*/*~
 
-opt : $(EXEC).opt
+mrproper: recycle clean
+	@rm -rf ${EXEC} ${EXEC}.opt
 
+
+SOURCES  = ${FILES}
 SOURCES1 = $(SOURCES:.mly=.ml)
-SOURCES2 = $(SOURCES1:.mll=.ml)
+SOURCES2 = ${filter %.ml, $(SOURCES1:.mll=.ml)}
+HEADERS  = ${filter %.mli, $(SOURCES1:.mll=.ml)}
 PRODLEX  = $(patsubst %.mll, %.ml, $(filter %.mll,$(SOURCES)))
 PRODYACC = $(patsubst %.mly, %.ml, $(filter %.mly,$(SOURCES))) $(patsubst %.mly, %.mli, $(filter %.mly,$(SOURCES)))
-SOURCES3 = ${filter %.ml, ${SOURCES2}}
-OBJS     = ${SOURCES3:.ml=.cmo}
-OPTOBJS  = $(SOURCES2:.ml=.cmx)
-REMOVE   = find . -name $(var) -exec rm -f {} \;
+CMI      = ${foreach file, ${HEADERS:.mli=.cmi}, ${COMPILE}/${file}}
+OBJS     = ${foreach file, $(SOURCES2:.ml=.cmo), ${COMPILE}/${file}}
+OPTOBJS  = ${foreach file, $(SOURCES2:.ml=.cmx), ${COMPILE}/${file}}
+REMOVE   = find . -name $(var) -exec rm -vf {} \;
 DUMP = sed -e 's/\\/\\\\/g' -e 's/\"/\\"/g' $(var) >> $@
 
-$(EXEC): $(OBJS) .depend
-	@${ECHO} "\033[33m${OBJS} → $@\033[0m"
-	@$(CAMLC) $(INCLUDE) -o $(EXEC) $(LIBS) $(OBJS)
+${EXEC}: ${CMI} ${OBJS} .depend
+	@${ECHO} "\033[1;33m${CMI} ${OBJS} → ${EXEC}\033[0;0m"
+	@${CAMLC} ${INCLUDE} -o ${EXEC} ${LIBS} ${OBJS}
 
-$(EXEC).opt: $(OPTOBJS) .depend
-	@${ECHO} "\033[33m${OPTOBJS} → $@\033[0m"
+${EXEC}.opt: ${CMI} ${OPTOBJS} .depend 
+	@${ECHO} "\033[1;33m${OPTOBJS} → ${EXEC}.opt\033[0;0m"
 	@$(CAMLOPT) $(INCLUDE) -o $(EXEC).opt $(LIBS:.cma=.cmxa) $(OPTOBJS)
 
 .SUFFIXES:
 .SUFFIXES: .ml .mli .cmo .cmi .cmx .mll .mly
 
-.ml.cmo:
-	@${ECHO} "\033[32m$< → $@\033[0m"
-	@$(CAMLC) $(INCLUDE) -c $<
+${COMPILE}/%.cmo: ${SRC}/*/%.ml
+	@${ECHO} "\033[1;36m$*.ml → $*.cmo\033[0;0m"
+	@${CAMLC} ${INCLUDE} -c $<
+	@mv ${SRC}/*/$*.cmo ${COMPILE}/
+	@if [ -e ${SRC}/*/$*.cmi ]; then mv ${SRC}/*/$*.cmi ${COMPILE}/; fi
 
-.mli.cmi:
-	@${ECHO} "\033[36m$< → $@\033[0m"
-	@$(CAMLC) $(INCLUDE) -c $<
+${COMPILE}/%.cmi: ${SRC}/*/%.mli
+	@${ECHO} "\033[1;36m$*.mli → $*.cmi\033[0;0m"
+	@${CAMLC} ${INCLUDE} -c $<
+	@mv ${SRC}/*/$*.cmi ${COMPILE}/
 
-.ml.cmx:
-	@${ECHO} "\033[32m$< → $@\033[0m"
-	@$(CAMLOPT) $(INCLUDE) -c $<
+${COMPILE}/%.cmx: ${SRC}/*/%.ml
+	@${ECHO} "\033[1;36m$*.ml → $*.cmx\033[0;0m"
+	@${CAMLOPT} ${INCLUDE} -c $<
+	@mv ${SRC}/*/$*.cmx ${SRC}/*/$*.o ${COMPILE}/
+	@if [ -f ${SRC}/*/$*.cmi ]; then mv ${SRC}/*/$*.cmi ${COMPILE}/; fi
 
-.mll.cmo:
-	@$(CAMLLEX) $<
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLC) $(INCLUDE) -c $*.ml
+${COMPILE}/%.cmo: ${SRC}/*/%.mll
+	@${CAMLLEX} $<
+	@mv ${<:.mll=.ml} ${COMPILE}/
+	@${ECHO} "\033[1;36m$*.mll → $*.cmo\033[0;0m"
+	@${CAMLC} ${INCLUDE} -c ${COMPILE}/$*.ml
 
-.mll.cmx:
-	@$(CAMLLEX) $<
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLOPT) $(INCLUDE) -c $*.ml
+${COMPILE}/%.cmx: ${SRC}/*/%.mll
+	@${CAMLLEX} $<
+	@mv ${<:.mll=.ml} ${COMPILE}/
+	@${ECHO} "\033[1;36m$*.mll → $*.cmx\033[0;0m"
+	@${CAMLOPT} ${INCLUDE} -c ${COMPILE}/$*.ml
 
-.mly.cmo:
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLYACC) $<
-	@$(CAMLC) $(INCLUDE) -c $*.mli
-	@$(CAMLC) $(INCLUDE) -c $*.ml
+${COMPILE}/%.cmo: ${SRC}/*/%.mly
+	@${CAMLYACC} $<
+	@mv ${SRC}/*/$*.mli ${COMPILE}/
+	@mv ${SRC}/*/$*.ml ${COMPILE}/
+	@${ECHO} "\033[1;36m$*.mly → $*.mli\033[0;0m"
+	@$(CAMLC) ${INCLUDE} -c ${COMPILE}/$*.mli
+	@${ECHO} "\033[1;36m$*.mly → $*.cmo\033[0;0m"
+	@$(CAMLC) $(INCLUDE) -c ${COMPILE}/$*.ml
 
-.mly.cmx:
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLYACC) $<
-	@$(CAMLOPT) $(INCLUDE) -c $*.mli
-	@$(CAMLOPT) $(INCLUDE) -c $*.ml
+${COMPILE}/%.cmx: ${SRC}/*/%.mly
+	@${CAMLYACC} $<
+	@mv ${SRC}/*/$*.mli ${COMPILE}/
+	@mv ${SRC}/*/$*.ml ${COMPILE}/
+	@${ECHO} "\033[1;36m$*.mly → $*.mli\033[0;0m"
+	@${CAMLOPT} ${INCLUDE} -c ${COMPILE}/$*.mli
+	@${ECHO} "\033[1;36m$*.mly → $*.cmx\033[0;0m"
+	@${CAMLOPT} ${INCLUDE} -c ${COMPILE}/$*.ml
 
-.mly.cmi:
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLYACC) $<
-	@$(CAMLC) $(INCLUDE) -c $*.mli
+${COMPILE}/%.cmi: ${SRC}/*/%.mly
+	@${CAMLYACC} $<
+	@mv ${SRC}/*/$*.mli
+	@${ECHO} "\033[1;36m$*.mly → $*.cmi\033[0;0m"
+	@${CAMLC} ${INCLUDE} -c $*.mli
+	@mv ${SRC}/*/$*.cmi ${COMPILE}/
 
-.mll.ml:
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	$(CAMLLEX) $<
+${COMPILE}/%.ml: ${SRC}/*/%.mll
+	@${CAMLLEX} $<
+	@mv ${SRC}/*/$*.ml ${COMPILE}/
 
-.mly.ml:
-	@${ECHO} "\033[35m$< → $@\033[0m"
-	@$(CAMLYACC) $<
+${COMPILE}/%.ml: ${SRC}/*/%.mly
+	@${CAMLYACC} $<
+	@mv ${SRC}/*/$*.ml ${COMPILE}/
+
+fixme:
+	@grep -is FIXME ${SRC}/*/*.ml ${SRC}/*/*.mli ${SRC}/*/*.mll ${SRC}/*/*.mly ; true
+
+clean:
+	@rm ${COMPILE}/*
+
+DEPENDFILES = ${foreach file, ${FILES}, ${SRC}/*/${file}} \
+			  ${foreach file, ${filter %.mll, ${FILES}}, ${COMPILE}/${file:.mll=.ml}} \
+			  ${foreach file, ${filter %.mly, ${FILES}}, ${COMPILE}/${file:.mly=.ml}}
+
+.depend: ${DEPENDFILES} Makefile
+	@${CAMLDEP} ${INCLUDE} ${DEPENDFILES} > .depend.tmp
+	@sed "s/${SRC}\/[^\/]*\/\([a-zA-Z0-9_]*\).cm\(.\)/${COMPILE}\/\1.cm\2/g" .depend.tmp > .depend
+	@rm .depend.tmp
+
+-include .depend
+
+# These lines are human-generated ;-) because ocamldep does not parse mll and mly files…
 
 ##############################################################
 ################### Creating documentation ###################
@@ -142,36 +171,4 @@ documentation: ${DOC}
 	@${ECHO} "\033[33m$(<F) → $@\033[0m"
 	@find . -name $(<F) -execdir ${PDFLATEX} {} 2> /dev/null \;
 	@mv ${DOCPATH}/$@ .
-
-##############################################################
-################### Other generic rules ######################
-##############################################################
-
-clean:
-	@# dependencies
-	@rm -f ".depend"
-	@# libraries
-	@$(foreach var,"*.cm[iox]" "*~" ".*~",$(REMOVE);)
-	@# lexer
-	@$(foreach var,$(PRODLEX),$(REMOVE);)
-	@# parser
-	@$(foreach var,$(PRODYACC),$(REMOVE);)
-	@# documentation files
-	@rm -f $(addprefix $(DOCPATH)/,*~ *.dvi *.ps *.out *.log *.toc *.aux *.nav *.snm)
-
-mrproper: clean
-	@# executable
-	@$(foreach var,$(EXEC) $(EXEC).opt,$(REMOVE);)
-	@# documentation files
-	@$(foreach var,${DOC},$(REMOVE);)
-
-fixme:
-	@# debuging
-	@grep -i FIXME $(foreach d,${VPATH},$(foreach e,tex ml mli mll mly,$d/*.$e)) 2> /dev/null ; true
-
-.depend: $(SOURCES2)
-	@${ECHO} "\033[34m$(SOURCES2) → $@\033[0m"
-	@$(CAMLDEP) $(INCLUDE) $(foreach var, $(notdir $^), $(shell find . -name $(var))) > $@
-
--include .depend
 
