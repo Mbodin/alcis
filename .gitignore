@@ -1,7 +1,6 @@
-/.git
+/.bzr
 /_build
 alcix
 *~
 \#*\#
 *.swp
-

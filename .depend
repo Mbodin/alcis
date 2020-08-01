@@ -1,50 +1,100 @@
-compile/position.cmi: 
-compile/choices.cmi: compile/position.cmi 
-compile/errors.cmi: compile/position.cmi 
-compile/parsed_syntax.cmi: compile/position.cmi 
-compile/parser.cmi: compile/parsed_syntax.cmi 
-compile/parser_printer.cmi: 
-compile/io.cmi: 
-compile/main.cmi: 
-compile/position.cmo: compile/position.cmi 
-compile/position.cmx: compile/position.cmi 
-compile/choices.cmo: compile/position.cmi compile/choices.cmi 
-compile/choices.cmx: compile/position.cmx compile/choices.cmi 
-compile/errors.cmo: compile/position.cmi compile/choices.cmi \
-    compile/errors.cmi 
-compile/errors.cmx: compile/position.cmx compile/choices.cmx \
-    compile/errors.cmi 
-compile/parsed_syntax.cmo: compile/position.cmi \
-    compile/parsed_syntax.cmi 
-compile/parsed_syntax.cmx: compile/position.cmx \
-    compile/parsed_syntax.cmi 
-compile/parser.cmo: compile/position.cmi \
-    compile/parsed_syntax.cmi compile/errors.cmi \
-    compile/parser.cmi 
-compile/parser.cmx: compile/position.cmx \
-    compile/parsed_syntax.cmx compile/errors.cmx \
-    compile/parser.cmi 
-compile/parser_printer.cmo: compile/preparser.cmi \
-    compile/position.cmi compile/parsed_syntax.cmi compile/lexer.cmo \
-    compile/errors.cmi compile/choices.cmi \
-    compile/parser_printer.cmi 
-compile/parser_printer.cmx: compile/preparser.cmx \
-    compile/position.cmx compile/parsed_syntax.cmx compile/lexer.cmx \
-    compile/errors.cmx compile/choices.cmx \
-    compile/parser_printer.cmi 
-compile/io.cmo: compile/position.cmi compile/errors.cmi \
-    compile/choices.cmi compile/io.cmi 
-compile/io.cmx: compile/position.cmx compile/errors.cmx \
-    compile/choices.cmx compile/io.cmi 
-compile/main.cmo: compile/position.cmi compile/errors.cmi \
-    compile/choices.cmi compile/main.cmi 
-compile/main.cmx: compile/position.cmx compile/errors.cmx \
-    compile/choices.cmx compile/main.cmi 
-compile/lexer.cmo: compile/preparser.cmi compile/position.cmi \
-    compile/errors.cmi 
-compile/lexer.cmx: compile/preparser.cmx compile/position.cmx \
-    compile/errors.cmx 
-compile/preparser.cmo: compile/position.cmi compile/parsed_syntax.cmi \
-    compile/errors.cmi compile/preparser.cmi 
-compile/preparser.cmx: compile/position.cmx compile/parsed_syntax.cmx \
-    compile/errors.cmx compile/preparser.cmi 
+compile/lexer.cmo : \
+    compile/preparser.cmi \
+    compile/position.cmi \
+    compile/errors.cmi
+compile/lexer.cmx : \
+    compile/preparser.cmx \
+    compile/position.cmx \
+    compile/errors.cmx
+compile/preparser.cmo : \
+    compile/position.cmi \
+    compile/parsed_syntax.cmi \
+    compile/errors.cmi \
+    compile/preparser.cmi
+compile/preparser.cmx : \
+    compile/position.cmx \
+    compile/parsed_syntax.cmx \
+    compile/errors.cmx \
+    compile/preparser.cmi
+compile/choices.cmo : \
+    compile/position.cmi \
+    compile/choices.cmi
+compile/choices.cmx : \
+    compile/position.cmx \
+    compile/choices.cmi
+compile/choices.cmi : \
+    compile/position.cmi
+compile/errors.cmo : \
+    compile/position.cmi \
+    compile/choices.cmi \
+    compile/errors.cmi
+compile/errors.cmx : \
+    compile/position.cmx \
+    compile/choices.cmx \
+    compile/errors.cmi
+compile/errors.cmi : \
+    compile/position.cmi
+compile/io.cmo : \
+    compile/position.cmi \
+    compile/errors.cmi \
+    compile/choices.cmi \
+    compile/io.cmi
+compile/io.cmx : \
+    compile/position.cmx \
+    compile/errors.cmx \
+    compile/choices.cmx \
+    compile/io.cmi
+compile/io.cmi :
+compile/main.cmo : \
+    compile/position.cmi \
+    compile/errors.cmi \
+    compile/choices.cmi \
+    compile/main.cmi
+compile/main.cmx : \
+    compile/position.cmx \
+    compile/errors.cmx \
+    compile/choices.cmx \
+    compile/main.cmi
+compile/main.cmi :
+compile/parsed_syntax.cmo : \
+    compile/position.cmi \
+    compile/parsed_syntax.cmi
+compile/parsed_syntax.cmx : \
+    compile/position.cmx \
+    compile/parsed_syntax.cmi
+compile/parsed_syntax.cmi : \
+    compile/position.cmi
+compile/parser.cmo : \
+    compile/position.cmi \
+    compile/parsed_syntax.cmi \
+    compile/errors.cmi \
+    compile/parser.cmi
+compile/parser.cmx : \
+    compile/position.cmx \
+    compile/parsed_syntax.cmx \
+    compile/errors.cmx \
+    compile/parser.cmi
+compile/parser.cmi : \
+    compile/parsed_syntax.cmi
+compile/parser_printer.cmo : \
+    compile/preparser.cmi \
+    compile/position.cmi \
+    compile/parsed_syntax.cmi \
+    compile/lexer.cmo \
+    compile/errors.cmi \
+    compile/choices.cmi \
+    compile/parser_printer.cmi
+compile/parser_printer.cmx : \
+    compile/preparser.cmx \
+    compile/position.cmx \
+    compile/parsed_syntax.cmx \
+    compile/lexer.cmx \
+    compile/errors.cmx \
+    compile/choices.cmx \
+    compile/parser_printer.cmi
+compile/parser_printer.cmi :
+compile/position.cmo : \
+    compile/position.cmi
+compile/position.cmx : \
+    compile/position.cmi
+compile/position.cmi :
