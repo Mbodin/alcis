@@ -1,0 +1,15 @@
+(* Operations about lists. *)
+
+(list ?a) ::=
+  | []
+  | a :: (list a)
+  .
+
+(* Concatenation. *)
+?a. (??(list a) ++ (list a) : list a.
+(_ :: _) ::> (_ ++ _).
+
+(* Reversal. *)
+?a. ((list a) t) : list a.
+(_ t) ::> (_ :: _).
+

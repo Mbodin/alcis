@@ -1,0 +1,29 @@
+
+positive ::=
+	| one
+	| twice positive
+	| twice positive plus one
+	.
+
+integer ::=
+  | zero
+	| + positive
+	| - positive
+	.
+
+(* TODO: All the operators. *)
+
+ten := + twice (twice (twice one) plus one).
+
+i := zero.
+(?x 0) := ten * x.
+(?x 1) := x 0 + + one.
+(?x 2) := x 1 + + one.
+(?x 3) := x 2 + + one.
+(?x 4) := x 3 + + one.
+(?x 5) := x 4 + + one.
+(?x 6) := x 5 + + one.
+(?x 7) := x 6 + + one.
+(?x 8) := x 7 + + one.
+(?x 9) := x 8 + + one.
+

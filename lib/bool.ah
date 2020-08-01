@@ -1,0 +1,20 @@
+(* Operations about booleans. *)
+
+bool ::=
+  | true
+  | false
+  .
+
+(* condition *)
+?a. (if bool then a else a) : a.
+
+(* Common operations *)
+(¬ bool) : bool.
+(??bool /\ bool) : bool.
+(??bool \/ bool) : bool.
+(bool = bool) : bool.
+
+(_ /\ _) ::> (_ = _).
+(_ \/ _) ::> (_ /\ _).
+(¬ _) ::> (_ \/ _).
+

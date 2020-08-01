@@ -1,0 +1,23 @@
+
+(if ?b then ?sa else ?sb) :=
+  b?(
+  | true -> sa
+  | false -> sb
+  ).
+
+(¬ ?b) :=
+  b?(
+	| true -> false
+	| false -> true
+  ).
+
+(?ba /\ ?bb) :=
+  ba?(
+  | true -> bb
+  | false -> false
+  ).
+
+(?ba \/ ?bb) := ¬ (¬ ba /\ ¬ bb).
+
+(?ba = ?bb) := (ba /\ bb) \/ (¬ ba /\ ¬ bb).
+
