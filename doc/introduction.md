@@ -20,7 +20,7 @@ See [examples](../examples/) for more details.
 (f ?x) := x.
 
 (* Openning modules. *)
-numerics.$
+numeric.$
 
 (* Declaration of a constant. *)
 c := i42.
@@ -28,7 +28,7 @@ c := i42.
 (* Declaration of an inductive type: a list. *)
 (list ?a) ::=
   | []
-  | (?x : a) :: (?l : list a)
+  | a :: (list a)
   .
 
 (* Definition of a recursive function over a list. *)
@@ -55,8 +55,7 @@ c := i42.
   all [length l fancy] expressions will then be understood as [length (l fancy)]. *)
 (_ fancy) ::> (length _).
 
-(* Note that we had to use parentheses in the definition of [++] above.
-  The following line can prevent this need in further usage. *)
+(* A less fancy usage of the priority can be defined between [::] and [++]. *)
 (_ :: _) ::> (_ ++ _).
 
 (* One can define operations with more than one symbols. *)
