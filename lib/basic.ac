@@ -1,3 +1,5 @@
 
-([ ?v ]) := v.
+[ ?v ] := v.
+
+(_ : unit) = (_ : unit) := bool.true.
 

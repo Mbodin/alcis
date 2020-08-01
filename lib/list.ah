@@ -1,15 +1,24 @@
 (* Operations about lists. *)
 
-(list ?a) ::=
-  | []
-  | a :: (list a)
-  .
+list ?a ::=
+	| []
+	| a :: (list a)
+	.
 
-(* Concatenation. *)
-?a. (??(list a) ++ (list a) : list a.
-(_ :: _) ::> (_ ++ _).
+(* Concatenation *)
+?a. ??(list a) ++ (list a) : list a.
+_ :: _ ::> _ ++ _.
 
-(* Reversal. *)
-?a. ((list a) t) : list a.
-(_ t) ::> (_ :: _).
+(* Reverse *)
+?a. (list a) t : list a.
+_ t ::> _ :: _.
+
+(* Fold *)
+?a. ?b. (b (b _ a : b) ==>) (list a) : b.
+
+(* Map *)
+?a. ?b. ((_ a : b) -->) (list a) : list b.
+
+(* Comparison *)
+?a. (list a) (= (a _ a : bool.bool)) (list a) : bool.bool.
 

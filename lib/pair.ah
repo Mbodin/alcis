@@ -1,0 +1,9 @@
+(* Product and sum types. *)
+
+??a * ?b ::= ??a , b.
+
+??a + ?b ::=
+	| a /
+	| / b
+	.
+

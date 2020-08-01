@@ -1,0 +1,10 @@
+(* The option type. *)
+
+option ?a ::=
+	| ##
+	| # a #
+	.
+
+(* Map *)
+?a. ?b. (((_ a) --> : b)) (option a) : option b.
+

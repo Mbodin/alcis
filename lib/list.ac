@@ -1,16 +1,36 @@
 
-(??la ++ ?lb) :=
-  la?(
+pair.$
+bool.$
+
+??la ++ ?lb :=
+	la?(
 	| [] -> lb
 	| ?a :: ?la' -> a :: (la' ++ lb)
-  ).
+	).
 
-(?l t) := (
+?l t := (
 		(?acc aux ?l) :=
 			l?(
 			| [] -> acc
 			| ?a :: ?l' -> (a :: acc) aux l'
 			).
 		[] aux l
+	).
+
+(?init ?f ==>) ?l :=
+	l?(
+	| [] -> init
+	| ?a :: ?l' -> (init f a) f ==> l
+	).
+
+(?f -->) ?l :=
+	[] (?l \ ?a -> f a :: l) ==> (l t).
+
+?la (= ?cmp) ?lb :=
+	(la, lb)?(
+	| [], [] -> true
+	| ?a :: ?la', ?b :: ?lb' ->
+		a cmp b /\ la' = cmp lb'
+	| _, _ -> false
 	).
 

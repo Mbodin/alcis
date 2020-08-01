@@ -1,29 +1,82 @@
 
+pair.$
+bool.$
+
 positive ::=
 	| one
 	| twice positive
 	| twice positive plus one
 	.
 
+?pa = ?pb :=
+	(pa, pb)?(
+	| one, one -> true
+	| twice ?pa', twice ?pb' -> pa' = pb'
+	| twice ?pa' plus one, twice ?pb' plus one -> pa' = pb'
+	| _, _ -> false
+	).
+
+?pa >= ?pb :=
+	(pa, pb)?(
+	| _, one -> true
+	| one, _ -> false
+	| (twice ?pa' plus one | twice ?pa'), twice ?pb' -> pa' >= pb'
+	| twice ?pa' plus one, twice pb' plus one -> pa' >= pb'
+	| twice ?pa', twice pb' plus one -> pa' >= pb' /\ ¬ pa' = pb'
+	).
+(?pa : positive) > pb := pa >= pb /\ ¬ pa = pb.
+(?pa : positive) <= ?pb := pb >= pa.
+(?pa : positive) < ?pb := pb > pa.
+
+(* Successor *)
+succ ?p :=
+	p?(
+	| one -> twice one
+	| twice ?p -> twice p plus one
+	| twice ?p plus one -> twice succ p
+	).
+
+
 integer ::=
-  | zero
+	| zero
 	| + positive
 	| - positive
 	.
 
-(* TODO: All the operators. *)
+?ia >= ?ib :=
+	(ia, ib)?(
+	| (zero | + _), (zero | - _) -> true
+	| (zero | - _), (zero | + _) -> false
+	| + ?pa, + ?pb -> pa >= pb
+	| - pa, - pb -> pb >= pa
+	).
+(?ia : integer) > ib := ia >= ib /\ ¬ ia = ib.
+(?ia : integer) <= ?ib := ib >= ia.
+(?ia : integer) < ?ib := ib > ia.
+
+(* TODO: All the operators.  See https://coq.inria.fr/library/Coq.PArith.BinPosDef.html *)
 
 ten := + twice (twice (twice one) plus one).
 
+incr ?x := x + + one.
+
 i := zero.
-(?x 0) := ten * x.
-(?x 1) := x 0 + + one.
-(?x 2) := x 1 + + one.
-(?x 3) := x 2 + + one.
-(?x 4) := x 3 + + one.
-(?x 5) := x 4 + + one.
-(?x 6) := x 5 + + one.
-(?x 7) := x 6 + + one.
-(?x 8) := x 7 + + one.
-(?x 9) := x 8 + + one.
+?x 0 := ten * x.
+?x 1 := incr $ x 0.
+?x 2 := incr $ x 1.
+?x 3 := incr $ x 2.
+?x 4 := incr $ x 3.
+?x 5 := incr $ x 4.
+?x 6 := incr $ x 5.
+?x 7 := incr $ x 6.
+?x 8 := incr $ x 7.
+?x 9 := incr $ x 8.
+
+?ia = ?ib :=
+	(ia, ib)?(
+	| zero, zero -> true
+	| + ?pa, + ?pb -> pa = pb
+	| - ?pa, - ?pb -> pa = pb
+	| _, _ -> false
+	).
 
