@@ -1,8 +1,5 @@
 (* Basic definitions. *)
 
-(* A variant of parentheses. *)
-?a. [ a ] : a.
-
 (* The unit type. *)
 unit ::= ~.
 

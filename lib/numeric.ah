@@ -1,20 +1,12 @@
 (* Operations about numbers. *)
 
-(* The type integer, defined as an opaque type. *)
-integer.
+(* The type integer, left opaque. *)
+_ : integer.
 
-(* Functions to define integers. *)
-i : integer.
-??integer 0 : integer.
-??integer 1 : integer.
-??integer 2 : integer.
-??integer 3 : integer.
-??integer 4 : integer.
-??integer 5 : integer.
-??integer 6 : integer.
-??integer 7 : integer.
-??integer 8 : integer.
-??integer 9 : integer.
+(* The following two numbers are independent of the base.
+  For the other numbers, consider the [decimal] module. *)
+0 : integer.
+1 : integer.
 
 (* Common operations *)
 integer = integer : bool.bool.
@@ -40,14 +32,4 @@ _ mod _ ::> _ - _.
 - _ ::> _ * _.
 - _ ::> _ / _.
 - _ ::> _ mod _.
-_ 0 ::> - _.
-_ 1 ::> - _.
-_ 2 ::> - _.
-_ 3 ::> - _.
-_ 4 ::> - _.
-_ 5 ::> - _.
-_ 6 ::> - _.
-_ 7 ::> - _.
-_ 8 ::> - _.
-_ 9 ::> - _.
 

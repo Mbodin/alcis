@@ -1,24 +1,24 @@
 (* Operations about lists. *)
 
-list ?a ::=
+[ ?a ] ::=
 	| []
 	| a :: (list a)
 	.
 
 (* Concatenation *)
-?a. ??(list a) ++ (list a) : list a.
+?a. ??([ a ]) ++ ([ a ]) : [ a ].
 _ :: _ ::> _ ++ _.
 
 (* Reverse *)
-?a. (list a) t : list a.
+?a. [ a ] $ t : [ a ].
 _ t ::> _ :: _.
 
 (* Fold *)
-?a. ?b. (b (b _ a : b) ==>) (list a) : b.
+?a. ?b. b (b _ a : b) ==> $ [ a ] : b.
 
 (* Map *)
-?a. ?b. ((_ a : b) -->) (list a) : list b.
+?a. ?b. (_ a : b) --> $ [ a ] : [ b ].
 
 (* Comparison *)
-?a. (list a) (= (a _ a : bool.bool)) (list a) : bool.bool.
+?a. ([ a ]) (= (a _ a : bool.bool)) $ [ a ] : bool.bool.
 

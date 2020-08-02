@@ -1,10 +1,13 @@
 (* The option type. *)
 
-option ?a ::=
+# ?a # ::=
 	| ##
 	| # a #
 	.
 
 (* Map *)
-?a. ?b. (((_ a) --> : b)) (option a) : option b.
+?a. ?b. (_ a: b) --> $ # a # : # b #.
+
+(* Conversion *)
+?a. convert (# a #) to + : a pair.+ basic.unit.
 

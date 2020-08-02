@@ -1,0 +1,20 @@
+
+numeric.$
+
+two := 1 + 1.
+ten := two * (1 + two * two).
+
+incr ?x := x + 1.
+
+i := 0.
+?x 0 := ten * x.
+?x 1 := incr $ x 0.
+?x 2 := incr $ x 1.
+?x 3 := incr $ x 2.
+?x 4 := incr $ x 3.
+?x 5 := incr $ x 4.
+?x 6 := incr $ x 5.
+?x 7 := incr $ x 6.
+?x 8 := incr $ x 7.
+?x 9 := incr $ x 8.
+

@@ -17,24 +17,24 @@ See [examples](../examples/) for more details.
 
 ```alcis
 (* Definition of an identity function. *)
-(f ?x) := x.
+f ?x := x.
 
-(* Openning modules. *)
+(* Opening modules. *)
 numeric.$
 
 (* Declaration of a constant. *)
-c := i42.
+c := decimal.(i42).
 
 (* Declaration of an inductive type: a list. *)
-(list ?a) ::=
+list ?a ::=
   | []
   | a :: (list a)
   .
 
 (* Definition of a recursive function over a list. *)
-(length ?l) :=
+length ?l :=
   l?(
-	| [] -> i0
+	| [] -> 0
 	| _ :: ?l' -> i1 + length l'
 	).
 
@@ -46,7 +46,7 @@ c := i42.
   ).
 
 (* Declaring a fancy function taking its argument to the left. *)
-(?x fancy) := x :: [].
+?x fancy := x :: [].
 
 (* Note that in a conflict of notation in an expression like [length l fancy]:
   it could either mean [length (l fancy)] or [(length l) fancy].
@@ -56,10 +56,10 @@ c := i42.
 (_ fancy) ::> (length _).
 
 (* A less fancy usage of the priority can be defined between [::] and [++]. *)
-(_ :: _) ::> (_ ++ _).
+_ :: _ ::> _ ++ _.
 
 (* One can define operations with more than one symbols. *)
-(?x # ??y # ?z) := x + y + z.
+?x # ??y # ?z := x - y + z.
 
 (* Note the use of the double [?] for the [??y] argument.
   If it were just [?y], then there would be an ambiguity in [a # b # c # d # e].
@@ -69,6 +69,7 @@ c := i42.
   [a # (b # c # d) # e]. *)
 
 (* Of course, the example [(_ # _ # _)] is just silly.
-  There are cases where this is wanted, though, like in the [++] example above. *)
+  There are cases where this is wanted, though, like in the [++] example above, or the factorial. *)
+?n ! := if n = 0 then 1 else ((n - 1)! * n).
 ```
 

@@ -1,0 +1,27 @@
+(* Decimal notation for numbers. *)
+
+numeric.$
+
+i : integer.
+??integer 0 : integer.
+??integer 1 : integer.
+??integer 2 : integer.
+??integer 3 : integer.
+??integer 4 : integer.
+??integer 5 : integer.
+??integer 6 : integer.
+??integer 7 : integer.
+??integer 8 : integer.
+??integer 9 : integer.
+
+_ 0 ::> - _.
+_ 1 ::> - _.
+_ 2 ::> - _.
+_ 3 ::> - _.
+_ 4 ::> - _.
+_ 5 ::> - _.
+_ 6 ::> - _.
+_ 7 ::> - _.
+_ 8 ::> - _.
+_ 9 ::> - _.
+
