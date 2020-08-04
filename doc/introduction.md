@@ -20,10 +20,10 @@ See [examples](../examples/) for more details.
 f ?x := x.
 
 (* Opening modules. *)
-numeric.$
+integer.$
 
 (* Declaration of a constant. *)
-c := decimal.(i42).
+c := decimal.(42).
 
 (* Declaration of an inductive type: a list. *)
 list ?a ::=

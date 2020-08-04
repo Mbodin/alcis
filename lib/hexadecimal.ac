@@ -1,0 +1,54 @@
+
+integer.$
+
+2 := 1 + 1.
+16 := 2 * 2 * 2 * 2.
+
+incr ?x := x + 1.
+
+?x 0 := 16 * x.
+?x 1 := incr $ x 0.
+?x 2 := incr $ x 1.
+?x 3 := incr $ x 2.
+?x 4 := incr $ x 3.
+?x 5 := incr $ x 4.
+?x 6 := incr $ x 5.
+?x 7 := incr $ x 6.
+?x 8 := incr $ x 7.
+?x 9 := incr $ x 8.
+?x a := incr $ x 9.
+?x b := incr $ x a.
+?x c := incr $ x b.
+?x d := incr $ x c.
+?x e := incr $ x d.
+?x f := incr $ x e.
+?x A := x a.
+?x B := x b.
+?x C := x c.
+?x D := x d.
+?x E := x e.
+?x F := x f.
+
+0 := 0.
+1 := 1.
+2 := 0 2.
+3 := 0 3.
+4 := 0 4.
+5 := 0 5.
+6 := 0 6.
+7 := 0 7.
+8 := 0 8.
+9 := 0 9.
+a := 0 a.
+b := 0 b.
+c := 0 c.
+d := 0 d.
+e := 0 e.
+f := 0 f.
+A := 0 A.
+B := 0 B.
+C := 0 C.
+D := 0 D.
+E := 0 E.
+F := 0 F.
+

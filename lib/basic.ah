@@ -5,3 +5,9 @@ unit ::= ~.
 
 unit = unit : bool.bool.
 
+(* Strict parentheses *)
+?a. ?b. ?!(_ a : b) $! a : b.
+
+(* let-binder *)
+?a. let ?&a be a.
+

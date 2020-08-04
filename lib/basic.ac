@@ -1,3 +1,5 @@
 
 (_ : unit) = (_ : unit) := bool.true.
 
+let ?&n be ?v := (n := v).
+

@@ -1,4 +1,4 @@
-(* Operations about numbers. *)
+(* Operations about integers. *)
 
 (* The type integer, left opaque. *)
 _ : integer.

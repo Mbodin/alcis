@@ -1,0 +1,73 @@
+(* Hexadecimal notation for numbers. *)
+
+integer.$
+
+0 : integer.
+1 : integer.
+2 : integer.
+3 : integer.
+4 : integer.
+5 : integer.
+6 : integer.
+7 : integer.
+8 : integer.
+9 : integer.
+a : integer.
+b : integer.
+c : integer.
+d : integer.
+e : integer.
+f : integer.
+A : integer.
+B : integer.
+C : integer.
+D : integer.
+E : integer.
+F : integer.
+
+??integer 0 : integer.
+??integer 1 : integer.
+??integer 2 : integer.
+??integer 3 : integer.
+??integer 4 : integer.
+??integer 5 : integer.
+??integer 6 : integer.
+??integer 7 : integer.
+??integer 8 : integer.
+??integer 9 : integer.
+??integer a : integer.
+??integer b : integer.
+??integer c : integer.
+??integer d : integer.
+??integer e : integer.
+??integer f : integer.
+??integer A : integer.
+??integer B : integer.
+??integer C : integer.
+??integer D : integer.
+??integer E : integer.
+??integer F : integer.
+
+_ 0 ::> - _.
+_ 1 ::> - _.
+_ 2 ::> - _.
+_ 3 ::> - _.
+_ 4 ::> - _.
+_ 5 ::> - _.
+_ 6 ::> - _.
+_ 7 ::> - _.
+_ 8 ::> - _.
+_ 9 ::> - _.
+_ a ::> - _.
+_ b ::> - _.
+_ c ::> - _.
+_ d ::> - _.
+_ e ::> - _.
+_ f ::> - _.
+_ A ::> - _.
+_ B ::> - _.
+_ C ::> - _.
+_ D ::> - _.
+_ E ::> - _.
+_ F ::> - _.
+
