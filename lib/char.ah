@@ -1,0 +1,117 @@
+(* Character manipulation *)
+
+(* For now, only ASCII characters are supported.  This may change in the future. *)
+
+_ : char.
+
+(* Warning: it is important to note that the following are just notations
+  defined through the Alcis mechanism.  This means that for instance although
+  ['\ '] looks like it is a backslashed space between quotes, it really is a
+  sequence of ['\] and [']: putting a new line between the two won't change
+  the associated semantics, but may induce people into misreading your code. *)
+
+'\0' : char.
+'\a' : char.
+'\b' : char.
+'\t' : char.
+'\n' : char.
+'\v' : char.
+'\f' : char.
+'\r' : char.
+'\e' : char.
+'\ ' : char.
+'!' : char.
+'"' : char.
+'#' : char.
+'$' : char.
+'%' : char.
+'&' : char.
+'\'' : char.
+'(' : char.
+')' : char.
+'*' : char.
+'+' : char.
+',' : char.
+'-' : char.
+'.' : char.
+'/' : char.
+'0' : char.
+'1' : char.
+'2' : char.
+'3' : char.
+'4' : char.
+'5' : char.
+'6' : char.
+'7' : char.
+'8' : char.
+'9' : char.
+':' : char.
+';' : char.
+'<' : char.
+'=' : char.
+'>' : char.
+'?' : char.
+'@' : char.
+'A' : char.
+'B' : char.
+'C' : char.
+'D' : char.
+'E' : char.
+'F' : char.
+'G' : char.
+'H' : char.
+'I' : char.
+'J' : char.
+'K' : char.
+'L' : char.
+'M' : char.
+'N' : char.
+'O' : char.
+'P' : char.
+'Q' : char.
+'R' : char.
+'S' : char.
+'T' : char.
+'U' : char.
+'V' : char.
+'W' : char.
+'X' : char.
+'Y' : char.
+'Z' : char.
+'[' : char.
+'\\' : char.
+']' : char.
+'^' : char.
+'_' : char.
+'`' : char.
+'a' : char.
+'b' : char.
+'c' : char.
+'d' : char.
+'e' : char.
+'f' : char.
+'g' : char.
+'h' : char.
+'i' : char.
+'j' : char.
+'k' : char.
+'l' : char.
+'m' : char.
+'n' : char.
+'o' : char.
+'p' : char.
+'q' : char.
+'r' : char.
+'s' : char.
+'t' : char.
+'u' : char.
+'v' : char.
+'w' : char.
+'x' : char.
+'y' : char.
+'z' : char.
+'{' : char.
+'|' : char.
+'}' : char.
+'~' : char.
+

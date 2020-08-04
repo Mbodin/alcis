@@ -2,6 +2,16 @@
 
 integer.$
 
+(* Numbers are not primitive in Alcis: they are defined by the functions below.
+  This means that when writing, e.g., [42], this really means [(4) 2]: [4] being
+  a base number, and [2] being a function.
+  This means that theoretically, one can use [2] (or any other digit) as function
+  in a different context.  Think twice before doing so, as it can greatly hinder
+  readability.
+  Another consequence is that spacing is irrelevant: [42] and [4 2] are exactly
+  the same thing.  You can thus use this fact to group numbers and ease
+  readilibity of large numbers, e.g., [12 345 678]. *)
+
 0 : integer.
 1 : integer.
 2 : integer.

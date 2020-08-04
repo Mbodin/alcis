@@ -1,0 +1,121 @@
+(* Character string manipulation. *)
+
+_ : string.
+
+(* As for characters, the following are only notations defined through the Alcis mechanism.
+  Beware of how their pitfalls, and generally avoid using long strings.  Instead, use small
+  string to identify the text that should be displayed, then fetch the corresponding text in
+  the user's language from an external file. *)
+
+(* The type [prestring] is a string that is being parsed. *)
+
+_ : prestring.
+
+" : prestring.
+prestring " : string.
+
+??prestring \0 : prestring.
+??prestring \a : prestring.
+??prestring \b : prestring.
+??prestring \t : prestring.
+??prestring \n : prestring.
+??prestring \v : prestring.
+??prestring \f : prestring.
+??prestring \r : prestring.
+??prestring \e : prestring.
+??prestring \ : prestring.
+??prestring ! : prestring.
+??prestring \" : prestring.
+??prestring # : prestring.
+??prestring $ : prestring.
+??prestring % : prestring.
+??prestring & : prestring.
+??prestring ' : prestring.
+??prestring \( : prestring.
+??prestring \) : prestring.
+??prestring * : prestring.
+??prestring + : prestring.
+??prestring , : prestring.
+??prestring - : prestring.
+??prestring . : prestring.
+??prestring / : prestring.
+??prestring 0 : prestring.
+??prestring 1 : prestring.
+??prestring 2 : prestring.
+??prestring 3 : prestring.
+??prestring 4 : prestring.
+??prestring 5 : prestring.
+??prestring 6 : prestring.
+??prestring 7 : prestring.
+??prestring 8 : prestring.
+??prestring 9 : prestring.
+??prestring : : prestring.
+??prestring ; : prestring.
+??prestring < : prestring.
+??prestring = : prestring.
+??prestring > : prestring.
+??prestring ? : prestring.
+??prestring @ : prestring.
+??prestring A : prestring.
+??prestring B : prestring.
+??prestring C : prestring.
+??prestring D : prestring.
+??prestring E : prestring.
+??prestring F : prestring.
+??prestring G : prestring.
+??prestring H : prestring.
+??prestring I : prestring.
+??prestring J : prestring.
+??prestring K : prestring.
+??prestring L : prestring.
+??prestring M : prestring.
+??prestring N : prestring.
+??prestring O : prestring.
+??prestring P : prestring.
+??prestring Q : prestring.
+??prestring R : prestring.
+??prestring S : prestring.
+??prestring T : prestring.
+??prestring U : prestring.
+??prestring V : prestring.
+??prestring W : prestring.
+??prestring X : prestring.
+??prestring Y : prestring.
+??prestring Z : prestring.
+??prestring [ : prestring.
+??prestring \\ : prestring.
+??prestring ] : prestring.
+??prestring ^ : prestring.
+??prestring _ : prestring.
+??prestring ` : prestring.
+??prestring a : prestring.
+??prestring b : prestring.
+??prestring c : prestring.
+??prestring d : prestring.
+??prestring e : prestring.
+??prestring f : prestring.
+??prestring g : prestring.
+??prestring h : prestring.
+??prestring i : prestring.
+??prestring j : prestring.
+??prestring k : prestring.
+??prestring l : prestring.
+??prestring m : prestring.
+??prestring n : prestring.
+??prestring o : prestring.
+??prestring p : prestring.
+??prestring q : prestring.
+??prestring r : prestring.
+??prestring s : prestring.
+??prestring t : prestring.
+??prestring u : prestring.
+??prestring v : prestring.
+??prestring w : prestring.
+??prestring x : prestring.
+??prestring y : prestring.
+??prestring z : prestring.
+??prestring { : prestring.
+??prestring \| : prestring.
+??prestring } : prestring.
+??prestring ~ : prestring.
+
