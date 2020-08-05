@@ -11,9 +11,11 @@
   purpose is to define a [list a] between [[..]]. *)
 ?a. _ : //list a.
 ?a. [ //list a : list a.
+?a ] : //list a.
 ?a. ] : //list a.
 ?a. a ; ??(//list a) : //list a.
 [] ::> [ _.
+[] ::> _ ].
 [] ::> ].
 
 (* Concatenation *)

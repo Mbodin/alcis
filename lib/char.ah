@@ -33,7 +33,7 @@ _ : char.
 '+' : char.
 ',' : char.
 '-' : char.
-'.' : char.
+'\.' : char.
 '/' : char.
 '0' : char.
 '1' : char.

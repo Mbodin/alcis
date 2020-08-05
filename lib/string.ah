@@ -25,7 +25,7 @@ _ : //string.
 \f ??(//string) : //string.
 \r ??(//string) : //string.
 \e ??(//string) : //string.
-\_ ??(//string) : //string. (* space. *)
+\- ??(//string) : //string. (* space. *)
 ! ??(//string) : //string.
 \" ??(//string) : //string.
 # ??(//string) : //string.
@@ -88,7 +88,7 @@ Z ??(//string) : //string.
 \\ ??(//string) : //string.
 ] ??(//string) : //string.
 ^ ??(//string) : //string.
-_ ??(//string) : //string.
+\_ ??(//string) : //string.
 ` ??(//string) : //string.
 a ??(//string) : //string.
 b ??(//string) : //string.

@@ -10,7 +10,12 @@ There are two kinds of source files:
 - code files, usually with the extension `.ac`.
   They contain the declaration of functions and local types.
 
-# Examples
+To these two kinds of files, we add two compiled kinds of files:
+- object header files, with the extension `.aho`.
+- object files, with the extension `.aco`.
+These files contain compilation information.
+
+# Example
 
 The following snippet shows how to define a basic function.
 See [examples](../examples/) for more details.
@@ -72,4 +77,26 @@ _ :: _ ::> _ ++ _.
   There are cases where this is wanted, though, like in the [++] example above, or the factorial. *)
 ?n ! := if n = 0 then 1 else ((n - 1)! * n).
 ```
+
+# Documentation
+
+This documentation is organised as follows.
+
+## References
+- [basics](reference/basics.md): reserved identifiers, tokenisation, etc.
+- [types](reference/types.md): syntax for type declarations.
+- [definitions](reference/definitions.md): syntax for terms.
+- [priorities](reference/priorities.md): syntax to define priority between operators.
+- [evaluation](reference/evaluation.md): evaluation model.
+- [command-line](reference/command_line.md): command-line usage of the compiler.
+- [stdlib](reference/stdlib.md): description of the standard library.
+
+## Tutorials
+None for now.
+
+## Explanations
+None for now.
+
+## How-to
+- [long-notations](howto/long_notations.md): how to define long notations like the `[a1; .. ; an]` list-notation.
 
