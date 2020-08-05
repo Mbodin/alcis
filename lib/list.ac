@@ -2,6 +2,12 @@
 pair.$
 bool.$
 
+//list ?a ::= list a.
+
+[ ?l := l.
+] := [].
+?a ; ??l := a :: l.
+
 ??la ++ ?lb :=
 	la?(
 	| [] -> lb
@@ -17,13 +23,20 @@ bool.$
 		[] aux l
 	).
 
-(?init ?f ==>) ?l :=
+?init ?f ==> $ ?l :=
 	l?(
 	| [] -> init
 	| ?a :: ?l' -> (init f a) f ==> l
 	).
 
-(?f -->) ?l :=
+?l $ <== ?f ?init :=
+	l?(
+	| [] -> init
+	| ?a :: ?l' -> a f (l' <== f init)
+	).
+
+
+?f --> $ ?l :=
 	[] (?l \ ?a -> f a :: l) ==> (l t).
 
 ?la (= ?cmp) ?lb :=

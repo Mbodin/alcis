@@ -5,6 +5,17 @@
 	| a :: (list a)
 	.
 
+(* Alternative notation for lists: [[a1; .. ; ab].
+  The type [//list a] is a [list a] that is being parsed.
+  It is not meant to be used in another context: its sole
+  purpose is to define a [list a] between [[..]]. *)
+?a. _ : //list a.
+?a. [ //list a : list a.
+?a. ] : //list a.
+?a. a ; ??(//list a) : //list a.
+[] ::> [ _.
+[] ::> ].
+
 (* Concatenation *)
 ?a. ??([ a ]) ++ ([ a ]) : [ a ].
 _ :: _ ::> _ ++ _.
@@ -15,6 +26,10 @@ _ t ::> _ :: _.
 
 (* Fold *)
 ?a. ?b. b (b _ a : b) ==> $ [ a ] : b.
+(* [b f ==> [a1; .. ; an]] is [((b f a1) ..) f an]. *)
+
+?a. ?b. [ a ] $ <== (a _ b : b) b : b.
+(* [[a1; .. ; an] <== f b] is [a1 f (.. (an f b))].  Not tail-recursive. *)
 
 (* Map *)
 ?a. ?b. (_ a : b) --> $ [ a ] : [ b ].
