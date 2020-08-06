@@ -6,8 +6,8 @@
 	.
 
 (* Map *)
-?a. ?b. (_ a: b) --> $ # a # : # b #.
+?a. ?b. (_ a: b) --> |> # a # : # b #.
 
 (* Conversion *)
-?a. convert (# a #) to + : a pair.+ basic.unit.
+?a. convert (# a #) to + : a pair.(+) basic.unit.
 

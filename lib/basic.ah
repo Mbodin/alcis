@@ -6,7 +6,8 @@ unit ::= ~.
 unit = unit : bool.bool.
 
 (* Strict parentheses *)
-?a. ?b. ?!(_ a : b) $! ??a : b.
+?a. ?b. ??!(_ a : b) !|> ?a : b.
+?a. ?b. ?a <|! ??!(a _ : b) : b.
 
 (* let-binder *)
 ?a. let ?&a be a.

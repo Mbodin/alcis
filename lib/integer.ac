@@ -1,6 +1,6 @@
 
-pair.$
-bool.$
+pair.|>
+bool.|>
 
 positive ::=
 	| p 1

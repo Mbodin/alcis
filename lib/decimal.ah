@@ -1,6 +1,6 @@
 (* Decimal notation for numbers. *)
 
-integer.$
+integer.|>
 
 (* Numbers are not primitive in Alcis: they are defined by the functions below.
   This means that when writing, e.g., [42], this really means [(4) 2]: [4] being

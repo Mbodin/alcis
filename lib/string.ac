@@ -1,6 +1,6 @@
 
-list.$
-char.$
+list.|>
+char.|>
 
 string ::= list char.
 //string ::= string.

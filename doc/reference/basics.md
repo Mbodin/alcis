@@ -22,11 +22,11 @@ The dot `.` is used for various purposes:
 
 To differentiate between the three usages, the following algorithm is used:
 - if a letter-based identifier immediately (that is, with no space in between, including tabulation and line breaks) precedes the dot, and that this letter-based identifier is itself preceded by a question-mark `?`, and that we can expect a type declaration at the current place, then the dot is a separator of a universal quantification from its associated declaration.
-- if a letter-based identifier immediately precedes the dot, and that the dot is immediately followed by an opening parenthesis `(`, a dollar `$` which is not itself immediately followed by a symbol-based identifier, or a letter-based identifier, then the dot is seen as a module opening.
+- if a letter-based identifier immediately precedes the dot, and that the dot is immediately followed by an opening parenthesis `(`, a `|>` identifier, or a letter-based identifier, then the dot is seen as a module opening.
 - otherwise, if the dot is part of a symbol-based identifier with more than one character, then it is an identifier.
 - otherwise, the dot indicate the end of a declaration.
 
-In particular, this means that the identifier `.` is forbidden, and `.$` is likely to be avoided.
+In particular, this means that the identifier `.` is forbidden, and `.|>` is to be avoided in most cases.
 
 ## Reserved identifiers
 The list follows:
@@ -38,7 +38,11 @@ The list follows:
 - `?` (used in pattern-matching, argument declarations, and universally quantified types),
 - `??`, `?!`, `??!`, and `?&` (used in argument declaration),
 - `_` (wildcard),
-- `$` (used for function application),
+- `|>` and `<|` (used for function application),
 - `\` (nameless function),
 - `->` (used in pattern-matching and nameless functions).
+
+The following identifiers are also reserved for future use:
+- `?:` (type argument),
+- `?:&` (type-name argument).
 

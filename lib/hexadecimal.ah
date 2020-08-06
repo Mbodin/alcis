@@ -1,6 +1,6 @@
 (* Hexadecimal notation for numbers. *)
 
-integer.$
+integer.|>
 
 0 : integer.
 1 : integer.

@@ -1,6 +1,6 @@
 
-pair.$
-bool.$
+pair.|>
+bool.|>
 
 //list ?a ::= list a.
 
@@ -24,20 +24,20 @@ bool.$
 		[] aux l
 	).
 
-?init ?f ==> $ ?l :=
+?init ?f ==> |> ?l :=
 	l?(
 	| [] -> init
 	| ?a :: ?l' -> (init f a) f ==> l
 	).
 
-?l $ <== ?f ?init :=
+?l <| <== ?f ?init :=
 	l?(
 	| [] -> init
 	| ?a :: ?l' -> a f (l' <== f init)
 	).
 
 
-?f --> $ ?l :=
+?f --> |> ?l :=
 	[] (?l \ ?a -> f a :: l) ==> (l t).
 
 ?la (= ?cmp) ?lb :=

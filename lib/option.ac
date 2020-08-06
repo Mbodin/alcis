@@ -1,12 +1,12 @@
 
-f --> $ o :=
+f --> |> o :=
 	o?(
 	| ## -> ##
 	|	# a # -> # f a #
 	).
 
-basic.$
-pair.$
+basic.|>
+pair.|>
 
 convert ?o to + :=
 	o?(

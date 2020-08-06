@@ -25,7 +25,7 @@ See [examples](../examples/) for more details.
 f ?x := x.
 
 (* Opening modules. *)
-integer.$
+integer.|>
 
 (* Declaration of a constant. *)
 c := decimal.(42).
