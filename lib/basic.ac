@@ -3,3 +3,6 @@
 
 let ?&n be ?v := (n := v).
 
+idr ?a := a.
+?a idl := a.
+

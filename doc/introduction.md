@@ -76,6 +76,13 @@ _ :: _ ::> _ ++ _.
 (* Of course, the example [(_ # _ # _)] is just silly.
   There are cases where this is wanted, though, like in the [++] example above, or the factorial. *)
 ?n ! := if n = 0 then 1 else ((n - 1)! * n).
+
+(* In fact, lists themselves are not noted [list a] in Alcis: they are noted [[ a ]].
+  This is possible thanks to the notation mechanism: *)
+[ ?a ] ::=
+	| []
+	| a :: ([ a ])
+	.
 ```
 
 # Documentation
@@ -87,6 +94,7 @@ This documentation is organised as follows.
 - [types](reference/types.md): syntax for type declarations.
 - [definitions](reference/definitions.md): syntax for terms.
 - [priorities](reference/priorities.md): syntax to define priority between operators.
+- [modules](reference/modules.md): syntax to define priority between operators.
 - [evaluation](reference/evaluation.md): evaluation model.
 - [command-line](reference/command_line.md): command-line usage of the compiler.
 - [stdlib](reference/stdlib.md): description of the standard library.
@@ -98,5 +106,7 @@ None for now.
 None for now.
 
 ## How-to
-- [long-notations](howto/long_notations.md): how to define long notations like the `[a1; .. ; an]` list-notation.
+- [long-notations](howto/long_notations.md): how to define long notations like the `[a1; .. ; an]` list-notation,
+- [records](howto/records.md): how to define records.
+
 

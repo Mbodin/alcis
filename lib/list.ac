@@ -2,7 +2,7 @@
 pair.|>
 bool.|>
 
-//list ?a ::= list a.
+//[ ?a ] ::= [ a ].
 
 [ ?l := l.
 ?a ] := a :: [].

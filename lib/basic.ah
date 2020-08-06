@@ -12,3 +12,7 @@ unit = unit : bool.bool.
 (* let-binder *)
 ?a. let ?&a be a.
 
+(* Identity functions. *)
+?a. idr a: a.
+?a. a idl : a.
+

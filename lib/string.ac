@@ -2,7 +2,7 @@
 list.|>
 char.|>
 
-string ::= list char.
+string ::= [ char ].
 //string ::= string.
 
 " ?str := str.
