@@ -6,3 +6,8 @@ This is project has been dig up from my very old projects and is in the process 
 
 See [introduction](doc/introduction.md) for more informations.
 
+# License
+© Intellectual property right of Martin Bodin, 2009–2010, 2020.
+This program is released under the CeCILL-C license.
+See [LICENSE](LICENSE) for more information.
+
