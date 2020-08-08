@@ -1,0 +1,22 @@
+
+language: node_js
+
+node_js:
+  - 8
+
+os:
+  - linux
+
+cache:
+  directories:
+    - ${HOME}/.esy
+
+install:
+  - npm install --global esy@0.6.6
+  - esy install
+
+script:
+  - esy build
+  - esy test
+  - esy doc
+

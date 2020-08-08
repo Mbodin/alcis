@@ -1,7 +1,6 @@
 {
-(* lexer.mll *)
-(* Lex the input. *)
-(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
+(** Tokenize the input. *)
+(* author: Martin Constantino–Bodin <martin.bodin@ens-lyon.org> *)
 
     open Preparser
     open Position
@@ -19,7 +18,7 @@ let integer_literal  = ['0'-'9']['0'-'9' '_']*
 let letter = ['a'-'z' 'A'-'Z']
 
 let symbol = ['_' '!' '$' '%' '&' '*' '+' '-' '.' '/' '<' '=' '>' '?' '@' '^' '|' '~' '\'']
-(* FIXME: Shall we accept all the UTF-8 ? *)
+(* FIXME: Shall we accept all UTF-8 ? *)
 
 let identifier = (symbol | letter)(symbol | letter | ['0'-'9'])*
 
