@@ -6,73 +6,94 @@
     open Position
 
     let _ = Errors.define_warning "comments" true "Activate all warnings concerning comments"
+
+    let reserved_identifiers =
+      List.fold_left (fun m (id, v) -> PMap.add id v m) PMap.empty [
+        (".", DOT) ;
+        (":=", ASSIGN) ;
+        ("::=", TYPE_ASSIGN) ;
+        (":", COLON) ;
+        ("|", PIPE) ;
+        ("?", QUESTION_MARK) ;
+        ("|>", LEFT_FUNCTION_APP) ;
+        ("<|", RIGHT_FUNCTION_APP) ;
+        ("\\", LAMBDA) ;
+        ("->", RIGHT_ARROW) ;
+      ]
 }
 
 let blank = [' ' '\t' '\r']
 
-let integer_literal  = ['0'-'9']['0'-'9' '_']*
-  | ("0x"|"0X")['0'-'9' 'A'-'F' 'a'-'f']['0'-'9' 'A'-'F' 'a'-'f' '_']*
-  | ("0o"|"0O")['0'-'7']['0'-'7' '_']*
-  | ("0b"|"0B")['0'-'1']['0'-'1' '_']*
+(* The “letters” of letter-based identifiers. *)
+let letters = ['a'-'z' 'A'-'Z' '\'' '_']
 
-let letter = ['a'-'z' 'A'-'Z']
+(* Similarly, the symbols of symbol-based identifiers. *)
+let symbol = ['`' '~' '!' '"' '@' '#' '$' '%' '^' '&' '*' '-' '+' '=' '[' ']' '{' '}' '\\' '/' '|' ';' ':' '<' '>' '?' ',' '.' '¬' '¦' '×' '÷' '¿' '¡' '€' '₤' '¤' '‘' '’' '“' '”' '°']
+(* FIXME: Shall we accept all of Unicode? *)
 
-let symbol = ['_' '!' '$' '%' '&' '*' '+' '-' '.' '/' '<' '=' '>' '?' '@' '^' '|' '~' '\'']
-(* FIXME: Shall we accept all UTF-8 ? *)
+let number = ['0'-'9']
 
-let identifier = (symbol | letter)(symbol | letter | ['0'-'9'])*
-
+(* FIXME: These [characters_read] and [new_line] feels bad practise. *)
 
 rule token = parse
 
-  | blank+ as s             { characters_read (String.length s); token lexbuf }    (* blanks are ignored. *)
+  | blank+ as s             { characters_read (String.length s (* FIXME: Unicode length and not ASCII length. *)); token lexbuf }    (* blanks are ignored. *)
   | '\n'                    { new_line (); token lexbuf }
 
   | '('                     { characters_read 1; LPAREN (get_position ()) }
   | ')'                     { characters_read 1; RPAREN }
 
-  | ':'                     { characters_read 1; COLON }
-  | '='                     { characters_read 1; EQUAL }
+  | "(|"                    { characters_read 2; LMODULE (get_position ()) }
+  | "|)"                    { characters_read 2; RMODULE }
 
-  | ';'                     { characters_read 1; SEMI_COLON }
-
-  | "<<<"                   { characters_read 3; LPRIOR (get_position ()) }
-  | ">>>"                   { characters_read 3; RPRIOR }
-
-  | "fun"                   { characters_read 3; FUN (get_position ()) }
-  | "->"                    { characters_read 2; RIGHT_ARROW }
-
+  | '.'                     { characters_read 1; DOT }
   | '_'                     { characters_read 1; UNDERSCORE (get_position ()) }
 
-  | identifier as s         { characters_read (String.length s); IDENT (cetiq s) }
+  | "?" (letters+ as s)     { characters_read (2 + String.length s); ARGUMENT ([], s) }
+  | "??" (letters+ as s)    { characters_read (2 + String.length s); ARGUMENT ([Recursive], s) }
+  | "?!" (letters+ as s)    { characters_read (2 + String.length s); ARGUMENT ([Strict], s) }
+  | "??!" (letters+ as s)   { characters_read (2 + String.length s); ARGUMENT ([Recursive; Strict], s) }
+  | "?&" (letters+ as s)    { characters_read (2 + String.length s); ARGUMENT ([Name], s) }
+
+  | (letters+ as m) ".|>"   { characters_read (3 + String.length m); MODULE_OPEN m }
+  | (letters+ as m) ".<|"   { characters_read (3 + String.length m); MODULE_INCLUDE m }
+  | (letters+ as m) ".("    { characters_read (3 + String.length m); MODULE_LOCAL_OPEN m }
+  | (letters+ as m) "." (letters+ as id)
+                            { characters_read (1 + String.length m + String.length s);
+                              MODULE_LOCAL_NAME (m, id) }
+
+  | '?' (letters+ as s) '.' { characters_read (2 + String.length s); QUANTIFICATION s }
+
+  | letters+ as s           { characters_read (String.length s); IDENT (cetiq s) }
+  | number as s             { characters_read (String.length s); IDENT (cetiq s) }
+  | symbol+ as s            { characters_read (String.length s);
+                              try
+                                PMap.find s reserved_identifiers
+                              with Not_found -> IDENT (cetiq s) }
 
   | "(*"                    { comment lexbuf ; token lexbuf }
 
   | eof                     { EOF }
 
-  | integer_literal as k    { characters_read (String.length k); INT (cetiq k) }
-
   | _                       { Errors.error (get_position ())
-                                [Printf.sprintf "I’m really sorry, but I don’t recognize the token ‘%s’ near the characters %d-%d."
-                                (Lexing.lexeme lexbuf)
-                                (Lexing.lexeme_start lexbuf)
-                                (Lexing.lexeme_end lexbuf);
-                                "Perhaps you misspell it."]
+                                [Printf.sprintf "Unrecognized token ‘%s’ near characters %d-%d."
+                                  (Lexing.lexeme lexbuf)
+                                  (Lexing.lexeme_start lexbuf)
+                                  (Lexing.lexeme_end lexbuf)]
                             }
 
 and comment = shortest (* ignore comments *)
-  | ")"                     { characters_read 1; if Errors.get_warning "comments" then Errors.warn (get_position ())
-                            [
-                                Printf.sprintf "This comment is ambigous ‘%s’ near %d-%d."
-                                (Lexing.lexeme lexbuf)
-                                (Lexing.lexeme_start lexbuf)
-                                (Lexing.lexeme_end lexbuf);
-                                "I will consider it as the beginning of a comment.";
-                                "You should add a space there."
-                            ]; comment lexbuf }
+  | ")"                     { characters_read 1;
+                              Errors.error (get_position ())
+                                [Printf.sprintf "Ambigous comment ‘%s’ near %d-%d."
+                                  (Lexing.lexeme lexbuf)
+                                  (Lexing.lexeme_start lexbuf)
+                                  (Lexing.lexeme_end lexbuf);
+                                 "Consider adding a space at the beginning of the comment."];
+                              comment lexbuf }
   | (_)*"(*" as s           { characters_read (String.length s); comment lexbuf; comment lexbuf }
   | (_)*"*)" as s           { characters_read (String.length s) }
-  | (_)* as s eof           { if Errors.get_warning "comments" then Errors.warn (get_position ())
-                                ["I’m afraid that the following comment is not finished : “" ^ s ^ "”";
-                                "You should add “*)” at the end of the file, or at an other correct place."] }
+  | (_)* as s eof           { Errors.error (get_position ())
+                                ["Unfinished comment: “" ^ s ^ "”";
+                                 "Consider adding “*)” at the end of the file."] }
 

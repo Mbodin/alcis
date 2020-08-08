@@ -1,15 +1,12 @@
-(* position.ml *)
-(* Contains definition to know where something happens. *)
-(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
 
 type file_type =
     | Alcis_header
     | Alcis_source_code
-    | Alcis_C_interface
-    | C_header
-    | C_source_code
+    | Alcis_compiled_header
+    | Alcis_compiled_code
 
-type t = string * ((int * (int option)) option) (* FIXME: This type should contain a begin and an end position. *)
+type t =
+  string * ((int * (int option)) option) (* FIXME: This type should contain a begin and an end position. *)
 
 let get_filename (s, _) = s
 
@@ -35,9 +32,10 @@ let to_string ((f, _) as p) =
     | "" -> ""
     | s -> ", " ^ s)
 
-let make f = function
-    | None -> fun _ -> f, None
-    | Some l -> fun c -> f, Some (l, c)
+let make f ?line ?colon =
+  match line with
+  | None -> f, None
+  | Some l -> f, Some (l, colon)
 
 let global = make Sys.executable_name None None
 

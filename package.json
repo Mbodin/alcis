@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@opam/dune": ">=2.0",
+		"@opam/extlib": "~1.7",
 		"@opam/odoc": "*",
 		"ocaml": ">=4.6"
 	}
