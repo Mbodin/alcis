@@ -56,6 +56,12 @@ integer ::=
 (?ia : integer) <= ?ib := ib >= ia.
 (?ia : integer) < ?ib := ib > ia.
 
+??ia max ?ib :=
+	if ia >= ib then ia else ib.
+
+??ia min ?ib :=
+	if ia <= ib then ia else ib.
+
 (* TODO: All the operators.  See https://coq.inria.fr/library/Coq.PArith.BinPosDef.html *)
 
 ?ia = ?ib :=

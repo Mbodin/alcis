@@ -10,3 +10,41 @@ swap ?s :=
 	| / ?b -> b /
 	).
 
+fst ?p :=
+	p?(
+	| ?a, _ -> a
+	).
+
+snd ?p :=
+	p?(
+	| _, ?b -> b
+	).
+
+absurdl ?p := (fst p)?().
+absurdr ?p := (snd p)?().
+absurdl ?s :=
+	s?(
+	| ?v / -> v?()
+	| / ?a -> a
+	).
+absurdr ?s :=
+	s?(
+	| ?a / -> a
+	| / ?v -> v?()
+	).
+
+bool.|>
+
+?pa (?cmpa = ?cmpb) ?pb :=
+	(pa, pb)?(
+	| (?aa, ?ab), (?ba, ?bb) ->
+		aa cmpa ba /\ ab cmpb bb
+	).
+
+?sa (?cmpa = ?cmpb) ?sb :=
+	(sa, sb)?(
+	| ?aa / , ?ba / -> aa cmpa ba
+	| / ?ab , / ?bb -> ab cmpb bb
+	| _, _ -> false
+	).
+

@@ -1,5 +1,11 @@
 
 (_ : unit) = (_ : unit) := bool.true.
+(?a : void) = (_ : void) := a?().
+
+absurd ?a := a?().
+
+??!f !|> x := f x.
+x <|! ??!f := f x.
 
 let ?&n be ?v := (n := v).
 

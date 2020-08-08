@@ -5,6 +5,10 @@
 	| # a #
 	.
 
+(* Alternative names *)
+option ?a ::= # a #.
+type ?a ::= option a.
+
 (* Map *)
 ?a. ?b. (_ a: b) --> |> # a # : # b #.
 

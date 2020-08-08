@@ -5,6 +5,10 @@
 	| a :: ([ a ])
 	.
 
+(* Alternative names *)
+list ?a ::= [ a ].
+type ?a ::= list a.
+
 (* Alternative notation for lists: [[a1; .. ; ab].
   The type [//[ a ]] is a [[a]] that is being parsed.
   It is not meant to be used in another context: its sole

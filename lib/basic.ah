@@ -5,6 +5,13 @@ unit ::= ~.
 
 unit = unit : bool.bool.
 
+(* The empty type. *)
+void ::= .
+
+void = void : bool.bool.
+
+?a. absurd void : a.
+
 (* Strict parentheses *)
 ?a. ?b. ??!(_ a : b) !|> ?a : b.
 ?a. ?b. ?a <|! ??!(a _ : b) : b.

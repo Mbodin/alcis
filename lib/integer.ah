@@ -20,6 +20,8 @@ integer < integer : bool.bool.
 ??integer * integer : integer.
 ??integer / integer : integer.
 ??integer mod integer : integer.
+??integer max ?integer : integer.
+??integer min ?integer : integer.
 
 _ + _ ::> _ = _.
 _ - _ ::> _ = _.
@@ -29,7 +31,13 @@ _ / _ ::> _ + _.
 _ / _ ::> _ - _.
 _ mod _ ::> _ + _.
 _ mod _ ::> _ - _.
+_ max _ ::> _ + _.
+_ max _ ::> _ - _.
+_ min _ ::> _ + _.
+_ min _ ::> _ - _.
 - _ ::> _ * _.
 - _ ::> _ / _.
 - _ ::> _ mod _.
+- _ ::> _ max _.
+- _ ::> _ min _.
 
