@@ -1,0 +1,30 @@
+(* Finite sets. *)
+
+?a. _ : { a }.
+
+(* Alternative names *)
+set ?a ::= { a }.
+type ?a ::= set a.
+
+(* An empty map, with a comparison function which is assumed to be transitive and anti-symetrical. *)
+?a. empty (a _ a : bool.bool) : { a }.
+
+(* number of stored values. *)
+?a. size ({ a }) : integer.integer.
+
+(* Checking if a value is in the set. *)
+?a. a in ({ a }) : bool.bool.
+
+(* Adding a value. *)
+?a. a --> ({ a }) : { a }.
+
+(* Removing a value. *)
+?a. a -/-> ({ a }) : { a }.
+
+(* Fold *)
+
+(* Folding along the order. *)
+?a. ?b. b (b _ a : b) ==> |> { a } : b.
+(* Folding against the order. *)
+?a. ?b. { a } <| <== (a _ b : b) b : b.
+

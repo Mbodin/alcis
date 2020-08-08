@@ -1,0 +1,16 @@
+
+integer.|>
+
+depth ?t :=
+	t?(
+	| >- _ -< -> 0
+	| ?ta -< _ >- ?tb -> (depth ta) max (depth tb)
+	).
+
+list.|>
+
+depth ?t :=
+	t?(
+	| < ?l > -> 1 + (0 max ==> |> depth --> l)
+	).
+

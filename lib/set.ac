@@ -1,0 +1,28 @@
+
+basic.|>
+
+{ ?a } ::= map.(a => unit).
+
+empty ?cmp := cmp map.empty.
+
+size ?s := map.size s.
+
+bool.|>
+option.|>
+
+?a in ?s :=
+	map.(a ---> s)?(
+	| ## -> false
+	| # ~ # -> true
+	).
+
+?a --> ?s := map.(a - s --> ~).
+
+?a -/-> ?s := map.(a -/-> s).
+
+?init ?f ==> :=
+	map.(init (?b \ ?a ~ -> b f a) ==>).
+
+<== ?init ?f :=
+	map.(<== (?a \ ?b ~ -> a f b) init).
+

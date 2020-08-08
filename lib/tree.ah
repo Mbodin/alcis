@@ -1,0 +1,15 @@
+(* Operations about trees. *)
+
+(* Binary trees. *)
+?node tree ?leaf ::=
+	| >- leaf -<
+	| (node tree leaf) -< node >- (node tree leaf)
+	.
+
+(* Multiway trees. *)
+multiway ?value ::= < [ multiway value ] >.
+
+(* Depth *)
+?node. ?leaf. depth (node tree leaf) : integer.integer.
+?value. depth (multiway value) : integer.integer.
+
