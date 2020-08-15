@@ -1,7 +1,6 @@
 %{
-(* preparser.mly *)
-(* Preparse the input. *)
-(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
+(** Preparse the input. *)
+(* author: Martin Constantino–Bodin <martin.bodin@ens-lyon.org> *)
 
   open Parsed_syntax
 
@@ -14,7 +13,7 @@
 
   let expecting expct l =
       parsing_error (
-          ("I was expecting an expression of the pattern “" ^ expct ^ "”.")
+          ("An expression of the pattern “" ^ expct ^ "” was expected.")
           :: l)
 
   let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]

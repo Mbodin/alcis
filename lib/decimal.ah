@@ -12,8 +12,6 @@ integer.|>
   the same thing.  You can thus use this fact to group numbers and ease
   readilibity of large numbers, e.g., [12 345 678]. *)
 
-0 : integer.
-1 : integer.
 2 : integer.
 3 : integer.
 4 : integer.

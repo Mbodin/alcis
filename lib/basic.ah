@@ -1,16 +1,16 @@
 (* Basic definitions. *)
 
 (* The unit type. *)
-unit ::= ~.
+1 ::= - .
 
-unit = unit : bool.bool.
+1 = 1 : bool.bool.
 
 (* The empty type. *)
-void ::= .
+0 ::= .
 
-void = void : bool.bool.
+0 = 0 : bool.bool.
 
-?a. absurd void : a.
+?a. absurd 0 : a.
 
 (* Strict parentheses *)
 ?a. ?b. ??!(_ a : b) !|> ?a : b.

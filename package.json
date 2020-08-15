@@ -16,6 +16,7 @@
 		"@opam/dune": ">=2.0",
 		"@opam/extlib": "~1.7",
 		"@opam/odoc": "*",
+		"@opam/menhir": "20200624",
 		"ocaml": ">=4.6"
 	}
 }

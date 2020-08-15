@@ -1,6 +1,6 @@
 
-(_ : unit) = (_ : unit) := bool.true.
-(?a : void) = (_ : void) := a?().
+(_ : 1) = (_ : 1) := bool.true.
+(?a : 0) = (_ : 0) := a?().
 
 absurd ?a := a?().
 

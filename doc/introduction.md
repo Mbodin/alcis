@@ -93,7 +93,7 @@ This documentation is organised as follows.
 - [basics](reference/basics.md): reserved identifiers, tokenisation, etc.
 - [types](reference/types.md): syntax for type declarations.
 - [definitions](reference/definitions.md): syntax for terms.
-- [priorities](reference/priorities.md): syntax to define priority between operators.
+- [priorities](reference/priorities.md): describe how terms are parsed, and how to tune it.
 - [modules](reference/modules.md): syntax to define priority between operators.
 - [evaluation](reference/evaluation.md): evaluation model.
 - [command-line](reference/command_line.md): command-line usage of the compiler.
