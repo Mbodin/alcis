@@ -5,6 +5,8 @@ bool ::=
 	| false
 	.
 
+(* Alternative names *)
+type ::= bool.
 2 ::= bool.
 
 (* condition *)

@@ -1,0 +1,34 @@
+(* Operations about comparisons. *)
+
+(* The result of a comparison. *)
+comparison ::=
+	| =
+	| >
+	| <
+	.
+
+(* Alternative name. *)
+type ::= comparison.
+
+(* The type of a function comparing values. *)
+compare ?a ::= a _ a : comparison.
+
+(* The type of a relation. *)
+relation ?a ::= a _ a : bool.bool.
+
+(* Common comparison operators. *)
+operators ?a ::= (|
+		<> : comparison a.
+		= : relation a.
+		≠ : relation a.
+		< : relation a.
+		> : relation a.
+		<= : relation a.
+		>= : relation a.
+		??a max a : a.
+		??a min a : a.
+	|)
+
+(* From a comparison function, we can get all the usual comparison functions. *)
+?a. < (comparison a) > : operators a.
+

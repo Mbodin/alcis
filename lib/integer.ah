@@ -9,22 +9,29 @@ _ : integer.
 1 : integer.
 
 (* Common operations *)
-integer = integer : bool.bool.
-integer >= integer : bool.bool.
-integer > integer : bool.bool.
-integer <= integer : bool.bool.
-integer < integer : bool.bool.
 ??integer + integer : integer.
 ??integer - integer : integer.
 - integer : integer.
 ??integer * integer : integer.
 ??integer / integer : integer.
 ??integer mod integer : integer.
-??integer max ?integer : integer.
-??integer min ?integer : integer.
+
+(* Comparisons *)
+operators : comparison.operators integer.
+operators.<|
 
 _ + _ ::> _ = _.
 _ - _ ::> _ = _.
+_ + _ ::> _ ≠ _.
+_ - _ ::> _ ≠ _.
+_ + _ ::> _ < _.
+_ - _ ::> _ < _.
+_ + _ ::> _ > _.
+_ - _ ::> _ > _.
+_ + _ ::> _ <= _.
+_ - _ ::> _ <= _.
+_ + _ ::> _ >= _.
+_ - _ ::> _ >= _.
 _ * _ ::> _ + _.
 _ * _ ::> _ - _.
 _ / _ ::> _ + _.

@@ -1,0 +1,36 @@
+bool.|>
+
+< ?cmp > := (|
+
+		<> := cmp.
+
+		?a = ?b :=
+			(a cmp b)?(
+			| = => true
+			| _ => false
+			).
+
+		?a < ?b :=
+			(a cmp b)?(
+			| < => true
+			| _ => false
+			).
+
+		?a > ?b :=
+			(a cmp b)?(
+			| > => true
+			| _ => false
+			).
+
+		?a ≠ ?b := ¬ (a = b).
+		?a <= ?b := ¬ (a > b).
+		?a >= ?b := ¬ (a < b).
+
+		??a max ?b :=
+			if a >= b then a else b.
+
+		??a min ?b :=
+			if a <= b then a else b.
+
+	|).
+

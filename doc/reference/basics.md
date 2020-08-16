@@ -8,7 +8,7 @@ Comments can be nested.
 ## Identifiers
 There are three kinds of identifiers:
 - letter-based identifier, with only letters (a-z, A-Z) or the `'` and `_` characters.
-- symbol-based identifier, with only symbols: `` ` ``, `~`, `!`, `"`, `@`, `#`, `$`, `%`, `^`, `&`, `*`, `-`, `+`, `=`, `[`, `]`, `{`, `}`, `\`, `/`, `|`, `;`, `:`, `<`, `>`, `?`, `,`, `.`, `¬`, `¦`, `×`, `÷`, `¿`, `¡`, `€`, `₤`, `¤`, `‘`, `’`, `“`, `”`, and `°`. (The exact list might expand in the future.) Note that parentheses `(` and `)` are not part of this list.
+- symbol-based identifier, with only symbols: `` ` ``, `~`, `!`, `"`, `@`, `#`, `$`, `%`, `^`, `&`, `*`, `-`, `+`, `=`, `[`, `]`, `{`, `}`, `\`, `/`, `|`, `;`, `:`, `<`, `>`, `?`, `,`, `.`, `¬`, `¦`, `×`, `÷`, `¿`, `¡`, `€`, `₤`, `¤`, `‘`, `’`, `“`, `”`, `°`, and `≠`. (The exact list might expand in the future. FIXME: Maybe using some Unicode property?) Note that parentheses `(` and `)` are not part of this list.
 - numbers (0-9) with exactly one symbol.
 
 For instance, the chain `a'b&*x41` contains 5 identifiers: `a'b`, `&*`, `x`, `4`, and `1`.

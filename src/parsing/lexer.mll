@@ -28,7 +28,7 @@ let blank = [' ' '\t' '\r']
 let letters = ['a'-'z' 'A'-'Z' '\'' '_']
 
 (* Similarly, the symbols of symbol-based identifiers. *)
-let symbol = ['`' '~' '!' '"' '@' '#' '$' '%' '^' '&' '*' '-' '+' '=' '[' ']' '{' '}' '\\' '/' '|' ';' ':' '<' '>' '?' ',' '.' '¬' '¦' '×' '÷' '¿' '¡' '€' '₤' '¤' '‘' '’' '“' '”' '°']
+let symbol = ['`' '~' '!' '"' '@' '#' '$' '%' '^' '&' '*' '-' '+' '=' '[' ']' '{' '}' '\\' '/' '|' ';' ':' '<' '>' '?' ',' '.' '¬' '¦' '×' '÷' '¿' '¡' '€' '₤' '¤' '‘' '’' '“' '”' '°' '≠']
 (* FIXME: Shall we accept all of Unicode? *)
 
 let number = ['0'-'9']
@@ -61,8 +61,7 @@ rule token = parse
   | (letters+ as m) "." (letters+ as id)
                             { characters_read (1 + String.length m + String.length s);
                               MODULE_LOCAL_NAME (m, id) }
-
-  | '?' (letters+ as s) '.' { characters_read (2 + String.length s); QUANTIFICATION s }
+  | ").("                   { LOCAL_MODULE_OPEN }
 
   | letters+ as s           { characters_read (String.length s); IDENT (cetiq s) }
   | number as s             { characters_read (String.length s); IDENT (cetiq s) }
