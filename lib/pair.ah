@@ -9,15 +9,16 @@
 
 _ * _ ::> _ + _.
 
-?a. ?b. (a * b) ((a _ a : bool.bool) = (b _ b : bool.bool)) (a * b) : bool.bool.
-?a. ?b. (a + b) ((a _ a : bool.bool) = (b _ b : bool.bool)) (a + b) : bool.bool.
+(* TODO: Use a module. *)
+?a. ?b. ?(a * b) (?(a _ a : bool.bool) = ?(b _ b : bool.bool)) ?(a * b) : bool.bool.
+?a. ?b. ?(a + b) (?(a _ a : bool.bool) = ?(b _ b : bool.bool)) ?(a + b) : bool.bool.
 
-?a. ?b. swap (a * b) : b * a.
+?a. ?b. swap ?(a * b) : b * a.
 
-?a. ?b. swap (a + b) : b + a.
+?a. ?b. swap ?(a + b) : b + a.
 
-?a. ?b. fst (a * b) : a.
-?a. ?b. snd (a * b) : b.
+?a. ?b. <* ?(a * b) : a.
+?a. ?b. ?(a * b) *> : b.
 
 basic.|>
 

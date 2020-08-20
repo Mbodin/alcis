@@ -10,13 +10,13 @@ type ::= bool.
 2 ::= bool.
 
 (* condition *)
-?a. if bool then a else a : a.
+?a. if ?bool then ?a else ?a : a.
 
 (* Common operations *)
-¬ bool : bool.
-??bool /\ bool : bool.
-??bool \/ bool : bool.
-bool = bool : bool.
+¬ ?bool : bool.
+??bool /\ ?bool : bool.
+??bool \/ ?bool : bool.
+?bool = ?bool : bool.
 
 _ /\ _ ::> _ = _.
 _ \/ _ ::> _ /\ _.

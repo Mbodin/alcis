@@ -8,29 +8,29 @@
 ?a type ?b ::= a map b.
 
 (* An empty map, with a comparison function which is assumed to be transitive and anti-symetrical. *)
-?a. ?b. (a _ a : bool.bool) empty : a => b.
+?a. ?b. ?(a _ a : bool.bool) empty : a => b. (* TODO: Use modules? *)
 
 (* number of stored values. *)
-?a. ?b. size (a => b) : integer.integer.
+?a. ?b. size ?(a => b) : integer.integer.
 
 (* Adding a value. *)
-?a. ?b. a - (a => b) --> b : a => b.
+?a. ?b. ?a - ?(a => b) --> ?b : a => b.
 
 (* Removing a value. *)
-?a. ?b. a -/-> (a => b) : a => b.
+?a. ?b. ?a -/-> ?(a => b) : a => b.
 
 option.|>
 
 (* Looking for a value. *)
-?a. ?b. a ---> (a => b) : # b #.
+?a. ?b. ?a ---> ?(a => b) : # b #.
 
 (* Fold *)
 
 (* Folding along the order. *)
-?a. ?b. ?c. c (c _ a b : c) ==> |> a => b : c.
+?a. ?b. ?c. ?c ?(c _ a b : c) ==> |> ?a => b : c.
 (* Folding against the order. *)
-?a. ?b. ?c. a => b <| <== (a b _ c : c) c : c.
+?a. ?b. ?c. ?(a => b) <| <== ?(a b _ c : c) ?c : c.
 
 (* Map *)
-?a. ?b. ?c. (_ b : c) --> |> a => b : a => c.
+?a. ?b. ?c. ?(_ b : c) --> |> ?(a => b) : a => c.
 

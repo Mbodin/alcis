@@ -24,7 +24,7 @@ See [examples](../examples/) for more details.
 (* Definition of an identity function. *)
 f ?x := x.
 
-(* Opening modules. *)
+(* Opening the module integer module. *)
 integer.|>
 
 (* Declaration of a constant. *)
@@ -32,23 +32,23 @@ c := decimal.(42).
 
 (* Declaration of an inductive type: a list. *)
 list ?a ::=
-  | []
-  | a :: (list a)
-  .
+	| []
+	| a :: (list a)
+	.
 
 (* Definition of a recursive function over a list. *)
 length ?l :=
-  l?(
+	l?(
 	| [] -> 0
 	| _ :: ?l' -> i1 + length l'
 	).
 
 (* Definition of an inline operator over lists. *)
 (?la ++ ?lb) :=
-  la?(
-  | [] -> lb
-  | ?a :: ?la' -> a :: (la' ++ lb)
-  ).
+	la?(
+	| [] -> lb
+	| ?a :: ?la' -> a :: (la' ++ lb)
+	).
 
 (* Declaring a fancy function taking its argument to the left. *)
 ?x fancy := x :: [].
@@ -58,7 +58,7 @@ length ?l :=
   If there is any ambiguity, the compiler will refuse the compilation: parentheses are then mandatory.
   Alternatively, one can declare that (for instance) [fancy] has a higher priority than [length]:
   all [length l fancy] expressions will then be understood as [length (l fancy)]. *)
-(_ fancy) ::> (length _).
+_ fancy ::> length _.
 
 (* A less fancy usage of the priority can be defined between [::] and [++]. *)
 _ :: _ ::> _ ++ _.

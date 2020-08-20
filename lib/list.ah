@@ -2,7 +2,7 @@
 
 [ ?a ] ::=
 	| []
-	| a :: ([ a ])
+	| ?a :: ?([ a ])
 	.
 
 (* Alternative names *)
@@ -14,32 +14,41 @@ type ?a ::= list a.
   It is not meant to be used in another context: its sole
   purpose is to define a [[a]] between [[..]]. *)
 ?a. _ : //[ a ].
-?a. [ //[ a ] : [ a ].
-?a ] : //[ a ].
+?a. [ ?(//[ a ]) : [ a ].
+?a. ?a ] : //[ a ].
 ?a. ] : //[ a ].
-?a. a ; ??(//[ a ]) : //[ a ].
+?a. ?a ; ??(//[ a ]) : //[ a ].
 [] ::> [ _.
 [] ::> _ ].
 [] ::> ].
 
+option.|>
+
+(* Head and tail *)
+?a. <# ?([ a ]) : # a #.
+?a. ?([ a ]) #> : [ a ].
+
+(* Nth-element. *)
+?a. ?([ a ]) [ ?integer.integer ] : # a #.
+
 (* Concatenation *)
-?a. ??([ a ]) ++ ([ a ]) : [ a ].
+?a. ??([ a ]) ++ ?([ a ]) : [ a ].
 _ :: _ ::> _ ++ _.
 
 (* Reverse *)
-?a. [ a ] <| t : [ a ].
+?a. ?([ a ]) <| t : [ a ].
 _ t ::> _ :: _.
 
 (* Fold *)
-?a. ?b. b (b _ a : b) ==> |> [ a ] : b.
+?a. ?b. ?b ?(b _ a : b) ==> |> ?([ a ]) : b.
 (* [b f ==> [a1; .. ; an]] is [((b f a1) ..) f an]. *)
 
-?a. ?b. [ a ] <| <== (a _ b : b) b : b.
+?a. ?b. ?([ a ]) <| <== ?(a _ b : b) ?b : b.
 (* [[a1; .. ; an] <== f b] is [a1 f (.. (an f b))].  Not tail-recursive. *)
 
 (* Map *)
-?a. ?b. (_ a : b) --> |> [ a ] : [ b ].
+?a. ?b. ?(_ a : b) --> |> ?([ a ]) : [ b ].
 
-(* Comparison *)
-?a. ([ a ]) (= |> a _ a : bool.bool) ([ a ]) : bool.bool.
+(* Comparison *) (* TODO: Use a module? *)
+?a. ?([ a ]) (= |> ?(a _ a : bool.bool)) ?([ a ]) : bool.bool.
 

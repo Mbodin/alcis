@@ -5,19 +5,19 @@ bool.|>
 		<> := cmp.
 
 		?a = ?b :=
-			(a cmp b)?(
+			(a <> b)?(
 			| = => true
 			| _ => false
 			).
 
 		?a < ?b :=
-			(a cmp b)?(
+			(a <> b)?(
 			| < => true
 			| _ => false
 			).
 
 		?a > ?b :=
-			(a cmp b)?(
+			(a <> b)?(
 			| > => true
 			| _ => false
 			).

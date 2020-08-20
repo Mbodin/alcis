@@ -10,7 +10,7 @@
 
 0 = 0 : bool.bool.
 
-?a. absurd 0 : a.
+?a. absurd ?0 : a.
 
 (* Strict parentheses *)
 ?a. ?b. ??!(_ a : b) !|> ?a : b.
@@ -20,6 +20,6 @@
 ?a. let ?&a be a.
 
 (* Identity functions. *)
-?a. idr a: a.
-?a. a idl : a.
+?a. idr ?a: a.
+?a. ?a idl : a.
 

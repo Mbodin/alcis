@@ -5,8 +5,8 @@ comparison.|>
 
 positive ::=
 	| p 1
-	| p 2 * positive
-	| p 1 + 2 * positive
+	| p 2 * ?positive
+	| p 1 + 2 * ?positive
 	.
 
 ?pa <> ?pb :=
@@ -39,8 +39,8 @@ succ ?p :=
 
 integer ::=
 	| 0
-	| + positive
-	| - positive
+	| + ?positive
+	| - ?positive
 	.
 
 1 := + p 1.
@@ -61,8 +61,7 @@ integer ::=
 		)
 	).
 
-operators := < <> >.
-operators.<|
+(< <> >).<|
 
 (* TODO: All the operators.  See https://coq.inria.fr/library/Coq.PArith.BinPosDef.html *)
 

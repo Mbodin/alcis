@@ -30,5 +30,5 @@ operators ?a ::= (|
 	|)
 
 (* From a comparison function, we can get all the usual comparison functions. *)
-?a. < (comparison a) > : operators a.
+?a. < ?(comparison a) > : operators a.
 

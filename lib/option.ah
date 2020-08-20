@@ -10,8 +10,8 @@ option ?a ::= # a #.
 type ?a ::= option a.
 
 (* Map *)
-?a. ?b. (_ a: b) --> |> # a # : # b #.
+?a. ?b. ?(_ a: b) --> |> ?(# a #) : # b #.
 
 (* Conversion *)
-?a. convert (# a #) to + : a pair.(+) basic.unit.
+?a. ~ ?(# a #) : a pair.(+) basic.unit.
 

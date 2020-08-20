@@ -10,18 +10,18 @@ swap ?s :=
 	| / ?b -> b /
 	).
 
-fst ?p :=
+<* ?p :=
 	p?(
 	| ?a, _ -> a
 	).
 
-snd ?p :=
+?p *> :=
 	p?(
 	| _, ?b -> b
 	).
 
-absurdl ?p := (fst p)?().
-absurdr ?p := (snd p)?().
+absurdl ?p := (<* p)?().
+absurdr ?p := (p *>)?().
 absurdl ?s :=
 	s?(
 	| ?v / -> v?()

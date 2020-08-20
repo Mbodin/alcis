@@ -9,16 +9,15 @@ _ : integer.
 1 : integer.
 
 (* Common operations *)
-??integer + integer : integer.
-??integer - integer : integer.
-- integer : integer.
-??integer * integer : integer.
-??integer / integer : integer.
-??integer mod integer : integer.
+??integer + ?integer : integer.
+??integer - ?integer : integer.
+- ?integer : integer.
+??integer * ?integer : integer.
+??integer / ?integer : integer.
+??integer mod ?integer : integer.
 
 (* Comparisons *)
-operators : comparison.operators integer.
-operators.<|
+(_ : comparison.operators integer).<|
 
 _ + _ ::> _ = _.
 _ - _ ::> _ = _.

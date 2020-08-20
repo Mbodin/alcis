@@ -7,6 +7,9 @@ _ : string.
   string to identify the text that should be displayed, then fetch the corresponding text in
   the user's language from an external file. *)
 
+(* Nth-character. *)
+?string [ ?integer.integer ] : option.(# char.char #).
+
 (* The type [//string] is a [string] that is being parsed.
   It is not meant to be used in another context: its sole
   purpose is to define a [string] between quotes. *)
