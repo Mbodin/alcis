@@ -5,42 +5,52 @@
   open Parsed_syntax
 
   let parsing_error l =
-      Errors.error (Position.get_position ())
-      ((Printf.sprintf "I’m sorry, but I don’t understand the input, and I think it’s a syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l)
+    Errors.error (Position.get_position ())
+      ((Printf.sprintf "Syntax error at characters %d-%d." (Parsing.symbol_start ()) (Parsing.symbol_end ())) :: l) (* TODO: Menhir’s [Parsing] interface is now a dummy one. *)
 
   let parse_error s =
-      parsing_error (if s = "syntax error" then [] else [s])
+    parsing_error (if s = "syntax error" then [] else [s])
 
-  let expecting expct l =
-      parsing_error (
-          ("An expression of the pattern “" ^ expct ^ "” was expected.")
-          :: l)
+  let expecting expect l =
+    parsing_error (
+        ("An expression of the pattern “" ^ expect ^ "” was expected.")
+        :: l)
 
   let double_arrow_error = ["In the file preparser.mly, a double right arrow type appears to be misparenthesis."]
 
+  (* TODO: Move to a proper header *)
+  (** A wrapper, adding a pair of position (start/stop) to a value. *)
+  type 'a positionned = {
+      value : 'a ;
+      position : (Lexing.position * Lexing.position)
+    }
+
+  type argument_flag =
+    | Recursive (** Arguments of the form [??x] *)
+    | Strict (** Arguments of the form [?!x] *)
+    | Name (** Arguments of the form [?&x] *)
+
 %}
 
-%token <string Position.e> INT /* The Ocaml int type would be two small for real integers. */
-%token <string Position.e> IDENT
-%token <Position.t> LPAREN
-%token RPAREN
+%token <string> IDENT
+%token DOT
+%token ASSIGN TYPE_ASSIGN
 %token COLON
-%token EQUAL
-%token <Position.t> LPRIOR
-%token RPRIOR
-%token SEMI_COLON
-%token <Position.t> FUN
+%token PIPE QUESTION_MARK
+%token LEFT_FUNCTION_APP RIGHT_FUNCTION_APP
+%token LAMBDA
 %token RIGHT_ARROW
-%token <Position.t> UNDERSCORE
+%token LPAREN RPAREN
+%token WILDCARD
 %token EOF
+%token <argument_flag list * string> ARGUMENT
+%token <string> MODULE_OPEN MODULE_INCLUDE MODULE_LOCAL_OPEN
+%token <string * string> MODULE_LOCAL_NAME
+%token LOCAL_MODULE_OPEN
+%token LMODULE RMODULE
 
-%nonassoc   error
-%left       SEMI_COLON
-%nonassoc   below_COLON
-%nonassoc   COLON
-%right      RIGHT_ARROW
-%nonassoc   LPAREN RPAREN LPRIOR RPRIOR
-%nonassoc   FUN INT IDENT UNDERSCORE
+%left DOT
+%left PIPE COLON
 
 %start header body lex_flot
 %type <Parsed_syntax.header list> header
@@ -48,6 +58,20 @@
 %type <string list> lex_flot
 
 %%
+
+(** Wrap a value in a position. *)
+let mkpos x ==
+  ~ = x ; { { value = x ; position = $sloc } }
+
+(** An abstract type declaration [_ : t]. *)
+let abstract_type_declaration :=
+  (* TODO: Variables *)
+  WILDCARD; COLON; t = type_def; { Type_decl (t, None) }
+
+(** An explicit type declaration [t ::= ...]. *)
+let type_declaration :=
+  (* TODO: Variables *)
+  t = type_def; TYPE_ASSIGN; (* TODO: Continue *)
 
 header:
     | structure_header EOF                                                                  { $1 }

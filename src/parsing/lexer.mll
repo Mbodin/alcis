@@ -33,21 +33,21 @@ let symbol = ['`' '~' '!' '"' '@' '#' '$' '%' '^' '&' '*' '-' '+' '=' '[' ']' '{
 
 let number = ['0'-'9']
 
-(* FIXME: These [characters_read] and [new_line] feels bad practise. *)
+(* FIXME: These [characters_read] and [new_line] are bad practise.
+  And as I no longer rely on [get_position], I think that I can remove them. *)
 
 rule token = parse
 
   | blank+ as s             { characters_read (String.length s (* FIXME: Unicode length and not ASCII length. *)); token lexbuf }    (* blanks are ignored. *)
   | '\n'                    { new_line (); token lexbuf }
 
-  | '('                     { characters_read 1; LPAREN (get_position ()) }
+  | '('                     { characters_read 1; LPAREN }
   | ')'                     { characters_read 1; RPAREN }
 
-  | "(|"                    { characters_read 2; LMODULE (get_position ()) }
+  | "(|"                    { characters_read 2; LMODULE }
   | "|)"                    { characters_read 2; RMODULE }
 
-  | '.'                     { characters_read 1; DOT }
-  | '_'                     { characters_read 1; UNDERSCORE (get_position ()) }
+  | '_'                     { characters_read 1; WILDCARD }
 
   | "?" (letters+ as s)     { characters_read (2 + String.length s); ARGUMENT ([], s) }
   | "??" (letters+ as s)    { characters_read (2 + String.length s); ARGUMENT ([Recursive], s) }
