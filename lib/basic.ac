@@ -7,7 +7,10 @@ absurd ?a := a?().
 ??!f !|> x := f x.
 x <|! ??!f := f x.
 
+(* LATER
 let ?&n be ?v := (n := v).
+let ?!&n be ?v := (n := v).
+*)
 
 idr ?a := a.
 ?a idl := a.

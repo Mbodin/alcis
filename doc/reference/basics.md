@@ -8,7 +8,7 @@ Comments can be nested.
 ## Identifiers
 There are three kinds of identifiers:
 - letter-based identifier, with only letters (a-z, A-Z) or the `'` and `_` characters.
-- symbol-based identifier, with only symbols: `` ` ``, `~`, `!`, `"`, `@`, `#`, `$`, `%`, `^`, `&`, `*`, `-`, `+`, `=`, `[`, `]`, `{`, `}`, `\`, `/`, `|`, `;`, `:`, `<`, `>`, `?`, `,`, `.`, `¬`, `¦`, `×`, `÷`, `¿`, `¡`, `€`, `₤`, `¤`, `‘`, `’`, `“`, `”`, `°`, and `≠`. (The exact list might expand in the future. FIXME: Maybe using some Unicode property?) Note that parentheses `(` and `)` are not part of this list.
+- symbol-based identifier, with only symbols: `` ` ``, `~`, `!`, `"`, `@`, `#`, `$`, `%`, `^`, `&`, `*`, `-`, `+`, `=`, `[`, `]`, `{`, `}`, `\`, `/`, `|`, `;`, `:`, `<`, `>`, `?`, `,`, `.`, `¬`, `¦`, `×`, `÷`, `¿`, `¡`, `€`, `₤`, `¤`, `‘`, `’`, `“`, `”`, `°`, and `≠`. (The exact list might evolve in the future. In particular, `?` and `.` might be removed from it, and other symbols may be added. FIXME: Maybe using some Unicode property?) Note that parentheses `(` and `)` are not part of this list.
 - numbers (0-9) with exactly one symbol.
 
 For instance, the chain `a'b&*x41` contains 5 identifiers: `a'b`, `&*`, `x`, `4`, and `1`.
@@ -35,7 +35,7 @@ The list follows:
 - `::>` (used in definition priorities),
 - `|` (used in pattern-matching and type definitions),
 - `?` (used in pattern-matching, argument declarations, and universally quantified types),
-- `??`, `?!`, `??!`, and `?&` (used in argument declaration),
+- `??`, `?!`, and `??!` (used in argument declaration),
 - `_` (wildcard),
 - `|>` and `<|` (used for function application),
 - `\` (nameless function),
@@ -47,7 +47,9 @@ Special keywords, whose usage should be avoided or only be considered with great
 
 The following identifiers are also reserved for future use:
 - `?:` (type argument),
-- `?:&` (type-name argument).
+- `?:&` (type-name argument),
+- `?&` (name argument),
+- `?!&` (strict name argument).
 
 Also note the existence of some special keywords containing parentheses:
 - `(` and `)` (parentheses),

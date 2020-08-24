@@ -15,6 +15,7 @@
 	"dependencies": {
 		"@opam/dune": ">=2.0",
 		"@opam/extlib": "~1.7",
+		"libutils": "github:Mbodin/libutils#9e788308249b1e7477ebe86f742163603ab9b0ce",
 		"@opam/odoc": "*",
 		"@opam/menhir": "20200624",
 		"ocaml": ">=4.6"

@@ -1,0 +1,12 @@
+
+(library
+	; (public_name alcis-parser)
+	(name alcis_parser)
+	(libraries extlib libutils)
+	(modules_without_implementation syntax presyntax)
+	(modes byte native))
+
+(menhir
+	(modules preparser)
+	(flags ("--explain")))
+

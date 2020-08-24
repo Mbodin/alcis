@@ -1,6 +1,5 @@
-(* parsed_syntax.ml *)
-(* Define all the structures that are used to represent the code while parsing. *)
-(* author: Martin BODIN <martin.bodin@ens-lyon.org> *)
+(** The structure that is being parsed by the preparser *)
+(* author: Martin Constantino–Bodin <martin.bodin@ens-lyon.org> *)
 
 
 type header =
@@ -22,7 +21,7 @@ and expression =
     | Expression_sequence of expression * expression
 
 and expression_item =
-    | Int of string Position.e
+    | Int of string Position.e	(* Note that int are treated through string to allow using as long integers as wanted. *)
     | Ident of string Position.e
     | Underscore of Position.t
     | Expr_fun of Position.t
@@ -38,9 +37,9 @@ and type_expr = type_expr_item list
 and type_expr_item =
     | Fun
     | Type
-    | Type_expr of parsed_expression
+    | Type_expr of parsed_expression (* The identifier case is included in that case. *)
 
-and name_expr = name_expr_item list Position.e
+and name_expr = name_expr_item list Position.e (* The position corresponds to where the notation has been defined. *)
 
 and name_expr_item =
     | Expr_ident of string
@@ -48,7 +47,7 @@ and name_expr_item =
 
 and parsed_expression =
 	| Integer of string Position.e
-    | Name of name_expr Position.e
+    | Name of name_expr Position.e (* The position corresponds to where it has been used. *)
     | Application of (parsed_expression * parsed_expression list) Position.e
     | Sequence of (parsed_expression * parsed_expression) Position.e
 
